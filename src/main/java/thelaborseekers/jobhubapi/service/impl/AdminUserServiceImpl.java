@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import thelaborseekers.jobhubapi.model.entity.User;
+import thelaborseekers.jobhubapi.model.entity.Postulante;
 import thelaborseekers.jobhubapi.repository.UserRepository;
 import thelaborseekers.jobhubapi.service.AdminUserService;
 
@@ -18,47 +18,46 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<User> findAll() {return userRepository.findAll();}
+    public List<Postulante> findAll() {return userRepository.findAll();}
 
 
     @Transactional(readOnly = true)
     @Override
-    public Page<User> paginate(Pageable pageable) {
+    public Page<Postulante> paginate(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
 
     @Transactional
     @Override
-    public User create(User user) {
-        return userRepository.save(user);
+    public Postulante create(Postulante postulante) {
+        return userRepository.save(postulante);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public User findById(Integer id) {
+    public Postulante findById(Integer id) {
         return userRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found with id: " + id));
     }
 
     @Transactional
     @Override
-    public User update(Integer id, User updatedUser) {
-        User userFromDb = findById(id);
+    public Postulante update(Integer id, Postulante updatedPostulante) {
+        Postulante postulanteFromDb = findById(id);
 
-        userFromDb.setName(updatedUser.getName());
-        userFromDb.setLastName(updatedUser.getLastName());
-        userFromDb.setEmail(updatedUser.getEmail());
-        userFromDb.setPhone(updatedUser.getPhone());
-        userFromDb.setBirthday(updatedUser.getBirthday());
-        userFromDb.setPassword(updatedUser.getPassword());
-        userFromDb.setType_user(updatedUser.getType_user());
+        postulanteFromDb.setName(updatedPostulante.getName());
+        postulanteFromDb.setLastName(updatedPostulante.getLastName());
+        postulanteFromDb.setEmail(updatedPostulante.getEmail());
+        postulanteFromDb.setPhone(updatedPostulante.getPhone());
+        postulanteFromDb.setBirthday(updatedPostulante.getBirthday());
+        postulanteFromDb.setPassword(updatedPostulante.getPassword());
 
-        return userRepository.save(userFromDb);
+        return userRepository.save(postulanteFromDb);
     }
 
     @Transactional
     @Override
     public void delete(Integer id) {
-        User user = userRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found with id: " + id));
-        userRepository.delete(user);
+        Postulante postulante = userRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found with id: " + id));
+        userRepository.delete(postulante);
     }
 }

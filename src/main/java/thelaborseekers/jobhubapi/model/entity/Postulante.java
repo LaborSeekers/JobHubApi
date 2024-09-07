@@ -1,21 +1,27 @@
 package thelaborseekers.jobhubapi.model.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+
+import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
+import java.util.Date;
 
 
 @Data
-@Entity
-@Table(name = "Postulantes")
-public class Postulante  extends User {
-    @OneToMany(mappedBy = "postulante", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Curriculum> curriculums;
+@Entity // crea la tabla
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name="Postulante")
+//public abstract class User //de momento solo funciona la agregacion de usuario sin especificar el tipo de usuario (obj)
+public class Postulante {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    @OneToMany(mappedBy = "postulante", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Application> applications;
+    private String name;
+    private String lastName;
+    private String email;
+    private String password;
+    private String phone;
+    private Date birthday;
+
 }

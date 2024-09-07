@@ -12,19 +12,13 @@ public class Application {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-
     @ManyToOne
-    @JoinColumn(name = "postulante_id")
+    @JoinColumn(name = "postulante_id",referencedColumnName = "id",foreignKey = @ForeignKey(name = "fk_postulante"))
     private Postulante postulante;
-
 
     @ManyToOne
     @JoinColumn(name = "joboffer_id")
     private JobOffer jobOffer;
-
-    @ManyToOne
-    @JoinColumn(name = "curriculum_id")
-    private Curriculum curriculum;
 
     private Date dateApplied;
 }

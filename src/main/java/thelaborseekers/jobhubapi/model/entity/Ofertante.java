@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "Ofertantes")
-public class Ofertante extends User{
+public class Ofertante extends Postulante {
 
     @OneToMany(mappedBy = "ofertante",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<JobOffer> jobOffers;
