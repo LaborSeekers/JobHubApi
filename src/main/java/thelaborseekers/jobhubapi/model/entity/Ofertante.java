@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.List;
 
 @Data
 @Entity
@@ -25,7 +24,7 @@ public class Ofertante  {
 
     private Integer reputationValue; //usar enum
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "empresa_id",referencedColumnName = "id",foreignKey = @ForeignKey(name = "fk_empresa"))
     private Empresa empresa;
 }

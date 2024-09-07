@@ -27,11 +27,15 @@ public class AdminEmpresaServiceImpl implements AdminEmpresaService {
 
     @Transactional
     @Override
-    public Empresa create(Empresa empresa) {return empresaRepository.save(empresa);}
+    public Empresa create(Empresa empresa) {
+        return empresaRepository.save(empresa);
+    }
 
     @Transactional(readOnly = true)
     @Override
-    public Empresa findById(Integer id) {return empresaRepository.findById(id).orElseThrow(()->new RuntimeException("Empresa not found with id:" + id));}
+    public Empresa findById(Integer id) {
+        return empresaRepository.findById(id).orElseThrow(()->new RuntimeException("Empresa not found with id:" + id));
+    }
 
     @Transactional
     @Override
