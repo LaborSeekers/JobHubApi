@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import thelaborseekers.jobhubapi.model.entity.Postulante;
 
-public interface UserRepository extends JpaRepository<Postulante, Integer> {
+public interface PostulanteRepository extends JpaRepository<Postulante, Integer> {
     @Query("SELECT COUNT(u)>0 FROM Postulante u WHERE u.email =:email")
     boolean existsByEmail(@Param("email") String email);
 

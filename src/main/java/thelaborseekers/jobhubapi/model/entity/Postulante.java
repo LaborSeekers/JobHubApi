@@ -11,7 +11,6 @@ import java.util.Date;
 @Entity // crea la tabla
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name="Postulante")
-//public abstract class User //de momento solo funciona la agregacion de usuario sin especificar el tipo de usuario (obj)
 public class Postulante {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
