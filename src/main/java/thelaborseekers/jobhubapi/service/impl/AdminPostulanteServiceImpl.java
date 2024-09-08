@@ -6,37 +6,37 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import thelaborseekers.jobhubapi.model.entity.Postulante;
-import thelaborseekers.jobhubapi.repository.UserRepository;
-import thelaborseekers.jobhubapi.service.AdminUserService;
+import thelaborseekers.jobhubapi.repository.PostulanteRepository;
+import thelaborseekers.jobhubapi.service.AdminPostulanteService;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class AdminUserServiceImpl implements AdminUserService {
-    private final UserRepository userRepository;
+public class AdminPostulanteServiceImpl implements AdminPostulanteService {
+    private final PostulanteRepository postulanteRepository;
 
     @Transactional(readOnly = true)
     @Override
-    public List<Postulante> findAll() {return userRepository.findAll();}
+    public List<Postulante> findAll() {return postulanteRepository.findAll();}
 
 
     @Transactional(readOnly = true)
     @Override
     public Page<Postulante> paginate(Pageable pageable) {
-        return userRepository.findAll(pageable);
+        return postulanteRepository.findAll(pageable);
     }
 
     @Transactional
     @Override
     public Postulante create(Postulante postulante) {
-        return userRepository.save(postulante);
+        return postulanteRepository.save(postulante);
     }
 
     @Transactional(readOnly = true)
     @Override
     public Postulante findById(Integer id) {
-        return userRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found with id: " + id));
+        return postulanteRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found with id: " + id));
     }
 
     @Transactional
@@ -51,13 +51,13 @@ public class AdminUserServiceImpl implements AdminUserService {
         postulanteFromDb.setBirthday(updatedPostulante.getBirthday());
         postulanteFromDb.setPassword(updatedPostulante.getPassword());
 
-        return userRepository.save(postulanteFromDb);
+        return postulanteRepository.save(postulanteFromDb);
     }
 
     @Transactional
     @Override
     public void delete(Integer id) {
-        Postulante postulante = userRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found with id: " + id));
-        userRepository.delete(postulante);
+        Postulante postulante = postulanteRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found with id: " + id));
+        postulanteRepository.delete(postulante);
     }
 }

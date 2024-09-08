@@ -6,7 +6,7 @@ import thelaborseekers.jobhubapi.model.entity.Postulante;
 
 import java.util.List;
 
-public interface AdminUserService {
+public interface AdminPostulanteService {
     List<Postulante> findAll();
     Page<Postulante> paginate(Pageable pageable);
     Postulante create(Postulante postulante);

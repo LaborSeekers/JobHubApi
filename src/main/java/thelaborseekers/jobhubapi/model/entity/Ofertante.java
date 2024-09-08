@@ -4,13 +4,27 @@ package thelaborseekers.jobhubapi.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
+import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "Ofertantes")
-public class Ofertante extends Postulante {
+@Table(name = "Ofertante")
+public class Ofertante  {
 
-    @OneToMany(mappedBy = "ofertante",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<JobOffer> jobOffers;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    private String name;
+    private String lastName;
+    private String email;
+    private String password;
+    private String phone;
+    private Date birthday;
+
+    private Integer reputationValue; //usar enum
+
+    @ManyToOne
+    @JoinColumn(name = "empresa_id",referencedColumnName = "id",foreignKey = @ForeignKey(name = "fk_empresa"))
+    private Empresa empresa;
 }

@@ -8,39 +8,41 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import thelaborseekers.jobhubapi.model.entity.Postulante;
-import thelaborseekers.jobhubapi.service.AdminUserService;
+import thelaborseekers.jobhubapi.service.AdminPostulanteService;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/admin/Users")
-public class AdminUserController {
-    private final AdminUserService adminUserService;
+@RequestMapping("/admin/Postulantes")
+public class AdminPostulanteController {
+    private final AdminPostulanteService adminPostulanteService;
 
     @GetMapping()
-    public List<Postulante> list(){return adminUserService.findAll();}
+    public List<Postulante> list(){return adminPostulanteService.findAll();}
 
 
     @GetMapping("/page")
     public Page<Postulante> paginate(@PageableDefault(size = 5,sort = "email") Pageable pageable) {
-        return adminUserService.paginate(pageable);
+        return adminPostulanteService.paginate(pageable);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Postulante create(@RequestBody Postulante postulanteForm) {return adminUserService.create(postulanteForm);}
+    public Postulante create(@RequestBody Postulante postulanteForm) {return adminPostulanteService.create(postulanteForm);}
 
     @GetMapping("/{id}")
-    public Postulante get(@PathVariable Integer id) {return adminUserService.findById(id);}
+    public Postulante get(@PathVariable Integer id) {return adminPostulanteService.findById(id);}
 
     @PutMapping("/{id}")
     public Postulante update(@PathVariable Integer id, @RequestBody Postulante postulanteForm) {
-        return adminUserService.update(id, postulanteForm);
+        return adminPostulanteService.update(id, postulanteForm);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Integer id) {adminUserService.delete(id);}
+    public void delete(@PathVariable Integer id) {
+        adminPostulanteService.delete(id);
+    }
 
 }
