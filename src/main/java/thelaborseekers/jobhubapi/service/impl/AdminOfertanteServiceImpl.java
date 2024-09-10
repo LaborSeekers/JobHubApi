@@ -29,6 +29,9 @@ public class AdminOfertanteServiceImpl implements AdminOfertanteService {
     @Transactional
     @Override
     public Ofertante create(Ofertante ofertante) {
+        if(ofertanteRepository.existsByEmail(ofertante.getEmail())) {
+            throw new RuntimeException("Email is already in use");
+        }
         return ofertanteRepository.save(ofertante);
     }
 
@@ -43,6 +46,10 @@ public class AdminOfertanteServiceImpl implements AdminOfertanteService {
     public Ofertante update(Integer id, Ofertante updatedOfertante) {
         Ofertante ofertanteFromDB = findById(id);
 
+        if(ofertanteRepository.existsByEmail(updatedOfertante.getEmail())
+                && !ofertanteFromDB.getEmail().equals(updatedOfertante.getEmail())) {
+            throw new RuntimeException("Email is already in use");
+        }
         ofertanteFromDB.setName(updatedOfertante.getName());
         ofertanteFromDB.setLastName(updatedOfertante.getLastName());
         ofertanteFromDB.setEmail(updatedOfertante.getEmail());
