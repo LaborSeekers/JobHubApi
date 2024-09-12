@@ -16,10 +16,10 @@ import java.util.List;
 
 public interface FavoriteJobOffersRepository extends JpaRepository<FavoriteJobOffers, FavoriteJobOffersPK> {
 
-    @Query("SELECT fjo from FavoriteJobOffers fjo WHERE fjo.postulante.id = :Postulante_id")
-    List<FavoriteJobOffers> findByPostulanteId( @Param("Postulante_id")Integer postulanteId);
-    @Query("SELECT fjo from FavoriteJobOffers fjo WHERE fjo.jobOffer.id = :job_offer_id")
-    List<FavoriteJobOffers> findByJobOfferId( @Param("job_offer_id") Integer jobOfferId);
+    @Query("SELECT fjo.jobOffer from FavoriteJobOffers fjo WHERE fjo.postulante.id = :Postulante_id")
+    List<JobOffer> findByPostulanteId( @Param("Postulante_id")Integer postulanteId);
+    @Query("SELECT fjo.postulante from FavoriteJobOffers fjo WHERE fjo.jobOffer.id = :job_offer_id")
+    List<Postulante> findByJobOfferId( @Param("job_offer_id") Integer jobOfferId);
 
     @Modifying
     @Transactional
