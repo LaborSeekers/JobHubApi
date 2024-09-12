@@ -30,6 +30,9 @@ public class AdminPostulanteServiceImpl implements AdminPostulanteService {
     @Transactional
     @Override
     public Postulante create(Postulante postulante) {
+        if(postulanteRepository.existsByEmail(postulante.getEmail())) {
+            throw new RuntimeException("Email is already in use");
+        }
         return postulanteRepository.save(postulante);
     }
 
@@ -44,6 +47,10 @@ public class AdminPostulanteServiceImpl implements AdminPostulanteService {
     public Postulante update(Integer id, Postulante updatedPostulante) {
         Postulante postulanteFromDb = findById(id);
 
+        if (postulanteRepository.existsByEmail(updatedPostulante.getEmail())
+                && !postulanteFromDb.getEmail().equals(updatedPostulante.getEmail())) {
+            throw new RuntimeException("Unable to update. Email is already in use");
+        }
         postulanteFromDb.setName(updatedPostulante.getName());
         postulanteFromDb.setLastName(updatedPostulante.getLastName());
         postulanteFromDb.setEmail(updatedPostulante.getEmail());
