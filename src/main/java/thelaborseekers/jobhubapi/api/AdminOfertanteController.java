@@ -3,6 +3,7 @@ package thelaborseekers.jobhubapi.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import thelaborseekers.jobhubapi.model.entity.Ofertante;
 import thelaborseekers.jobhubapi.service.AdminOfertanteService;
@@ -36,9 +37,18 @@ public class AdminOfertanteController {
     public Ofertante update(@PathVariable Integer id, @RequestBody Ofertante ofertanteForm) {
         return adminOfertanteService.update(id, ofertanteForm);
     }
-    @PutMapping("/{id}/{reputation}")
-    public Ofertante updateReputation(@PathVariable Integer id, @PathVariable Integer reputation) {
-        return adminOfertanteService. updateReputation(id, reputation); //posiblemente esta funcion se elimine ya que, la reputacion se maneja de manera interna
+    @PutMapping("/{id}/rate")
+    public ResponseEntity<String> updateReputation(@PathVariable Integer id, @RequestParam Integer ratingValue) {
+        if (ratingValue == null) {
+            return ResponseEntity.badRequest().body("Rating value is required.");
+        }
+
+        // Validar que ratingValue esté en el rango permitido (0 o 1)
+        if (ratingValue != 0 && ratingValue != 1) {
+            return ResponseEntity.badRequest().body("Rating value must be either 0 or 1.");
+        }
+        adminOfertanteService.updateReputation(id, ratingValue);
+        return ResponseEntity.ok("Reputation updated successfully.");
     }
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")

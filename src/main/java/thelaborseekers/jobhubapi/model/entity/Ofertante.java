@@ -3,6 +3,7 @@ package thelaborseekers.jobhubapi.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import thelaborseekers.jobhubapi.model.enums.Reputation;
 
 import java.util.Date;
 
@@ -23,7 +24,12 @@ public class Ofertante  {
     private Date birthday;
 
     private Integer reputationValue; //usar enum
-
+    @Enumerated(EnumType.STRING)
+    private Reputation reputation;
+    @PostLoad
+    private void computeReputationStatus() {
+        this.reputation = Reputation.fromValue(this.reputationValue);
+    }
     @ManyToOne
     @JoinColumn(name = "empresa_id",referencedColumnName = "id",foreignKey = @ForeignKey(name = "fk_empresa"))
     private Empresa empresa;
