@@ -18,13 +18,13 @@ public class AdminFavoriteJobOffersImpl implements AdminFavoriteJobOffersService
 
     @Transactional(readOnly = true)
     @Override
-    public List<FavoriteJobOffers> get_JobOffers(Integer postulante_id) {
+    public List<JobOffer> get_JobOffers(Integer postulante_id) {
         return favoriteJobOffersRepository.findByPostulanteId(postulante_id);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<FavoriteJobOffers> get_PostulantsForJobOffer(Integer jobOfferId) {
+    public List<Postulante> get_PostulantsForJobOffer(Integer jobOfferId) {
         return favoriteJobOffersRepository.findByJobOfferId(jobOfferId);
     }
 
