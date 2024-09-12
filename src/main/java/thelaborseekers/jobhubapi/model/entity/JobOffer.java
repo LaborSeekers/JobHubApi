@@ -14,23 +14,30 @@ public class JobOffer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false)
     private String title;
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "TEXT", nullable = false)
     private String description;
 
+    @Column(nullable = false)
     private String requirements;
+
     private String logo;
+
     private String location;
 
     @Column(name="created_at",nullable=false)
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
     private long salary;
+
     private String benefits;
     private String category;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private JobStatus status;
 
     @ManyToOne
