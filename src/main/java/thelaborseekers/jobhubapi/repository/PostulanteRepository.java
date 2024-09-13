@@ -14,11 +14,11 @@ public interface PostulanteRepository extends JpaRepository<Postulante, Integer>
     @Query("SELECT COUNT(u) > 0 FROM Postulante u WHERE u.email = :email AND u.id != :id")
     boolean existsBySlugAndIdNot(@Param("email") String email, @Param("id") Integer idNot);
 
-    // Nuevo: Filtrar por nombre y apellido
+    // nombre y apellido
     @Query("SELECT p FROM Postulante p WHERE LOWER(p.name) = LOWER(:name) AND LOWER(p.lastName) = LOWER(:lastName)")
     List<Postulante> findByNameAndLastName(@Param("name") String name, @Param("lastName") String lastName);
 
-    // Nuevo: Filtrar por edad
+    // edad
     @Query("SELECT p FROM Postulante p WHERE YEAR(CURRENT_DATE) - YEAR(p.birthday) = :age")
     List<Postulante> findByAge(@Param("age") int age);
 }
