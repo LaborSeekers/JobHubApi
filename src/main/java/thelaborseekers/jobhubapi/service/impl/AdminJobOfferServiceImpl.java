@@ -88,4 +88,9 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
         Ofertante ofertante = adminOfertanteService.findById(ofertanteId);
         return ofertante.getReputation();
     }
+
+    @Override
+    public JobOffer findById(Integer jobOfferId) {
+        return jobOfferRepository.findById(jobOfferId).orElseThrow(()->new RuntimeException("JobOffer not found with id: " + jobOfferId));
+    }
 }
