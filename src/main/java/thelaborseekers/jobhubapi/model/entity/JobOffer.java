@@ -29,6 +29,7 @@ public class JobOffer {
     private long salary;
     private String benefits;
     private String category;
+    private String ubication;
 
     @Enumerated(EnumType.STRING)
     private JobStatus status;
