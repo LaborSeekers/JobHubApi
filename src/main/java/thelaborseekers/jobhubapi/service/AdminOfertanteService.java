@@ -12,6 +12,7 @@ public interface AdminOfertanteService {
     Ofertante create(Ofertante Ofertante);
     Ofertante findById(Integer id);
     Ofertante update(Integer id, Ofertante updatedOfertante);
-    Ofertante updateReputation(Integer id, Integer reputation);
+    //Servicio para operar la reputacion (0 malo y 1 bueno)
+    Ofertante updateReputation(Integer id, Integer ratingValue);
     void delete(Integer id);
 }
