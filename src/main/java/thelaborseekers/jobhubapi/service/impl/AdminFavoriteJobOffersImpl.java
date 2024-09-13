@@ -34,6 +34,7 @@ public class AdminFavoriteJobOffersImpl implements AdminFavoriteJobOffersService
         favoriteJobOffersRepository.addFavoriteJobOffer(jobOfferId, postulanteId);
     }
 
+    @Transactional
     @Override
     public void delete(Integer jobOfferId, Integer postulanteId) {
         favoriteJobOffersRepository.deleteFavoriteJobOffers(jobOfferId, postulanteId);
