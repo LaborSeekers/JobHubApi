@@ -67,4 +67,15 @@ public class AdminPostulanteServiceImpl implements AdminPostulanteService {
         Postulante postulante = postulanteRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found with id: " + id));
         postulanteRepository.delete(postulante);
     }
+    @Transactional(readOnly = true)
+    @Override
+    public List<Postulante> filterByNameAndLastName(String name, String lastName) {
+        return postulanteRepository.findByNameAndLastName(name, lastName);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Postulante> filterByAge(int age) {
+        return postulanteRepository.findByAge(age);
+    }
 }

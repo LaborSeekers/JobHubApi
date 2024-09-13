@@ -64,7 +64,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-
         <!-- Dependencia para trabajar con JWT usando Auth0 -->
         <dependency>
             <groupId>com.auth0</groupId>

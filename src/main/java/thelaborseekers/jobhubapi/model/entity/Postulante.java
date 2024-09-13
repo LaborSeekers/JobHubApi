@@ -22,5 +22,5 @@ public class Postulante {
     private String password;
     private String phone;
     private Date birthday;
-
+    private String recoveryToken;
 }

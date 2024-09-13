@@ -45,4 +45,14 @@ public class AdminPostulanteController {
         adminPostulanteService.delete(id);
     }
 
+    @GetMapping("/filter")
+    public List<Postulante> filterByNameAndLastName(@RequestParam String name, @RequestParam String lastName) {
+        return adminPostulanteService.filterByNameAndLastName(name, lastName);
+    }
+
+    @GetMapping("/filterByAge")
+    public List<Postulante> filterByAge(@RequestParam int age) {
+        return adminPostulanteService.filterByAge(age);
+    }
+
 }
