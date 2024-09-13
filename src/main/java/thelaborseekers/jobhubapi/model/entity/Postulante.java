@@ -1,6 +1,7 @@
 package thelaborseekers.jobhubapi.model.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -22,8 +23,10 @@ public class Postulante {
     private String email;
     private String password;
     private String phone;
-    private boolean active;
     private String otp;
     private LocalDateTime otpGeneratedTime;
     private Date birthday;
+
+    @Column(nullable = true)
+    private boolean active;
 }

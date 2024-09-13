@@ -33,6 +33,7 @@ public class AdminPostulanteServiceImpl implements AdminPostulanteService {
         if(postulanteRepository.existsByEmail(postulante.getEmail())) {
             throw new RuntimeException("Email is already in use");
         }
+        postulante.setActive(false);
         return postulanteRepository.save(postulante);
     }
 

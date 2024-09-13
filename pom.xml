@@ -75,7 +75,7 @@
             <groupId>com.sun.mail</groupId>
             <artifactId>jakarta.mail</artifactId>
             <version>2.0.1</version>
-        <dependency>
+        </dependency>
 
         <!-- Dependencia para trabajar con JWT usando Auth0 -->
         <dependency>
@@ -84,11 +84,6 @@
             <version>4.4.0</version>
         </dependency>
 
-        <!-- Dependencia para Spring Boot Starter Data JPA -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
