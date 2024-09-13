@@ -8,9 +8,9 @@ INSERT INTO Ofertante (id, name, last_name, email, password, phone, birthday, re
                                                                                                               (2, 'Bob', 'Smith', 'bob.smith@example.com', 'password456', '555-0102', '1990-06-15', 4, 2)On conflict do nothing;
 
 -- Insertar datos de prueba en la tabla JobModality (suponiendo que existe)
-INSERT INTO Job_modality (id, name) VALUES
-                                       (1, 'Full-Time'),
-                                       (2, 'Part-Time') On conflict do nothing ;
+INSERT INTO Job_modality (id, name, description) VALUES
+                                       (1, 'In person','En esta modalidad trabajas desde una sede asignada'),
+                                       (2, 'hybrid','En esta modalidad se trabajar unos dias desde la sede que se le indique al trabajador y desde casa') On conflict do nothing ;
 
 -- Insertar datos de prueba en la tabla JobOffer
 INSERT INTO Job_offers (id, title, description, requirements, logo, location, created_at, salary, benefits, status, job_modality_id, ofertante_id) VALUES

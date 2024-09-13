@@ -13,8 +13,8 @@ public class JobOfferService {
     @Autowired
     private JobOfferRepository jobOfferRepository;
 
-    public List<JobOffer> filterJobOffers(String location, String category) {
-        return jobOfferRepository.findByLocationAndCategory(location, category);
+    public List<JobOffer> filterJobOffers(String location, Integer modality_id) {
+        return jobOfferRepository.findByLocationAndModality(location, modality_id);
     }
 }
 

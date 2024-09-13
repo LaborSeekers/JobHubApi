@@ -17,7 +17,7 @@ public class JobOfferController {
 
     @GetMapping("/api/job-offers")
     public List<JobOffer> getJobOffers(@RequestParam(required = false) String location,
-                                       @RequestParam(required = false) String category) {
-        return jobOfferService.filterJobOffers(location, category);
+                                       @RequestParam(required = false) Integer modality_id) {
+        return jobOfferService.filterJobOffers(location, modality_id);
     }
 }
