@@ -3,6 +3,7 @@ package thelaborseekers.jobhubapi.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import java.time.LocalDateTime;
 
 import java.util.Date;
 
@@ -21,6 +22,8 @@ public class Postulante {
     private String email;
     private String password;
     private String phone;
+    private boolean active;
+    private String otp;
+    private LocalDateTime otpGeneratedTime;
     private Date birthday;
-    private String recoveryToken;
 }
