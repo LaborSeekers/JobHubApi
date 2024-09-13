@@ -60,12 +60,22 @@ public class AdminOfertanteServiceImpl implements AdminOfertanteService {
 
         return ofertanteRepository.save(ofertanteFromDB);
     }
+
+
+    //Servicio para operar la reputacion (0 malo y 1 bueno)
     @Transactional
     @Override
-    public Ofertante updateReputation(Integer id, Integer reputation) {
+    public Ofertante updateReputation(Integer id, Integer ratingValue) {
         Ofertante ofertanteFromDB = findById(id);
+        Integer currentReputation = ofertanteFromDB.getReputationValue();
 
-        ofertanteFromDB.setReputationValue(reputation);
+        // Actualizar la reputación
+        if (ratingValue == 1) {
+            ofertanteFromDB.setReputationValue(Math.min(currentReputation + 2, 100)); //max=100
+        } else if (ratingValue == 0) {
+            // Decrementar reputación en 2 puntos si ratingValue es 0
+            ofertanteFromDB.setReputationValue(Math.max(currentReputation - 2, 0)); //min=0
+        }
 
         return ofertanteRepository.save(ofertanteFromDB);
     }
