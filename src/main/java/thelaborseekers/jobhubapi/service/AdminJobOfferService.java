@@ -18,4 +18,6 @@ public interface AdminJobOfferService {
     void deleteJobOffer(Integer jobOfferId);
 
     Reputation getReputationbyJobOfferId(Integer jobOfferId);
+
+    JobOffer findById(Integer jobOfferId);
 }
