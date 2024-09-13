@@ -13,4 +13,8 @@ public interface AdminPostulanteService {
     Postulante findById(Integer id);
     Postulante update(Integer id, Postulante updatedPostulante);
     void delete(Integer id);
+
+     // Nuevos métodos
+     List<Postulante> filterByNameAndLastName(String name, String lastName);
+     List<Postulante> filterByAge(int age);
 }

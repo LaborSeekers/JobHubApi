@@ -2,9 +2,11 @@ package thelaborseekers.jobhubapi.model.entity;
 
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Date;
 
+@Data
 @Entity
 @Table(name="Application")
 public class Application {
