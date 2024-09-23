@@ -5,6 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import thelaborseekers.jobhubapi.dto.PostulanteRegisterDTO;
+import thelaborseekers.jobhubapi.dto.PostulanteProfileDTO;
+import thelaborseekers.jobhubapi.exception.BadRequestException;
+import thelaborseekers.jobhubapi.exception.ResourceNotFoundException;
+import thelaborseekers.jobhubapi.mapper.PostulanteMapper;
 import thelaborseekers.jobhubapi.model.entity.Postulante;
 import thelaborseekers.jobhubapi.repository.PostulanteRepository;
 import thelaborseekers.jobhubapi.service.AdminPostulanteService;
@@ -15,68 +20,78 @@ import java.util.List;
 @Service
 public class AdminPostulanteServiceImpl implements AdminPostulanteService {
     private final PostulanteRepository postulanteRepository;
+    private final PostulanteMapper postulanteMapper;
+    @Transactional(readOnly = true)
+    @Override
+    public List<PostulanteProfileDTO> findAll() {
+        List<Postulante> postulantes = postulanteRepository.findAll();
+        return postulantes.stream().map(postulanteMapper::toPostulanteProfileDTO).toList();
+    }
+
 
     @Transactional(readOnly = true)
     @Override
-    public List<Postulante> findAll() {return postulanteRepository.findAll();}
-
-
-    @Transactional(readOnly = true)
-    @Override
-    public Page<Postulante> paginate(Pageable pageable) {
-        return postulanteRepository.findAll(pageable);
+    public Page<PostulanteRegisterDTO> paginate(Pageable pageable) {
+        Page<Postulante> postulantes = postulanteRepository.findAll(pageable);
+        return postulantes.map(postulanteMapper::toDTO);
     }
 
     @Transactional
     @Override
-    public Postulante create(Postulante postulante) {
-        if(postulanteRepository.existsByEmail(postulante.getEmail())) {
-            throw new RuntimeException("Email is already in use");
+    public PostulanteRegisterDTO create(PostulanteRegisterDTO postulanteRegisterDTO) {
+        if(postulanteRepository.existsByEmail(postulanteRegisterDTO.getEmail())) {
+            throw new BadRequestException("Email is already in use");
         }
+        Postulante postulante = postulanteMapper.toEntity(postulanteRegisterDTO);
         postulante.setActive(false);
-        return postulanteRepository.save(postulante);
+        postulante = postulanteRepository.save(postulante);
+        return postulanteMapper.toDTO(postulante);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Postulante findById(Integer id) {
-        return postulanteRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found with id: " + id));
+    public PostulanteProfileDTO findById(Integer id) {
+        Postulante postulante = postulanteRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User not found with id: " + id));
+        return postulanteMapper.toPostulanteProfileDTO(postulante);
     }
 
     @Transactional
     @Override
-    public Postulante update(Integer id, Postulante updatedPostulante) {
-        Postulante postulanteFromDb = findById(id);
+    public PostulanteRegisterDTO update(Integer id, PostulanteRegisterDTO updatedPostulanteRegisterDTO) {
+        Postulante postulanteFromDb =postulanteRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User not found with id: " + id));
 
-        if (postulanteRepository.existsByEmail(updatedPostulante.getEmail())
-                && !postulanteFromDb.getEmail().equals(updatedPostulante.getEmail())) {
-            throw new RuntimeException("Unable to update. Email is already in use");
+        if (postulanteRepository.existsByEmail(updatedPostulanteRegisterDTO.getEmail())
+                && !postulanteFromDb.getEmail().equals(updatedPostulanteRegisterDTO.getEmail())) {
+            throw new BadRequestException("Unable to update. Email is already in use");
         }
-        postulanteFromDb.setName(updatedPostulante.getName());
-        postulanteFromDb.setLastName(updatedPostulante.getLastName());
-        postulanteFromDb.setEmail(updatedPostulante.getEmail());
-        postulanteFromDb.setPhone(updatedPostulante.getPhone());
-        postulanteFromDb.setBirthday(updatedPostulante.getBirthday());
-        postulanteFromDb.setPassword(updatedPostulante.getPassword());
+        postulanteFromDb.setName(updatedPostulanteRegisterDTO.getName());
+        postulanteFromDb.setLastName(updatedPostulanteRegisterDTO.getLastName());
+        postulanteFromDb.setEmail(updatedPostulanteRegisterDTO.getEmail());
+        postulanteFromDb.setPhone(updatedPostulanteRegisterDTO.getPhone());
+        postulanteFromDb.setBirthday(updatedPostulanteRegisterDTO.getBirthday());
+        postulanteFromDb.setPassword(updatedPostulanteRegisterDTO.getPassword());
 
-        return postulanteRepository.save(postulanteFromDb);
+        postulanteFromDb = postulanteRepository.save(postulanteFromDb);
+        return postulanteMapper.toDTO(postulanteFromDb);
     }
 
     @Transactional
     @Override
     public void delete(Integer id) {
-        Postulante postulante = postulanteRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found with id: " + id));
+        Postulante postulante = postulanteRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User not found with id: " + id));
         postulanteRepository.delete(postulante);
     }
     @Transactional(readOnly = true)
     @Override
-    public List<Postulante> filterByNameAndLastName(String name, String lastName) {
-        return postulanteRepository.findByNameAndLastName(name, lastName);
+    public List<PostulanteProfileDTO> filterByNameAndLastName(String name, String lastName) {
+        List<Postulante> postulantes = postulanteRepository.findByNameAndLastName(name,lastName);
+        return postulantes.stream().map(postulanteMapper::toPostulanteProfileDTO).toList();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<Postulante> filterByAge(int age) {
-        return postulanteRepository.findByAge(age);
+    public List<PostulanteProfileDTO> filterByAge(int age) {
+        List<Postulante> postulantes = postulanteRepository.findByAge(age);
+        return postulantes.stream().map(postulanteMapper::toPostulanteProfileDTO).toList();
     }
 }
