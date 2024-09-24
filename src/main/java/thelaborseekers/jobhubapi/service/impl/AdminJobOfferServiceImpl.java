@@ -3,6 +3,7 @@ package thelaborseekers.jobhubapi.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import thelaborseekers.jobhubapi.mapper.OfertanteMapper;
 import thelaborseekers.jobhubapi.model.entity.JobOffer;
 import thelaborseekers.jobhubapi.model.entity.Ofertante;
 import thelaborseekers.jobhubapi.model.enums.Reputation;
@@ -23,6 +24,7 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
     private final AdminOfertanteService adminOfertanteService;
     private final OfertanteRepository ofertanteRepository;
     private final JobModalityRepository jobModalityRepository;
+
 
     @Override
     @Transactional(readOnly = true)
@@ -85,8 +87,8 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
 
         Integer ofertanteId = jobOffer.getOfertante().getId();
 
-        Ofertante ofertante = adminOfertanteService.findById(ofertanteId);
-        return ofertante.getReputation();
+
+        return adminOfertanteService.findById(ofertanteId).getReputation();
     }
 
     @Override

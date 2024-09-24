@@ -5,6 +5,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import thelaborseekers.jobhubapi.dto.OfertanteProfileDTO;
+import thelaborseekers.jobhubapi.dto.OfertanteRegisterDTO;
+import thelaborseekers.jobhubapi.exception.BadRequestException;
+import thelaborseekers.jobhubapi.exception.ResourceNotFoundException;
+import thelaborseekers.jobhubapi.mapper.OfertanteMapper;
+import thelaborseekers.jobhubapi.mapper.PostulanteMapper;
 import thelaborseekers.jobhubapi.model.entity.Ofertante;
 import thelaborseekers.jobhubapi.repository.OfertanteRepository;
 import thelaborseekers.jobhubapi.service.AdminOfertanteService;
@@ -15,50 +21,60 @@ import java.util.List;
 @Service
 public class AdminOfertanteServiceImpl implements AdminOfertanteService {
     private final OfertanteRepository ofertanteRepository;
+    private final OfertanteMapper ofertanteMapper;
 
     @Transactional(readOnly = true)
     @Override
-    public List<Ofertante> findAll() {return ofertanteRepository.findAll();}
+    public List<OfertanteProfileDTO> findAll() {
+        List<Ofertante> ofertantes = ofertanteRepository.findAll();
+        return ofertantes.stream().map(ofertanteMapper::toOfertanteProfileDTO).toList();
+    }
 
     @Transactional(readOnly = true)
     @Override
-    public Page<Ofertante> paginate(Pageable pageable) {
-        return ofertanteRepository.findAll(pageable);
+    public Page<OfertanteProfileDTO> paginate(Pageable pageable) {
+        Page<Ofertante> ofertantes = ofertanteRepository.findAll(pageable);
+        return ofertantes.map(ofertanteMapper::toOfertanteProfileDTO);
     }
 
     @Transactional
     @Override
-    public Ofertante create(Ofertante ofertante) {
-        if(ofertanteRepository.existsByEmail(ofertante.getEmail())) {
-            throw new RuntimeException("Email is already in use");
+    public OfertanteRegisterDTO create(OfertanteRegisterDTO ofertanteRegisterDTO) {
+        if(ofertanteRepository.existsByEmail(ofertanteRegisterDTO.getEmail())) {
+            throw new BadRequestException("Email is already in use");
         }
-        return ofertanteRepository.save(ofertante);
+        Ofertante ofertante = ofertanteMapper.toEntity(ofertanteRegisterDTO);
+        ofertante.setReputationValue(100);
+        ofertante = ofertanteRepository.save(ofertante);
+        return ofertanteMapper.toDTO(ofertante);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Ofertante findById(Integer id) {
-        return ofertanteRepository.findById(id).orElseThrow(()->new RuntimeException("Ofertante not found with id: " + id));
+    public OfertanteProfileDTO findById(Integer id) {
+        Ofertante ofertante = ofertanteRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Ofertante not found with id: " + id));
+        return ofertanteMapper.toOfertanteProfileDTO(ofertante);
     }
 
     @Transactional
     @Override
-    public Ofertante update(Integer id, Ofertante updatedOfertante) {
-        Ofertante ofertanteFromDB = findById(id);
+    public OfertanteRegisterDTO update(Integer id, OfertanteRegisterDTO updatedOfertanteRegisterDTO) {
+        Ofertante ofertanteFromDB = ofertanteRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Ofertante not found with id: " + id));
 
-        if(ofertanteRepository.existsByEmail(updatedOfertante.getEmail())
-                && !ofertanteFromDB.getEmail().equals(updatedOfertante.getEmail())) {
+        if(ofertanteRepository.existsByEmail(updatedOfertanteRegisterDTO.getEmail())
+                && !ofertanteFromDB.getEmail().equals(updatedOfertanteRegisterDTO.getEmail())) {
             throw new RuntimeException("Email is already in use");
         }
-        ofertanteFromDB.setName(updatedOfertante.getName());
-        ofertanteFromDB.setLastName(updatedOfertante.getLastName());
-        ofertanteFromDB.setEmail(updatedOfertante.getEmail());
-        ofertanteFromDB.setPhone(updatedOfertante.getPhone());
-        ofertanteFromDB.setBirthday(updatedOfertante.getBirthday());
-        ofertanteFromDB.setPassword(updatedOfertante.getPassword());
-        ofertanteFromDB.setEmpresa(updatedOfertante.getEmpresa());
+        ofertanteFromDB.setName(updatedOfertanteRegisterDTO.getName());
+        ofertanteFromDB.setLastName(updatedOfertanteRegisterDTO.getLastName());
+        ofertanteFromDB.setEmail(updatedOfertanteRegisterDTO.getEmail());
+        ofertanteFromDB.setPhone(updatedOfertanteRegisterDTO.getPhone());
+        ofertanteFromDB.setBirthday(updatedOfertanteRegisterDTO.getBirthday());
+        ofertanteFromDB.setPassword(updatedOfertanteRegisterDTO.getPassword());
+        ofertanteFromDB.setEmpresa(updatedOfertanteRegisterDTO.getEmpresa());
 
-        return ofertanteRepository.save(ofertanteFromDB);
+        ofertanteFromDB = ofertanteRepository.save(ofertanteFromDB);
+        return ofertanteMapper.toDTO(ofertanteFromDB);
     }
 
 
@@ -66,7 +82,7 @@ public class AdminOfertanteServiceImpl implements AdminOfertanteService {
     @Transactional
     @Override
     public Ofertante updateReputation(Integer id, Integer ratingValue) {
-        Ofertante ofertanteFromDB = findById(id);
+        Ofertante ofertanteFromDB = ofertanteRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Ofertante not found with id: " + id));;
         Integer currentReputation = ofertanteFromDB.getReputationValue();
 
         // Actualizar la reputación
@@ -76,7 +92,7 @@ public class AdminOfertanteServiceImpl implements AdminOfertanteService {
             // Decrementar reputación en 2 puntos si ratingValue es 0
             ofertanteFromDB.setReputationValue(Math.max(currentReputation - 2, 0)); //min=0
         }
-
+        //discutir si es necesario usar dto en esta funcion
         return ofertanteRepository.save(ofertanteFromDB);
     }
 

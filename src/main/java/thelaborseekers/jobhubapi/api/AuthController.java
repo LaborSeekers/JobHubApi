@@ -1,5 +1,6 @@
 package thelaborseekers.jobhubapi.api;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -7,8 +8,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import thelaborseekers.jobhubapi.dto.OfertanteProfileDTO;
+import thelaborseekers.jobhubapi.dto.OfertanteRegisterDTO;
+import thelaborseekers.jobhubapi.dto.PostulanteRegisterDTO;
+import thelaborseekers.jobhubapi.dto.PostulanteProfileDTO;
 import thelaborseekers.jobhubapi.model.entity.Ofertante;
-import thelaborseekers.jobhubapi.model.entity.Postulante;
 import thelaborseekers.jobhubapi.service.AdminOfertanteService;
 import thelaborseekers.jobhubapi.service.AdminPostulanteService;
 import thelaborseekers.jobhubapi.service.ExternalAuthService;
@@ -38,27 +42,27 @@ public class AuthController {
     }
     //Postulantes Section
     @GetMapping("/Postulantes")
-    public List<Postulante> getAllPostulantes() {
+    public List<PostulanteProfileDTO> getAllPostulantes() {
         return adminPostulanteService.findAll();
     }
     @GetMapping("/Postulantes/page")
-    public Page<Postulante> paginatePostulantes(@PageableDefault(size = 5, sort = "email") Pageable pageable) {
+    public Page<PostulanteRegisterDTO> paginatePostulantes(@PageableDefault(size = 5, sort = "email") Pageable pageable) {
         return adminPostulanteService.paginate(pageable);
     }
 
     @PostMapping("/Postulantes")
     @ResponseStatus(HttpStatus.CREATED)
-    public Postulante createPostulante(@RequestBody Postulante postulanteForm) {
+    public PostulanteRegisterDTO createPostulante(@Valid @RequestBody PostulanteRegisterDTO postulanteForm) {
         return adminPostulanteService.create(postulanteForm);
     }
 
     @GetMapping("/Postulantes/{id}")
-    public Postulante getPostulanteById(@PathVariable Integer id) {
+    public PostulanteProfileDTO getPostulanteById(@PathVariable Integer id) {
         return adminPostulanteService.findById(id);
     }
 
     @PutMapping("/Postulantes/{id}")
-    public Postulante updatePostulante(@PathVariable Integer id, @RequestBody Postulante postulanteForm) {
+    public PostulanteRegisterDTO updatePostulante(@PathVariable Integer id, @Valid @RequestBody PostulanteRegisterDTO postulanteForm) {
         return adminPostulanteService.update(id, postulanteForm);
     }
 
@@ -68,19 +72,19 @@ public class AuthController {
         adminPostulanteService.delete(id);
     }
 
-    @GetMapping("/Postulantes/filter")
-    public List<Postulante> filterPostulantesByNameAndLastName(@RequestParam String name, @RequestParam String lastName) {
+    @GetMapping("/Postulantes/filter/{name}/{lastName}")
+    public List<PostulanteProfileDTO> filterPostulantesByNameAndLastName(@PathVariable String name, @PathVariable String lastName) {
         return adminPostulanteService.filterByNameAndLastName(name, lastName);
     }
 
     @GetMapping("/Postulantes/filterByAge")
-    public List<Postulante> filterPostulantesByAge(@RequestParam int age) {
+    public List<PostulanteProfileDTO> filterPostulantesByAge(@RequestParam int age) {
         return adminPostulanteService.filterByAge(age);
     }
 
     //Ofertantes Section
     @GetMapping("/Ofertantes")
-    public List<Ofertante> GetAllOfertantes() {
+    public List<OfertanteProfileDTO> GetAllOfertantes() {
         return adminOfertanteService.findAll();
     }
 
@@ -88,15 +92,15 @@ public class AuthController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/Ofertantes")
-    public Ofertante createOfertante(@RequestBody Ofertante ofertanteForm) {
+    public OfertanteRegisterDTO createOfertante(@Valid @RequestBody OfertanteRegisterDTO ofertanteForm) {
         return adminOfertanteService.create(ofertanteForm);
     }
 
     @GetMapping("/Ofertantes/{id}")
-    public Ofertante getOfertanteById(@PathVariable Integer id) {return adminOfertanteService.findById(id);}
+    public OfertanteProfileDTO getOfertanteById(@PathVariable Integer id) {return adminOfertanteService.findById(id);}
 
     @PutMapping("/Ofertantes/{id}")
-    public Ofertante updateOfertante(@PathVariable Integer id, @RequestBody Ofertante ofertanteForm) {
+    public OfertanteRegisterDTO updateOfertante(@PathVariable Integer id, @Valid @RequestBody OfertanteRegisterDTO ofertanteForm) {
         return adminOfertanteService.update(id, ofertanteForm);
     }
     @PutMapping("/Ofertantes/{id}/rate")

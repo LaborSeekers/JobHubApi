@@ -21,7 +21,7 @@ public interface PostulanteRepository extends JpaRepository<Postulante, Integer>
     boolean existsBySlugAndIdNot(@Param("email") String email, @Param("id") Integer idNot);
 
     // Nuevo: Filtrar por nombre y apellido
-    @Query("SELECT p FROM Postulante p WHERE LOWER(p.name) = LOWER(:name) AND LOWER(p.lastName) = LOWER(:lastName)")
+    @Query("SELECT p FROM Postulante p WHERE LOWER(p.name) = LOWER(:name) AND LOWER(p.lastName) LIKE LOWER(CONCAT(:lastName, '%'))")
     List<Postulante> findByNameAndLastName(@Param("name") String name, @Param("lastName") String lastName);
 
     // Nuevo: Filtrar por edad
