@@ -8,6 +8,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import thelaborseekers.jobhubapi.dto.OfertanteProfileDTO;
+import thelaborseekers.jobhubapi.dto.OfertanteRegisterDTO;
 import thelaborseekers.jobhubapi.dto.PostulanteRegisterDTO;
 import thelaborseekers.jobhubapi.dto.PostulanteProfileDTO;
 import thelaborseekers.jobhubapi.model.entity.Ofertante;
@@ -82,7 +84,7 @@ public class AuthController {
 
     //Ofertantes Section
     @GetMapping("/Ofertantes")
-    public List<Ofertante> GetAllOfertantes() {
+    public List<OfertanteProfileDTO> GetAllOfertantes() {
         return adminOfertanteService.findAll();
     }
 
@@ -90,15 +92,15 @@ public class AuthController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/Ofertantes")
-    public Ofertante createOfertante(@RequestBody Ofertante ofertanteForm) {
+    public OfertanteRegisterDTO createOfertante(@Valid @RequestBody OfertanteRegisterDTO ofertanteForm) {
         return adminOfertanteService.create(ofertanteForm);
     }
 
     @GetMapping("/Ofertantes/{id}")
-    public Ofertante getOfertanteById(@PathVariable Integer id) {return adminOfertanteService.findById(id);}
+    public OfertanteProfileDTO getOfertanteById(@PathVariable Integer id) {return adminOfertanteService.findById(id);}
 
     @PutMapping("/Ofertantes/{id}")
-    public Ofertante updateOfertante(@PathVariable Integer id, @RequestBody Ofertante ofertanteForm) {
+    public OfertanteRegisterDTO updateOfertante(@PathVariable Integer id, @Valid @RequestBody OfertanteRegisterDTO ofertanteForm) {
         return adminOfertanteService.update(id, ofertanteForm);
     }
     @PutMapping("/Ofertantes/{id}/rate")

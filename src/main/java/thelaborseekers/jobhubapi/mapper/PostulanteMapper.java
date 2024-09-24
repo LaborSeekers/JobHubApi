@@ -21,16 +21,17 @@ public class PostulanteMapper {
     }
 
 
-    // Convertir de User a UserProfileDTO para la respuesta
+    // Convertimos el postulante a su DTO perfil
     public PostulanteProfileDTO toPostulanteProfileDTO(Postulante postulante) {
-       PostulanteProfileDTO userProfileDTO = modelMapper.map(postulante, PostulanteProfileDTO.class);
+       //PostulanteProfileDTO userProfileDTO = modelMapper.map(postulante, PostulanteProfileDTO.class);
 
-       userProfileDTO.setName(postulante.getName());
-       userProfileDTO.setLastName(postulante.getLastName());
-       userProfileDTO.setEmail(postulante.getEmail());
-       userProfileDTO.setPhone(postulante.getPhone());
-       userProfileDTO.setBirthday(postulante.getBirthday());
-        return userProfileDTO;
+       //userProfileDTO.setName(postulante.getName());
+       //userProfileDTO.setLastName(postulante.getLastName());
+       //userProfileDTO.setEmail(postulante.getEmail());
+       //userProfileDTO.setPhone(postulante.getPhone());
+       //userProfileDTO.setBirthday(postulante.getBirthday());
+        //return userProfileDTO;
+        return modelMapper.map(postulante, PostulanteProfileDTO.class);
     }
 
 }
