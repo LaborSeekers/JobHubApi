@@ -1,6 +1,5 @@
 package thelaborseekers.jobhubapi.service;
 
-import thelaborseekers.jobhubapi.model.entity.FavoriteJobOffers;
 import thelaborseekers.jobhubapi.model.entity.JobOffer;
 import thelaborseekers.jobhubapi.model.entity.Postulante;
 
