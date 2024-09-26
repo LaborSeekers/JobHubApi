@@ -104,18 +104,22 @@ public class AuthController {
         return adminOfertanteService.update(id, ofertanteForm);
     }
     @PutMapping("/Ofertantes/{id}/rate")
-    public ResponseEntity<String> updateReputation(@PathVariable Integer id, @RequestParam Integer ratingValue) {
+    public ResponseEntity<OfertanteRegisterDTO> updateReputation(@PathVariable Integer id, @RequestParam Integer ratingValue) {
         if (ratingValue == null) {
-            return ResponseEntity.badRequest().body("Rating value is required.");
+            return ResponseEntity.badRequest().body(null);
         }
 
         // Validar que ratingValue esté en el rango permitido (0 o 1)
         if (ratingValue != 0 && ratingValue != 1) {
-            return ResponseEntity.badRequest().body("Rating value must be either 0 or 1.");
+            return ResponseEntity.badRequest().body(null);
         }
-        adminOfertanteService.updateReputation(id, ratingValue);
-        return ResponseEntity.ok("Reputation updated successfully.");
+
+        OfertanteRegisterDTO updatedOfertanteDTO = adminOfertanteService.updateReputation(id, ratingValue);
+
+        // Devolver el DTO en la respuesta
+        return ResponseEntity.ok(updatedOfertanteDTO);
     }
+
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/Ofertantes/{id}")
     public void deleteOfertante(@PathVariable Integer id) {

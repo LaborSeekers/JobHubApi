@@ -80,7 +80,7 @@ public class AdminOfertanteServiceImpl implements AdminOfertanteService {
     //Servicio para operar la reputacion (0 malo y 1 bueno)
     @Transactional
     @Override
-    public Ofertante updateReputation(Integer id, Integer ratingValue) {
+    public OfertanteRegisterDTO updateReputation(Integer id, Integer ratingValue) {
         Ofertante ofertanteFromDB = ofertanteRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Ofertante not found with id: " + id));;
         Integer currentReputation = ofertanteFromDB.getReputationValue();
 
@@ -91,9 +91,13 @@ public class AdminOfertanteServiceImpl implements AdminOfertanteService {
             // Decrementar reputación en 2 puntos si ratingValue es 0
             ofertanteFromDB.setReputationValue(Math.max(currentReputation - 2, 0)); //min=0
         }
-        //discutir si es necesario usar dto en esta funcion
-        return ofertanteRepository.save(ofertanteFromDB);
+        // Guardar el ofertante actualizado
+        Ofertante updatedOfertante = ofertanteRepository.save(ofertanteFromDB);
+
+        // Convertir la entidad a DTO antes de retornarla
+        return ofertanteMapper.toDTO(updatedOfertante);
     }
+
 
     @Transactional
     @Override
