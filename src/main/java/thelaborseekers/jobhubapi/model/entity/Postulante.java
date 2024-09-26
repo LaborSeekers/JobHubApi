@@ -7,6 +7,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 import java.util.Date;
+import java.util.List;
 
 
 @Data
@@ -29,4 +30,9 @@ public class Postulante {
 
     @Column(nullable = true)
     private boolean active;
+
+    // Relación uno a muchos con postulaciones
+    @OneToMany(mappedBy = "postulante", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore // Para evitar ciclos en la serialización JSON
+    private List<Postulacion> postulaciones;
 }
