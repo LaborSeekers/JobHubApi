@@ -21,7 +21,10 @@ INSERT INTO Job_offers (id, title, description, requirements, logo, location, cr
 -- Insertar datos de prueba en la tabla Postulante
 INSERT INTO Postulante (id, name, last_name, email, password, phone, birthday, active) VALUES
                                                                                   (1, 'John', 'Doe', 'john.doe@example.com', 'password789', '555-0103', '1992-07-21', TRUE),
-                                                                                  (2, 'Jane', 'Doe', 'jane.doe@example.com', 'password101', '555-0104', '1993-08-22', TRUE)On conflict do nothing;
+
+                                                                                  (2, 'Jane', 'Doe', 'jane.doe@example.com', 'password101', '555-0104', '1993-08-22', TRUE) On conflict do nothing;
+
+
 
 -- Insertar datos de prueba en la tabla Curriculum
 INSERT INTO Curriculum (id, postulante_id, content) VALUES
