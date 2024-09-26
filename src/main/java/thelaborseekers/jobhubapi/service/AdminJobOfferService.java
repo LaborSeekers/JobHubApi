@@ -1,23 +1,24 @@
 package thelaborseekers.jobhubapi.service;
 
-import thelaborseekers.jobhubapi.model.entity.JobOffer;
+import thelaborseekers.jobhubapi.dto.JobOfferCreateDTO;
+import thelaborseekers.jobhubapi.dto.JobOfferDetailsDTO;
 import thelaborseekers.jobhubapi.model.enums.Reputation;
 
 import java.util.List;
 
 public interface AdminJobOfferService {
 // CRUD
-    JobOffer createJobOffer(JobOffer jobOffer);
+    JobOfferDetailsDTO createJobOffer(JobOfferCreateDTO jobOfferCreateDTO);
 
-    List<JobOffer> getAllJobOffers();
+    List<JobOfferDetailsDTO> getAllJobOffers();
 
-    JobOffer getJobOfferById(Integer jobOfferId);
+    JobOfferDetailsDTO getJobOfferById(Integer jobOfferId);
 
-    JobOffer updateJobOffer(Integer jobOfferId,JobOffer jobOffer);
+    JobOfferDetailsDTO  updateJobOffer(Integer jobOfferId,JobOfferCreateDTO  jobOfferCreateDTO);
 
     void deleteJobOffer(Integer jobOfferId);
 
     Reputation getReputationbyJobOfferId(Integer jobOfferId);
 
-    JobOffer findById(Integer jobOfferId);
+    JobOfferDetailsDTO findById(Integer jobOfferId);
 }

@@ -15,6 +15,6 @@ public interface AdminOfertanteService {
     OfertanteProfileDTO findById(Integer id);
     OfertanteRegisterDTO update(Integer id,OfertanteRegisterDTO updatedOfertante);
     //Servicio para operar la reputacion (0 malo y 1 bueno)
-    Ofertante updateReputation(Integer id, Integer ratingValue);
+    OfertanteRegisterDTO updateReputation(Integer id, Integer ratingValue);
     void delete(Integer id);
 }

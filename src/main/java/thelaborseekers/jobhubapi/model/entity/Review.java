@@ -16,10 +16,10 @@ public class Review {
 
 
     @ManyToOne
-    @JoinColumn(name = "Postulante_id",referencedColumnName = "id",foreignKey = @ForeignKey(name = "fk_postulante"))
+    @JoinColumn(name = "postulante_id",referencedColumnName = "id",foreignKey = @ForeignKey(name = "fk_postulante"))
     private Postulante postulante;
 
     @ManyToOne
-    @JoinColumn(name = "JobOffer_id",referencedColumnName = "id",foreignKey = @ForeignKey(name = "fk_jobOffer"))
+    @JoinColumn(name = "jobOffer_id",referencedColumnName = "id",foreignKey = @ForeignKey(name = "fk_jobOffer"))
     private JobOffer jobOffer;
 }
