@@ -10,7 +10,6 @@ import thelaborseekers.jobhubapi.dto.OfertanteRegisterDTO;
 import thelaborseekers.jobhubapi.exception.BadRequestException;
 import thelaborseekers.jobhubapi.exception.ResourceNotFoundException;
 import thelaborseekers.jobhubapi.mapper.OfertanteMapper;
-import thelaborseekers.jobhubapi.mapper.PostulanteMapper;
 import thelaborseekers.jobhubapi.model.entity.Ofertante;
 import thelaborseekers.jobhubapi.repository.OfertanteRepository;
 import thelaborseekers.jobhubapi.service.AdminOfertanteService;
@@ -63,7 +62,7 @@ public class AdminOfertanteServiceImpl implements AdminOfertanteService {
 
         if(ofertanteRepository.existsByEmail(updatedOfertanteRegisterDTO.getEmail())
                 && !ofertanteFromDB.getEmail().equals(updatedOfertanteRegisterDTO.getEmail())) {
-            throw new RuntimeException("Email is already in use");
+            throw new BadRequestException("Email is already in use");
         }
         ofertanteFromDB.setName(updatedOfertanteRegisterDTO.getName());
         ofertanteFromDB.setLastName(updatedOfertanteRegisterDTO.getLastName());
@@ -99,7 +98,7 @@ public class AdminOfertanteServiceImpl implements AdminOfertanteService {
     @Transactional
     @Override
     public void delete(Integer id) {
-        Ofertante Ofertante = ofertanteRepository.findById(id).orElseThrow(()->new RuntimeException("Ofertante not found with id: " + id));
+        Ofertante Ofertante = ofertanteRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Ofertante not found with id: " + id));
         ofertanteRepository.delete(Ofertante);
     }
 }

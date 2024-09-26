@@ -3,8 +3,7 @@ package thelaborseekers.jobhubapi.service;
 import thelaborseekers.jobhubapi.dto.FavoriteJobOfferCreateDTO;
 import thelaborseekers.jobhubapi.dto.FavoriteJobOfferDetailDTO;
 import thelaborseekers.jobhubapi.model.entity.FavoriteJobOffers;
-import thelaborseekers.jobhubapi.model.entity.JobOffer;
-import thelaborseekers.jobhubapi.model.entity.Postulante;
+
 
 import java.util.List;
 
