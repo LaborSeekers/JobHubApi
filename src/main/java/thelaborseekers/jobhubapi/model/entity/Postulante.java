@@ -1,10 +1,13 @@
 package thelaborseekers.jobhubapi.model.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import java.time.LocalDateTime;
 
 import java.util.Date;
+import java.util.List;
 
 
 @Data
@@ -21,6 +24,15 @@ public class Postulante {
     private String email;
     private String password;
     private String phone;
+    private String otp;
+    private LocalDateTime otpGeneratedTime;
     private Date birthday;
-    private String recoveryToken;
+
+    @Column(nullable = true)
+    private boolean active;
+
+    // Relación uno a muchos con postulaciones
+    @OneToMany(mappedBy = "postulante", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore // Para evitar ciclos en la serialización JSON
+    private List<Postulacion> postulaciones;
 }

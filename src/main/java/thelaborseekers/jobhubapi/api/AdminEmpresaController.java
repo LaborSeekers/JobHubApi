@@ -1,8 +1,10 @@
 package thelaborseekers.jobhubapi.api;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import thelaborseekers.jobhubapi.dto.EmpresaDTO;
 import thelaborseekers.jobhubapi.model.entity.Empresa;
 import thelaborseekers.jobhubapi.service.AdminEmpresaService;
 
@@ -14,7 +16,7 @@ import java.util.List;
 public class AdminEmpresaController {
     private final AdminEmpresaService adminEmpresaService;
     @GetMapping()
-    public List<Empresa> list() {return adminEmpresaService.findAll();
+    public List<EmpresaDTO> list() {return adminEmpresaService.findAll();
     }
 
     //@GetMapping("/page")
@@ -24,17 +26,17 @@ public class AdminEmpresaController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Empresa create(@RequestBody Empresa empresaForm) {
+    public EmpresaDTO create(@Valid @RequestBody EmpresaDTO empresaForm) {
         return adminEmpresaService.create(empresaForm);
     }
 
     @GetMapping("/{id}")
-    public Empresa get(@PathVariable Integer id) {
+    public EmpresaDTO get(@PathVariable Integer id) {
         return adminEmpresaService.findById(id);
     }
 
     @PutMapping("/{id}")
-    public Empresa update(@PathVariable Integer id, @RequestBody Empresa empresaForm) {
+    public EmpresaDTO update(@PathVariable Integer id, @Valid @RequestBody EmpresaDTO empresaForm) {
         return adminEmpresaService.update(id, empresaForm);
     }
 

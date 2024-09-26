@@ -1,8 +1,10 @@
 package thelaborseekers.jobhubapi.api;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import thelaborseekers.jobhubapi.dto.JobModalityDTO;
 import thelaborseekers.jobhubapi.model.entity.JobModality;
 import thelaborseekers.jobhubapi.service.AdminJobModalityService;
 
@@ -15,7 +17,7 @@ public class AdminJobModalityController {
     private final AdminJobModalityService adminJobModalityService;
 
     @GetMapping
-    public List<JobModality> list() {
+    public List<JobModalityDTO> list() {
         return adminJobModalityService.findAll();
     }
 
@@ -23,17 +25,17 @@ public class AdminJobModalityController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public JobModality create(@RequestBody JobModality jobModality) {
+    public JobModalityDTO create(@Valid @RequestBody JobModalityDTO jobModality) {
         return adminJobModalityService.create(jobModality);
     }
 
     @GetMapping("/{id}")
-    public JobModality get(@PathVariable Integer id) {
+    public JobModalityDTO get(@PathVariable Integer id) {
         return adminJobModalityService.findById(id);
     }
 
     @PutMapping("/{id}")
-    public JobModality update(@PathVariable Integer id, @RequestBody JobModality jobModalityForm) {
+    public JobModalityDTO update(@PathVariable Integer id,@Valid @RequestBody JobModalityDTO jobModalityForm) {
 
         return adminJobModalityService.update(id, jobModalityForm);
     }

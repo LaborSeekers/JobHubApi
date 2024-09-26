@@ -39,6 +39,9 @@ public class JobOffer {
     @Column(nullable = false)
     private JobStatus status;
 
+    @Column(name="scheduled_publish_at")
+    private LocalDateTime scheduledPublishAt;
+
     @ManyToOne
     @JoinColumn(name = "jobModality_id",referencedColumnName = "id",foreignKey = @ForeignKey(name = "fk_jobModality"))
     private JobModality jobModality;
