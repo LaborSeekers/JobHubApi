@@ -36,6 +36,10 @@ public class AdminPostulacionServiceImpl implements AdminPostulacionService {
         }
         return "Estado actualizado sin mensaje específico."; // Mensaje por defecto si el estado no coincide
     }
+    @Override
+    public List<Postulacion> obtenerHistorialPorPostulanteId(Long postulanteId) {
+        return postulacionRepository.findByPostulanteId(postulanteId);
+    }
 
 
 }
