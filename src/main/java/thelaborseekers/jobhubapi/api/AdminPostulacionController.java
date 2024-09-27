@@ -45,4 +45,15 @@ public class AdminPostulacionController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Postulación no encontrada");
         }
     }
+    @GetMapping("/historial/{postulanteId}")
+    public ResponseEntity<List<Postulacion>> obtenerHistorialDePostulaciones(@PathVariable Long postulanteId) {
+        List<Postulacion> historial = adminPostulacionService.obtenerHistorialPorPostulanteId(postulanteId);
+        
+        if (historial.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(historial);
+    }
+
+
 }
