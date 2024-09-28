@@ -1,15 +1,15 @@
 package thelaborseekers.jobhubapi.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import thelaborseekers.jobhubapi.model.entity.Ofertante;
+
+import java.util.Optional;
 
 public interface OfertanteRepository extends JpaRepository<Ofertante, Integer> {
 
-    @Query("SELECT COUNT(o)>0 FROM Ofertante o WHERE o.email =:email")
-    boolean existsByEmail(@Param("email") String email);
+    Optional<Ofertante> findByNameAndLastName(String name, String lastName);
 
-    @Query("SELECT COUNT(o) > 0 FROM Ofertante o WHERE o.email = :email AND o.id != :id")
-    boolean existsByEmailAndIdNot(@Param("email") String email, @Param("id") Integer idNot);
+    boolean existsByNameAndLastName(String name, String lastName);
+    //Metodo para verificar si ya existe un autor con el mismo nombre y apellido, excepto el usuario actual
+    boolean existsByNameAndLastNameAndUserIdNot(String name, String lastName, Integer userId);
 }

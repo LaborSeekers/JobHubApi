@@ -12,15 +12,19 @@ import thelaborseekers.jobhubapi.exception.ResourceNotFoundException;
 import thelaborseekers.jobhubapi.mapper.PostulanteMapper;
 import thelaborseekers.jobhubapi.model.entity.Postulante;
 import thelaborseekers.jobhubapi.repository.PostulanteRepository;
+import thelaborseekers.jobhubapi.repository.UserRepository;
 import thelaborseekers.jobhubapi.service.AdminPostulanteService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class AdminPostulanteServiceImpl implements AdminPostulanteService {
+    private final UserRepository userRepository;
     private final PostulanteRepository postulanteRepository;
     private final PostulanteMapper postulanteMapper;
+
     @Transactional(readOnly = true)
     @Override
     public List<PostulanteProfileDTO> findAll() {
@@ -39,11 +43,12 @@ public class AdminPostulanteServiceImpl implements AdminPostulanteService {
     @Transactional
     @Override
     public PostulanteRegisterDTO create(PostulanteRegisterDTO postulanteRegisterDTO) {
-        if(postulanteRepository.existsByEmail(postulanteRegisterDTO.getEmail())) {
+        if(userRepository.existsByEmail(postulanteRegisterDTO.getEmail())) {
             throw new BadRequestException("Email is already in use");
         }
         Postulante postulante = postulanteMapper.toEntity(postulanteRegisterDTO);
         postulante.setActive(false);
+        postulante.setCreatedAt(LocalDateTime.now());
         postulante = postulanteRepository.save(postulante);
         return postulanteMapper.toDTO(postulante);
     }
@@ -60,17 +65,18 @@ public class AdminPostulanteServiceImpl implements AdminPostulanteService {
     public PostulanteRegisterDTO update(Integer id, PostulanteRegisterDTO updatedPostulanteRegisterDTO) {
         Postulante postulanteFromDb =postulanteRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User not found with id: " + id));
 
-        if (postulanteRepository.existsByEmail(updatedPostulanteRegisterDTO.getEmail())
-                && !postulanteFromDb.getEmail().equals(updatedPostulanteRegisterDTO.getEmail())) {
+        if (userRepository.existsByEmail(updatedPostulanteRegisterDTO.getEmail())
+                && !postulanteFromDb.getUser().getEmail().equals(updatedPostulanteRegisterDTO.getEmail())) {
             throw new BadRequestException("Unable to update. Email is already in use");
         }
         postulanteFromDb.setName(updatedPostulanteRegisterDTO.getName());
         postulanteFromDb.setLastName(updatedPostulanteRegisterDTO.getLastName());
-        postulanteFromDb.setEmail(updatedPostulanteRegisterDTO.getEmail());
+        //postulanteFromDb.setEmail(updatedPostulanteRegisterDTO.getEmail());
         postulanteFromDb.setPhone(updatedPostulanteRegisterDTO.getPhone());
         postulanteFromDb.setBirthday(updatedPostulanteRegisterDTO.getBirthday());
-        postulanteFromDb.setPassword(updatedPostulanteRegisterDTO.getPassword());
+        //postulanteFromDb.setPassword(updatedPostulanteRegisterDTO.getPassword());
 
+        postulanteFromDb.setUpdatedAt(LocalDateTime.now());
         postulanteFromDb = postulanteRepository.save(postulanteFromDb);
         return postulanteMapper.toDTO(postulanteFromDb);
     }

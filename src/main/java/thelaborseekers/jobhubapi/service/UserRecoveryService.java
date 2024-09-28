@@ -3,7 +3,9 @@ package thelaborseekers.jobhubapi.service;
 import thelaborseekers.jobhubapi.dto.LoginDto;
 import thelaborseekers.jobhubapi.dto.RegisterDto;
 import thelaborseekers.jobhubapi.model.entity.Postulante;
+import thelaborseekers.jobhubapi.model.entity.User;
 import thelaborseekers.jobhubapi.repository.PostulanteRepository;
+import thelaborseekers.jobhubapi.repository.UserRepository;
 import thelaborseekers.jobhubapi.util.EmailUtil;
 import thelaborseekers.jobhubapi.util.OtpUtil;
 import jakarta.mail.MessagingException;
@@ -20,9 +22,10 @@ public class UserRecoveryService {
     @Autowired
     private EmailUtil emailUtil;
     @Autowired
-    private PostulanteRepository userRepository;
-    @Autowired
     private PostulanteRepository postulanteRepository;
+    @Autowired
+    private UserRepository userRepository;
+
 
     public String register(RegisterDto registerDto) {
         String otp = otpUtil.generateOtp();
@@ -31,22 +34,22 @@ public class UserRecoveryService {
         } catch (MessagingException e) {
             throw new RuntimeException("Unable to send otp please try again");
         }
-        Postulante user = new Postulante();
-        user.setName(registerDto.getName());
+        User user = new User();
+        user.getPostulante().setName(registerDto.getName());
         user.setEmail(registerDto.getEmail());
         user.setPassword(registerDto.getPassword());
-        user.setOtp(otp);
-        user.setOtpGeneratedTime(LocalDateTime.now());
+        user.getPostulante().setOtp(otp);
+        user.getPostulante().setOtpGeneratedTime(LocalDateTime.now());
         userRepository.save(user);
         return "User registration successful";
     }
 
     public String verifyAccount(String email, String otp) {
-        Postulante user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found with this email: " + email));
-        if (user.getOtp().equals(otp) && Duration.between(user.getOtpGeneratedTime(),
+        if (user.getPostulante().getOtp().equals(otp) && Duration.between(user.getPostulante().getOtpGeneratedTime(),
                 LocalDateTime.now()).getSeconds() < (1 * 60)) {
-            user.setActive(true);
+            user.getPostulante().setActive(true);
             userRepository.save(user);
             return "OTP verified you can login";
         }
@@ -54,7 +57,7 @@ public class UserRecoveryService {
     }
 
     public String regenerateOtp(String email) {
-        Postulante user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found with this email: " + email));
         String otp = otpUtil.generateOtp();
         try {
@@ -62,26 +65,26 @@ public class UserRecoveryService {
         } catch (MessagingException e) {
             throw new RuntimeException("Unable to send otp please try again");
         }
-        user.setOtp(otp);
-        user.setOtpGeneratedTime(LocalDateTime.now());
+        user.getPostulante().setOtp(otp);
+        user.getPostulante().setOtpGeneratedTime(LocalDateTime.now());
         userRepository.save(user);
         return "Email sent... please verify account within 1 minute";
     }
 
     public String login(LoginDto loginDto) {
-        Postulante user = userRepository.findByEmail(loginDto.getEmail())
+        User user = userRepository.findByEmail(loginDto.getEmail())
                 .orElseThrow(
                         () -> new RuntimeException("User not found with this email: " + loginDto.getEmail()));
         if (!loginDto.getPassword().equals(user.getPassword())) {
             return "Password is incorrect";
-        } else if (!user.isActive()) {
+        } else if (!user.getPostulante().isActive()) {
             return "your account is not verified";
         }
         return "Login successful";
     }
 
     public String forgotPassword(String email) {
-        Postulante user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(
                         () -> new RuntimeException("User not found with this email: " + email));
         try {
@@ -93,7 +96,7 @@ public class UserRecoveryService {
     }
 
     public String setPassword(String email, String newPassword){
-        Postulante user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(
                         () -> new RuntimeException("User not found with this email: " + email));
         user.setPassword(newPassword);

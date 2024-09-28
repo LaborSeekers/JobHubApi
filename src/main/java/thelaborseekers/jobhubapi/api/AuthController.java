@@ -8,26 +8,41 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import thelaborseekers.jobhubapi.dto.OfertanteProfileDTO;
-import thelaborseekers.jobhubapi.dto.OfertanteRegisterDTO;
-import thelaborseekers.jobhubapi.dto.PostulanteRegisterDTO;
-import thelaborseekers.jobhubapi.dto.PostulanteProfileDTO;
+import thelaborseekers.jobhubapi.dto.*;
 import thelaborseekers.jobhubapi.model.entity.Ofertante;
 import thelaborseekers.jobhubapi.service.AdminOfertanteService;
 import thelaborseekers.jobhubapi.service.AdminPostulanteService;
 import thelaborseekers.jobhubapi.service.ExternalAuthService;
 import thelaborseekers.jobhubapi.model.dto.ExternalAccountDto;
+import thelaborseekers.jobhubapi.service.UserService;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/auth")
 public class AuthController {
+
+    private final UserService userService;
 
     private final ExternalAuthService externalAuthService;
     private final AdminPostulanteService adminPostulanteService;
     private final AdminOfertanteService adminOfertanteService;
+
+    @PostMapping("/register/Postulantes")
+    public ResponseEntity<UserProfileDTO> registerPostulante(@Valid @RequestBody UserRegistrationDTO userRegistrationDTO) {
+        UserProfileDTO userProfile = userService.registerPostulante(userRegistrationDTO);
+        return new ResponseEntity<>(userProfile, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/register/Ofertantes")
+    public ResponseEntity<UserProfileDTO> registerOfertante(@Valid @RequestBody UserRegistrationDTO userRegistrationDTO) {
+        UserProfileDTO userProfile = userService.registerOfertante(userRegistrationDTO);
+        return new ResponseEntity<>(userProfile, HttpStatus.CREATED);
+    }
+
+
+
 
     @PostMapping("/register")
     public ResponseEntity<?> registerExternalAccount(@RequestBody ExternalAccountDto externalAccountDto) {
