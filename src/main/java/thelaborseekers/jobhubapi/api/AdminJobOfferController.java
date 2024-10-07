@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import thelaborseekers.jobhubapi.dto.JobOfferCreateDTO;
 import thelaborseekers.jobhubapi.dto.JobOfferDetailsDTO;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("admin/joboffer")
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('ADMIN','OFERTANTE')")
 public class AdminJobOfferController {
     private final AdminJobOfferService adminJobOfferService;
 

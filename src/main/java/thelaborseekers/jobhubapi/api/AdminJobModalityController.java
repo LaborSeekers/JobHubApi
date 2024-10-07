@@ -3,6 +3,7 @@ package thelaborseekers.jobhubapi.api;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import thelaborseekers.jobhubapi.dto.JobModalityDTO;
 import thelaborseekers.jobhubapi.model.entity.JobModality;
@@ -13,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/admin/JobModalities")
+@PreAuthorize("hasAnyRole('ADMIN')")
 public class AdminJobModalityController {
     private final AdminJobModalityService adminJobModalityService;
 

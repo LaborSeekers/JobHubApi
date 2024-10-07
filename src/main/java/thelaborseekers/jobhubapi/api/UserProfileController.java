@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import thelaborseekers.jobhubapi.dto.UserProfileDTO;
 import thelaborseekers.jobhubapi.service.UserService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/user/profile")
 @RequiredArgsConstructor
@@ -26,5 +28,11 @@ public class UserProfileController {
     public ResponseEntity<UserProfileDTO> updateProfile(@PathVariable Integer id, @Valid @RequestBody UserProfileDTO userProfileDTO) {
         UserProfileDTO updatedProfile = userService.updateUserProfile(id, userProfileDTO);
         return new ResponseEntity<>(updatedProfile, HttpStatus.OK);
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<List<UserProfileDTO>> getAllUserProfiles() {
+        List<UserProfileDTO> userProfileDTOs = userService.getAllUserProfiles();
+        return new ResponseEntity<>(userProfileDTOs, HttpStatus.OK);
     }
 }

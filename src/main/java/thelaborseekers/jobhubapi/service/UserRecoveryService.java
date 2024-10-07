@@ -1,8 +1,7 @@
 package thelaborseekers.jobhubapi.service;
 
-import thelaborseekers.jobhubapi.dto.LoginDto;
+import thelaborseekers.jobhubapi.dto.LoginDTO;
 import thelaborseekers.jobhubapi.dto.RegisterDto;
-import thelaborseekers.jobhubapi.model.entity.Postulante;
 import thelaborseekers.jobhubapi.model.entity.User;
 import thelaborseekers.jobhubapi.repository.PostulanteRepository;
 import thelaborseekers.jobhubapi.repository.UserRepository;
@@ -13,7 +12,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
 
 @Service
 public class UserRecoveryService {
@@ -71,7 +69,7 @@ public class UserRecoveryService {
         return "Email sent... please verify account within 1 minute";
     }
 
-    public String login(LoginDto loginDto) {
+    public String login(LoginDTO loginDto) {
         User user = userRepository.findByEmail(loginDto.getEmail())
                 .orElseThrow(
                         () -> new RuntimeException("User not found with this email: " + loginDto.getEmail()));

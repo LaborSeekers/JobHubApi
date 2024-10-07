@@ -7,9 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import thelaborseekers.jobhubapi.dto.*;
-import thelaborseekers.jobhubapi.model.entity.Ofertante;
 import thelaborseekers.jobhubapi.service.AdminOfertanteService;
 import thelaborseekers.jobhubapi.service.AdminPostulanteService;
 import thelaborseekers.jobhubapi.service.ExternalAuthService;
@@ -35,12 +35,18 @@ public class AuthController {
         return new ResponseEntity<>(userProfile, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping("/register/Ofertantes")
     public ResponseEntity<UserProfileDTO> registerOfertante(@Valid @RequestBody UserRegistrationDTO userRegistrationDTO) {
         UserProfileDTO userProfile = userService.registerOfertante(userRegistrationDTO);
         return new ResponseEntity<>(userProfile, HttpStatus.CREATED);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginDTO loginDTO) {
+        AuthResponseDTO authResponseDTO = userService.login(loginDTO);
+        return new ResponseEntity<>(authResponseDTO, HttpStatus.OK);
+    }
 
 
 
@@ -77,15 +83,19 @@ public class AuthController {
     }
 
     @PutMapping("/Postulantes/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE')")
     public PostulanteRegisterDTO updatePostulante(@PathVariable Integer id, @Valid @RequestBody PostulanteRegisterDTO postulanteForm) {
         return adminPostulanteService.update(id, postulanteForm);
     }
 
+
     @DeleteMapping("/Postulantes/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE')")
     public void deletePostulante(@PathVariable Integer id) {
         adminPostulanteService.delete(id);
     }
+
 
     @GetMapping("/Postulantes/filter/{name}/{lastName}")
     public List<PostulanteProfileDTO> filterPostulantesByNameAndLastName(@PathVariable String name, @PathVariable String lastName) {
@@ -107,6 +117,7 @@ public class AuthController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/Ofertantes")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public OfertanteRegisterDTO createOfertante(@Valid @RequestBody OfertanteRegisterDTO ofertanteForm) {
         return adminOfertanteService.create(ofertanteForm);
     }
@@ -115,9 +126,12 @@ public class AuthController {
     public OfertanteProfileDTO getOfertanteById(@PathVariable Integer id) {return adminOfertanteService.findById(id);}
 
     @PutMapping("/Ofertantes/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public OfertanteRegisterDTO updateOfertante(@PathVariable Integer id, @Valid @RequestBody OfertanteRegisterDTO ofertanteForm) {
         return adminOfertanteService.update(id, ofertanteForm);
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping("/Ofertantes/{id}/rate")
     public ResponseEntity<OfertanteRegisterDTO> updateReputation(@PathVariable Integer id, @RequestParam Integer ratingValue) {
         if (ratingValue == null) {
@@ -137,6 +151,7 @@ public class AuthController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/Ofertantes/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public void deleteOfertante(@PathVariable Integer id) {
         adminOfertanteService.delete(id);
     }
