@@ -32,11 +32,11 @@ public class AdminPostulacionServiceImpl implements AdminPostulacionService {
         postulacionRepository.save(postulacion);
 
         if (nuevoEstado.equalsIgnoreCase("Aprobado")) {
-            return "Felicidades, has pasado a la siguiente etapa en el proceso de selección del puesto de ABC de la empresa XYZ";
+            return "Felicidades, has pasado a la siguiente etapa en el proceso de selección del puesto";
         } else if (nuevoEstado.equalsIgnoreCase("Finalizado")) {
-            return "El proceso de selección para el puesto ABC de la empresa XYZ ha finalizado.";
+            return "El proceso de selección para el puesto ha finalizado.";
         } else if (nuevoEstado.equalsIgnoreCase("Cancelado")) {
-            return "El proceso de selección para el puesto ABC de la empresa XYZ ha sido cancelado.";
+            return "El proceso de selección para el puesto ha sido cancelado.";
         }
         return "Estado actualizado sin mensaje específico.";
     }
