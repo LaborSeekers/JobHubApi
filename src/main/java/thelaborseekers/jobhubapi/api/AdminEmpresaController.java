@@ -32,6 +32,7 @@ public class AdminEmpresaController {
         return adminEmpresaService.create(empresaForm);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE','OFERTANTE')")
     @GetMapping("/{id}")
     public EmpresaDTO get(@PathVariable Integer id) {
         return adminEmpresaService.findById(id);

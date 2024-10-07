@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/admin/curriculums")
-@PreAuthorize("hasAnyRole('ADMIN','POSTULANTE','OFERTANTE')")
+@PreAuthorize("hasAnyRole('ADMIN','POSTULANTE')")
 public class AdminCurriculumController {
 
     private final AdminCurriculumService adminCurriculumService;
@@ -35,6 +35,7 @@ public class AdminCurriculumController {
         return adminCurriculumService.create(curriculumForm);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','OFERTANTE')")
     @GetMapping("/{id}")
     public Curriculum get(@PathVariable Integer id) {
         return adminCurriculumService.findById(id);

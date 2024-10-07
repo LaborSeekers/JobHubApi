@@ -3,6 +3,7 @@ package thelaborseekers.jobhubapi.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import thelaborseekers.jobhubapi.model.entity.Postulacion;
 import thelaborseekers.jobhubapi.service.AdminPostulacionService;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/postulaciones")
+@PreAuthorize("hasAnyRole('ADMIN','POSTULANTE')")
 public class AdminPostulacionController {
 
     @Autowired

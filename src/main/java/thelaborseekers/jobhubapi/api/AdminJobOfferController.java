@@ -30,28 +30,26 @@ public class AdminJobOfferController {
 
     }
 
-
-
-
     @GetMapping
     public ResponseEntity<List<JobOfferDetailsDTO>> getAllJobOffers() {
         List<JobOfferDetailsDTO> jobOffers = adminJobOfferService.getAllJobOffers();
         return new ResponseEntity<>(jobOffers, HttpStatus.OK);
     }
 
-
+    @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE','OFERTANTE')")
     @GetMapping("/{jobOfferId}")
     public ResponseEntity<JobOfferDetailsDTO> getJobOfferById(@PathVariable Integer jobOfferId) {
         JobOfferDetailsDTO jobOffer = adminJobOfferService.getJobOfferById(jobOfferId);
         return ResponseEntity.ok(jobOffer);
 
     }
-
+    @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE','OFERTANTE')")
     @GetMapping("/reputation/{jobOfferId}")
     public ResponseEntity<Reputation> getReputationJobOfferById(@PathVariable Integer jobOfferId) {
         Reputation reputation = adminJobOfferService.getReputationbyJobOfferId(jobOfferId);
         return new ResponseEntity<>(reputation,HttpStatus.OK);
-}
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<JobOfferDetailsDTO> updateJobOffer(@PathVariable Integer id,
                                                              @Valid @RequestBody JobOfferCreateDTO jobOfferCreateDTO) {
@@ -59,5 +57,10 @@ public class AdminJobOfferController {
         return new ResponseEntity<>(updatedJobOffer, HttpStatus.OK);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    public void deleteJobOffer(@PathVariable Integer id) {
+        adminJobOfferService.deleteJobOffer(id);
+    }
 
 }

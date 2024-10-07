@@ -61,11 +61,13 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al registrar la cuenta: " + e.getMessage());
         }
     }
+
     //Postulantes Section
     @GetMapping("/Postulantes")
     public List<PostulanteProfileDTO> getAllPostulantes() {
         return adminPostulanteService.findAll();
     }
+
     @GetMapping("/Postulantes/page")
     public Page<PostulanteRegisterDTO> paginatePostulantes(@PageableDefault(size = 5, sort = "email") Pageable pageable) {
         return adminPostulanteService.paginate(pageable);
@@ -73,6 +75,8 @@ public class AuthController {
 
     @PostMapping("/Postulantes")
     @ResponseStatus(HttpStatus.CREATED)
+
+
     public PostulanteRegisterDTO createPostulante(@Valid @RequestBody PostulanteRegisterDTO postulanteForm) {
         return adminPostulanteService.create(postulanteForm);
     }

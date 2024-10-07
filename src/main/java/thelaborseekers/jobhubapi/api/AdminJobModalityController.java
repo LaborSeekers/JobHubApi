@@ -31,6 +31,7 @@ public class AdminJobModalityController {
         return adminJobModalityService.create(jobModality);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE','OFERTANTE')")
     @GetMapping("/{id}")
     public JobModalityDTO get(@PathVariable Integer id) {
         return adminJobModalityService.findById(id);
