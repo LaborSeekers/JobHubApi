@@ -3,22 +3,22 @@ package thelaborseekers.jobhubapi.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import thelaborseekers.jobhubapi.model.entity.Ofertante;
 import thelaborseekers.jobhubapi.model.entity.Postulante;
 import java.util.Optional;
 
 import java.util.List;
 
 public interface PostulanteRepository extends JpaRepository<Postulante, Integer> {
-    @Query("SELECT COUNT(u)>0 FROM Postulante u WHERE u.email =:email")
-    boolean existsByEmail(@Param("email") String email);
+    //@Query("SELECT COUNT(u)>0 FROM Postulante u WHERE u.email =:email")
+   // boolean existsByEmail(@Param("email") String email);
+    boolean existsByNameAndLastName(String name, String lastName);
 
+    boolean existsByNameAndLastNameAndUserIdNot(String name, String lastName, Integer userId);
     //@Query("SELECT p FROM Postulante p WHERE p.email = :email")
     //Postulante findByEmail(@Param("email") String email);
 
-    Optional<Postulante> findByEmail(String email);
-
-    @Query("SELECT COUNT(u) > 0 FROM Postulante u WHERE u.email = :email AND u.id != :id")
-    boolean existsBySlugAndIdNot(@Param("email") String email, @Param("id") Integer idNot);
+    //Optional<Postulante> findByEmail(String email);
 
     // Nuevo: Filtrar por nombre y apellido
     @Query("SELECT p FROM Postulante p WHERE LOWER(p.name) = LOWER(:name) AND LOWER(p.lastName) LIKE LOWER(CONCAT(:lastName, '%'))")

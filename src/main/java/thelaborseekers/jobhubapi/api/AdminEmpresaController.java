@@ -3,6 +3,7 @@ package thelaborseekers.jobhubapi.api;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import thelaborseekers.jobhubapi.dto.EmpresaDTO;
 import thelaborseekers.jobhubapi.model.entity.Empresa;
@@ -13,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/admin/Empresas")
+@PreAuthorize("hasAnyRole('ADMIN')")
 public class AdminEmpresaController {
     private final AdminEmpresaService adminEmpresaService;
     @GetMapping()
@@ -30,6 +32,7 @@ public class AdminEmpresaController {
         return adminEmpresaService.create(empresaForm);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE','OFERTANTE')")
     @GetMapping("/{id}")
     public EmpresaDTO get(@PathVariable Integer id) {
         return adminEmpresaService.findById(id);

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import thelaborseekers.jobhubapi.model.entity.Curriculum;
 import thelaborseekers.jobhubapi.service.AdminCurriculumService;
@@ -13,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/admin/curriculums")
+@PreAuthorize("hasAnyRole('ADMIN','POSTULANTE')")
 public class AdminCurriculumController {
 
     private final AdminCurriculumService adminCurriculumService;
@@ -33,6 +35,7 @@ public class AdminCurriculumController {
         return adminCurriculumService.create(curriculumForm);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','OFERTANTE')")
     @GetMapping("/{id}")
     public Curriculum get(@PathVariable Integer id) {
         return adminCurriculumService.findById(id);

@@ -21,18 +21,29 @@ public class Postulante {
 
     private String name;
     private String lastName;
-    private String email;
-    private String password;
+    //private String email;
+    //private String password;
     private String phone;
     private String otp;
     private LocalDateTime otpGeneratedTime;
     private Date birthday;
 
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     @Column(nullable = true)
     private boolean active;
+
+    @OneToOne
+    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    private User user;
 
     // Relación uno a muchos con postulaciones
     @OneToMany(mappedBy = "postulante", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore // Para evitar ciclos en la serialización JSON
     private List<Postulacion> postulaciones;
+
+
 }

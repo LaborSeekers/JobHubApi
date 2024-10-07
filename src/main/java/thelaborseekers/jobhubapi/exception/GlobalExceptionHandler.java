@@ -33,6 +33,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(RoleNotFoundException.class)
+    public ResponseEntity<CustomErrorResponse> handleRoleNotFoundException(RoleNotFoundException ex, WebRequest request){
+        CustomErrorResponse err = new CustomErrorResponse(LocalDateTime.now(), ex.getMessage(), request.getDescription(false));
+
+        return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<CustomErrorResponse> handleAllException(Exception ex, WebRequest request) {
         CustomErrorResponse err = new CustomErrorResponse(LocalDateTime.now(),
@@ -46,10 +53,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         String msg = ex.getBindingResult().getFieldErrors().stream()
                 .map(e ->e.getField().concat(":").concat(e.getDefaultMessage())
         ).collect(Collectors.joining(","));
-
-        /*for(FieldError err : ex.getBindingResult().getFieldErrors()){
-            msg += err.getField().concat(":").concat(err.getDefaultMessage());
-        }*/
 
         CustomErrorResponse err = new CustomErrorResponse(LocalDateTime.now(),
                 msg,

@@ -3,6 +3,7 @@ package thelaborseekers.jobhubapi.api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import thelaborseekers.jobhubapi.dto.FavoriteJobOfferCreateDTO;
 import thelaborseekers.jobhubapi.dto.FavoriteJobOfferDetailDTO;
@@ -13,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/admin/fav-job-offers")
+@PreAuthorize("hasAnyRole('ADMIN','POSTULANTE')")
 public class AdminFavoriteJobOffersController {
     private final AdminFavoriteJobOffersService adminFavoriteJobOffersService;
 
