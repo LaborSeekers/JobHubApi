@@ -69,7 +69,7 @@ public class AdminPostulanteServiceImpl implements AdminPostulanteService {
                 && !postulanteFromDb.getUser().getEmail().equals(updatedPostulanteRegisterDTO.getEmail())) {
             throw new BadRequestException("Unable to update. Email is already in use");
         }
-        postulanteFromDb.setName(updatedPostulanteRegisterDTO.getName());
+        postulanteFromDb.setFirstName(updatedPostulanteRegisterDTO.getFirstName());
         postulanteFromDb.setLastName(updatedPostulanteRegisterDTO.getLastName());
         //postulanteFromDb.setEmail(updatedPostulanteRegisterDTO.getEmail());
         postulanteFromDb.setPhone(updatedPostulanteRegisterDTO.getPhone());
@@ -90,7 +90,7 @@ public class AdminPostulanteServiceImpl implements AdminPostulanteService {
     @Transactional(readOnly = true)
     @Override
     public List<PostulanteProfileDTO> filterByNameAndLastName(String name, String lastName) {
-        List<Postulante> postulantes = postulanteRepository.findByNameAndLastName(name,lastName);
+        List<Postulante> postulantes = postulanteRepository.findByFirstNameAndLastName(name,lastName);
         return postulantes.stream().map(postulanteMapper::toPostulanteProfileDTO).toList();
     }
 

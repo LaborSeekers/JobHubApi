@@ -7,9 +7,9 @@ import java.util.Optional;
 
 public interface OfertanteRepository extends JpaRepository<Ofertante, Integer> {
 
-    Optional<Ofertante> findByNameAndLastName(String name, String lastName);
+    Optional<Ofertante> findByFirstNameAndLastName(String name, String lastName);
 
-    boolean existsByNameAndLastName(String name, String lastName);
+    boolean existsByFirstNameAndLastName(String firstName, String lastName);
     //Metodo para verificar si ya existe un autor con el mismo nombre y apellido, excepto el usuario actual
-    boolean existsByNameAndLastNameAndUserIdNot(String name, String lastName, Integer userId);
+    boolean existsByFirstNameAndLastNameAndUserIdNot(String firstName, String lastName, Integer userId);
 }

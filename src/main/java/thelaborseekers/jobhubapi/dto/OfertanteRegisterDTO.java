@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import thelaborseekers.jobhubapi.model.entity.Empresa;
-import thelaborseekers.jobhubapi.model.enums.Reputation;
 
 import java.util.Date;
 
@@ -16,7 +15,7 @@ public class OfertanteRegisterDTO {
 
     @NotBlank(message = "El nombre es obligatorio")
     @Size(min = 2, max = 50,message = "El nombre debe tener entre 2 a 50 caracteres")
-    private String name;
+    private String firstName;
 
     @NotBlank(message = "El apellido es obligatorio")
     @Size(min = 2, max = 50,message = "El apellido debe tener entre 2 a 50 caracteres")

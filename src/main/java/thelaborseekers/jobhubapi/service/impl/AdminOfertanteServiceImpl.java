@@ -68,7 +68,7 @@ public class AdminOfertanteServiceImpl implements AdminOfertanteService {
                 && !ofertanteFromDB.getUser().getEmail().equals(updatedOfertanteRegisterDTO.getEmail())) {
             throw new BadRequestException("Email is already in use");
         }
-        ofertanteFromDB.setName(updatedOfertanteRegisterDTO.getName());
+        ofertanteFromDB.setFirstName(updatedOfertanteRegisterDTO.getFirstName());
         ofertanteFromDB.setLastName(updatedOfertanteRegisterDTO.getLastName());
         //ofertanteFromDB.setEmail(updatedOfertanteRegisterDTO.getEmail());
         ofertanteFromDB.setPhone(updatedOfertanteRegisterDTO.getPhone());

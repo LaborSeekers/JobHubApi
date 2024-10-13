@@ -10,7 +10,7 @@ import java.util.Date;
 public class UserRegistrationDTO {
 
     @NotBlank(message = "El nombre es obligatorio")
-    private String name;
+    private String firstName;
     @NotBlank(message = "El apellido es obligatorio")
     private String lastName;
     @Email(message = "El correo electronico no es válido")

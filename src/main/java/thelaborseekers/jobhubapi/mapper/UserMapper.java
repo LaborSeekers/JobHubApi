@@ -24,14 +24,14 @@ public class UserMapper {
     public UserProfileDTO toUserProfileDTO(User user) {
       UserProfileDTO userProfileDTO = modelMapper.map(user, UserProfileDTO.class);
       if (user.getOfertante() != null) {
-          userProfileDTO.setName(user.getOfertante().getName());
+          userProfileDTO.setFirstName(user.getOfertante().getFirstName());
           userProfileDTO.setLastName(user.getOfertante().getLastName());
           userProfileDTO.setEmpresa(user.getOfertante().getEmpresa());
           userProfileDTO.setBirthday(user.getOfertante().getBirthday());
           userProfileDTO.setPhone(user.getOfertante().getPhone());
       }
       if (user.getPostulante() != null) {
-          userProfileDTO.setName(user.getPostulante().getName());
+          userProfileDTO.setFirstName(user.getPostulante().getFirstName());
           userProfileDTO.setLastName(user.getPostulante().getLastName());
           userProfileDTO.setBirthday(user.getPostulante().getBirthday());
           userProfileDTO.setPhone(user.getPostulante().getPhone());
@@ -48,8 +48,8 @@ public class UserMapper {
         AuthResponseDTO authResponseDTO =  new AuthResponseDTO();
         authResponseDTO.setToken(token);
 
-        String firstName = (user.getPostulante() != null) ? user.getPostulante().getName()
-                :(user.getOfertante() != null)? user.getOfertante().getName()
+        String firstName = (user.getPostulante() != null) ? user.getPostulante().getFirstName()
+                :(user.getOfertante() != null)? user.getOfertante().getFirstName()
                 :"Admin";
         String lastName = (user.getPostulante() != null) ? user.getPostulante().getLastName()
                 :(user.getOfertante() != null)? user.getOfertante().getLastName()
