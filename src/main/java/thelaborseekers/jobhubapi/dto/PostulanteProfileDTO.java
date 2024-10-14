@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import thelaborseekers.jobhubapi.model.entity.Curriculum;
 
 import java.util.Date;
 @Data
@@ -29,4 +30,5 @@ public class PostulanteProfileDTO {
     @NotNull(message = "La fecha de cumpleaños es obligatoria")
     @Past(message = "La fecha de nacimiento debe ser una fecha pasada")
     private Date birthday;
+    private CurriculumDTO curriculum;
 }
