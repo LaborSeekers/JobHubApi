@@ -1,12 +1,12 @@
 INSERT INTO Empresa (name, description) VALUES
                                                 ( 'Tech Innovators', 'A leading company in tech innovation.'),
                                                 ( 'Health Solutions', 'Provider of health and wellness solutions.') On conflict do nothing;
-/*
+
 -- Insertar datos de prueba en la tabla Ofertante
 INSERT INTO Ofertante (id, name, last_name, phone, birthday,reputation, reputation_value, empresa_id) VALUES
                                                                                                               (1, 'Alice', 'Brown',  '555-0101', '1985-04-12','BAJA', 5, 1),
                                                                                                               (2, 'Bob', 'Smith',  '555-0102', '1990-06-15', 'ALTA', 100, 2)On conflict do nothing;
-*/
+
 -- Insertar datos de prueba en la tabla JobModality (suponiendo que existe)
 INSERT INTO Job_modality (id, name, description) VALUES
                                        (1, 'In person','En esta modalidad trabajas desde una sede asignada'),
@@ -19,12 +19,12 @@ INSERT INTO Job_offers (id, title, description, requirements, logo, location, cr
                                                                                                                                                    (3, 'AI Specialist', 'Develop and maintain AI models.', 'Python', 'logo3.png', 'Los Angeles', '2024-09-05T09:00:00', 95000, 'Health insurance, stock options', 'ACTIVE', 2, 2) On conflict do nothing;
 
 -- Insertar datos de prueba en la tabla Postulante
-/*INSERT INTO Postulante (id, name, last_name, phone, birthday,created_at, active) VALUES
+INSERT INTO Postulante (id, name, last_name, phone, birthday,created_at, active) VALUES
                                                                                   (1, 'John', 'Doe', '555-0103', '1992-07-21',localtime, TRUE),
 
                                                                                   (2, 'Jane', 'Doe',  '555-0104', '1993-08-22',localtime, TRUE) On conflict do nothing;
 
-*/
+
 
 -- Insertar datos de prueba en la tabla Curriculum
 INSERT INTO Curriculum (id, postulante_id, content) VALUES
@@ -47,6 +47,5 @@ INSERT INTO Postulacion (id, estado, fecha_aplicacion, postulante_id, oferta_lab
                                                                                              (1, 'Pendiente', '2024-09-10', 3, 1),
                                                                                              (2, 'Aprobado', '2024-09-11', 2, 2),
                                                                                              (3, 'Cancelado', '2024-09-12', 3, 2)ON CONFLICT DO NOTHING;
-/*
+
 INSERT INTO Users (id, email,password) values (1,'u201816862@upc.edu.pe','12345678987')ON CONFLICT DO NOTHING;
-*/

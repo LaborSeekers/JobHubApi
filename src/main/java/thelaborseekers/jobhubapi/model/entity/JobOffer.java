@@ -2,12 +2,16 @@ package thelaborseekers.jobhubapi.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import thelaborseekers.jobhubapi.model.enums.JobStatus;
 
 import java.time.LocalDateTime;
 
 @Data
 @Entity
+@Getter
+@Setter
 @Table(name = "JobOffers")
 public class JobOffer {
     @Id
