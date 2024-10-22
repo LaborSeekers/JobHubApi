@@ -20,7 +20,7 @@ public class SubscriptionMapper {
     public SubscriptionDTO toDto(Subscription subscription) {
         SubscriptionDTO dto = new SubscriptionDTO();
         dto.setId(subscription.getId());
-        dto.setOfertante(subscription.getOfertante().getName() + " " + subscription.getOfertante().getLastName());
+        dto.setOfertante(subscription.getOfertante().getFirstName() + " " + subscription.getOfertante().getLastName());
         dto.setStartDate(subscription.getStartDate());
         dto.setEndDate(subscription.getEndDate());
         dto.setCreateDate(subscription.getCreateDate());
