@@ -137,8 +137,9 @@ public class UserServiceImpl implements UserService {
         userRegistrationDTO.setPassword(passwordEncoder.encode(userRegistrationDTO.getPassword()));
         User user = userMapper.toEntity(userRegistrationDTO);
         user.setRole(role);
+        Postulante postulante = new Postulante();
+        Ofertante ofertante = new Ofertante();
         if(roleEnum == Erole.POSTULANTE){
-            Postulante postulante = new Postulante();
             postulante.setName(userRegistrationDTO.getName());
             postulante.setLastName(userRegistrationDTO.getLastName());
             postulante.setPhone(userRegistrationDTO.getPhone());
@@ -148,7 +149,6 @@ public class UserServiceImpl implements UserService {
             postulante.setUser(user);
             user.setPostulante(postulante);
         } else if (roleEnum == Erole.OFERTANTE) {
-            Ofertante ofertante = new Ofertante();
             ofertante.setName(userRegistrationDTO.getName());
             ofertante.setLastName(userRegistrationDTO.getLastName());
             ofertante.setPhone(userRegistrationDTO.getPhone());
@@ -160,6 +160,11 @@ public class UserServiceImpl implements UserService {
             user.setOfertante(ofertante);
         }
         User savedUser = userRepository.save(user);
+        if(roleEnum == Erole.POSTULANTE){
+            postulanteRepository.save(postulante);
+        } else if (roleEnum == Erole.OFERTANTE) {
+            ofertanteRepository.save(ofertante);
+        }
         return userMapper.toUserProfileDTO(savedUser);
     }
 }

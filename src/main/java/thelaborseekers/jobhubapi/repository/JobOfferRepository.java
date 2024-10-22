@@ -14,4 +14,6 @@ public interface JobOfferRepository extends JpaRepository<JobOffer, Integer> {
 
     @Query("SELECT j FROM JobOffer j WHERE (:location IS NULL OR j.location = :location) AND (:modality IS NULL OR j.jobModality = :modality)")
     List<JobOffer> findByLocationAndModality(@Param("location") String location, @Param("modality") Integer modality);
+
+    List<JobOffer> findByLocation(String location);
 }

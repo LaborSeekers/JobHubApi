@@ -21,4 +21,6 @@ public interface AdminJobOfferService {
     Reputation getReputationbyJobOfferId(Integer jobOfferId);
 
     JobOfferDetailsDTO findById(Integer jobOfferId);
+
+    List<JobOfferDetailsDTO> getRecommendations(Integer postulanteId);
 }

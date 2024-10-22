@@ -3,25 +3,32 @@ package thelaborseekers.jobhubapi.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import thelaborseekers.jobhubapi.dto.FavoriteJobOfferDetailDTO;
 import thelaborseekers.jobhubapi.dto.JobOfferCreateDTO;
 import thelaborseekers.jobhubapi.dto.JobOfferDetailsDTO;
 import thelaborseekers.jobhubapi.exception.BadRequestException;
 import thelaborseekers.jobhubapi.exception.ResourceNotFoundException;
 import thelaborseekers.jobhubapi.mapper.JobOfferMapper;
 import thelaborseekers.jobhubapi.mapper.OfertanteMapper;
+import thelaborseekers.jobhubapi.model.entity.FavoriteJobOffers;
 import thelaborseekers.jobhubapi.model.entity.JobModality;
 import thelaborseekers.jobhubapi.model.entity.JobOffer;
 import thelaborseekers.jobhubapi.model.entity.Ofertante;
 import thelaborseekers.jobhubapi.model.enums.JobStatus;
 import thelaborseekers.jobhubapi.model.enums.Reputation;
+import thelaborseekers.jobhubapi.repository.FavoriteJobOffersRepository;
 import thelaborseekers.jobhubapi.repository.JobModalityRepository;
 import thelaborseekers.jobhubapi.repository.JobOfferRepository;
 import thelaborseekers.jobhubapi.repository.OfertanteRepository;
+import thelaborseekers.jobhubapi.service.AdminFavoriteJobOffersService;
 import thelaborseekers.jobhubapi.service.AdminJobOfferService;
 import thelaborseekers.jobhubapi.service.AdminOfertanteService;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -32,6 +39,7 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
     private final OfertanteRepository ofertanteRepository;
     private final JobModalityRepository jobModalityRepository;
     private final JobOfferMapper jobOfferMapper;
+    private final FavoriteJobOffersRepository favoriteJobOffersRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -167,4 +175,47 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
             return jobOfferMapper.toJobOfferDetailsDTO(jobOffer);
         }
 
+    @Override
+    public List<JobOfferDetailsDTO> getRecommendations(Integer postulanteId) {
+        List<FavoriteJobOffers> favorites = favoriteJobOffersRepository.findByPostulanteId(postulanteId);
+        Map<JobOffer, Double> scores = new HashMap<>();
+
+        for (FavoriteJobOffers favoriteJobOffers : favorites) {
+            JobOffer favoritejobOffer = favoriteJobOffers.getJobOffer();
+
+            List<JobOffer> similarJobs = jobOfferRepository.findByLocation(favoritejobOffer.getLocation());
+
+            for (JobOffer similarJob : similarJobs) {
+                double score = calculateScore(favoritejobOffer, similarJob);
+                scores.put(similarJob, scores.getOrDefault(similarJob, 0.0) + score);
+            }
+        }
+        return scores.entrySet().stream()
+                .sorted(Map.Entry.<JobOffer, Double>comparingByValue().reversed())
+                .map(Map.Entry::getKey)
+                .limit(5)
+                .map(jobOfferMapper::toJobOfferDetailsDTO)
+                .toList();
     }
+
+    private double calculateScore(JobOffer favoriteJob, JobOffer similarJob) {
+        double score = 0.0;
+
+        if (favoriteJob.getJobModality().equals(similarJob.getJobModality())) {
+            score += 1.0;
+        }
+
+        if (favoriteJob.getLocation().equalsIgnoreCase(similarJob.getLocation())) {
+            score += 2.0;
+        }
+
+        double salaryDifference = Math.abs(favoriteJob.getSalary() - similarJob.getSalary());
+        if (salaryDifference <= (favoriteJob.getSalary() * 0.1)) {
+            score += 1.0;
+        } else if (salaryDifference <= (favoriteJob.getSalary() * 0.2)) {
+            score += 0.5;
+        }
+
+        return score;
+    }
+}
