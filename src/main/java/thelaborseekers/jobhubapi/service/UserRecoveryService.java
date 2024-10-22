@@ -75,7 +75,7 @@ public class UserRecoveryService {
                         () -> new RuntimeException("User not found with this email: " + loginDto.getEmail()));
         if (!loginDto.getPassword().equals(user.getPassword())) {
             return "Password is incorrect";
-        } else if (!user.getPostulante().isActive()) {
+        } else if (!user.getPostulante().getActive()) {
             return "your account is not verified";
         }
         return "Login successful";

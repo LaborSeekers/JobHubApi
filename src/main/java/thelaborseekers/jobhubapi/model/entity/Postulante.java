@@ -4,6 +4,9 @@ package thelaborseekers.jobhubapi.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 import java.util.Date;
@@ -12,6 +15,8 @@ import java.util.List;
 
 @Data
 @Entity // crea la tabla
+@Getter
+@Setter
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name="Postulante")
 public class Postulante {
@@ -33,8 +38,8 @@ public class Postulante {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(nullable = true)
-    private boolean active;
+    @Column
+    private Boolean active;
 
     @OneToOne
     @JoinColumn(name = "user_id",referencedColumnName = "id")
