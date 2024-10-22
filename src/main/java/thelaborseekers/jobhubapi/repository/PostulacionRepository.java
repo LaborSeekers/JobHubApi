@@ -8,5 +8,5 @@ import thelaborseekers.jobhubapi.model.entity.Postulacion;
 @Repository
 public interface PostulacionRepository extends JpaRepository<Postulacion, Long> {
      // Nuevo método para obtener el historial de postulaciones de un postulante
-    List<Postulacion> findByPostulanteId(Long postulanteId);
+    List<Postulacion> findByPostulanteId(Integer postulanteId);
 }

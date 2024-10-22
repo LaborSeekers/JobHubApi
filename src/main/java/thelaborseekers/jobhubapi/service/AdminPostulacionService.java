@@ -13,5 +13,5 @@ public interface AdminPostulacionService {
 
     String notificarCambioDeEstado(Postulacion postulacion, String nuevoEstado);
     // Nuevo método para obtener historial
-    List<Postulacion> obtenerHistorialPorPostulanteId(Long postulanteId);
+    List<Postulacion> obtenerHistorialPorPostulanteId(Integer postulanteId);
 }

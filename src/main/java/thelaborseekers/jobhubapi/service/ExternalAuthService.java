@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import thelaborseekers.jobhubapi.model.dto.ExternalAccountDto;
-import thelaborseekers.jobhubapi.model.entity.Ofertante;
 import thelaborseekers.jobhubapi.model.entity.User;
 import thelaborseekers.jobhubapi.repository.OfertanteRepository;
 import thelaborseekers.jobhubapi.repository.UserRepository;
@@ -27,7 +26,7 @@ public class ExternalAuthService {
 
         // Crea una nueva instancia de Ofertante y establece sus propiedades
         User user = new User();
-        user.getOfertante().setName(externalAccountDto.getName());
+        user.getOfertante().setFirstName(externalAccountDto.getName());
         user.setEmail(externalAccountDto.getEmail());
         user.setPassword(generatePassword());
         user.getOfertante().setPhone("");

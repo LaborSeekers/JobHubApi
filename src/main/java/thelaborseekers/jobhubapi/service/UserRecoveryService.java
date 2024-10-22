@@ -33,7 +33,7 @@ public class UserRecoveryService {
             throw new RuntimeException("Unable to send otp please try again");
         }
         User user = new User();
-        user.getPostulante().setName(registerDto.getName());
+        user.getPostulante().setFirstName(registerDto.getName());
         user.setEmail(registerDto.getEmail());
         user.setPassword(registerDto.getPassword());
         user.getPostulante().setOtp(otp);

@@ -48,7 +48,7 @@ public class AdminPostulacionController {
         }
     }
     @GetMapping("/historial/{postulanteId}")
-    public ResponseEntity<List<Postulacion>> obtenerHistorialDePostulaciones(@PathVariable Long postulanteId) {
+    public ResponseEntity<List<Postulacion>> obtenerHistorialDePostulaciones(@PathVariable Integer postulanteId) {
         List<Postulacion> historial = adminPostulacionService.obtenerHistorialPorPostulanteId(postulanteId);
         
         if (historial.isEmpty()) {
