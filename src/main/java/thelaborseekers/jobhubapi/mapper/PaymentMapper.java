@@ -20,7 +20,7 @@ public class PaymentMapper {
 
         PaymentDTO dto = new PaymentDTO();
         dto.setId(payment.getId());
-        dto.setOfertante(payment.getOfertante().getName() + " " + payment.getOfertante().getLastName());
+        dto.setOfertante(payment.getOfertante().getFirstName() + " " + payment.getOfertante().getLastName());
         dto.setType(payment.getType());
         dto.setPaymentDate(payment.getPaymentDate());
         dto.setAmount(payment.getAmount());
