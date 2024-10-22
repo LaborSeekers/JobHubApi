@@ -4,8 +4,6 @@ import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import thelaborseekers.jobhubapi.dto.PaymentDTO;
 import thelaborseekers.jobhubapi.dto.SubscriptionCreateDTO;
@@ -45,6 +43,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Value("${spring.mail.username}")
     private String mailFrom;
+
+    @Value("${JobHub.domain}")
+    private String domain;
 
     @Override
     public SubscriptionDTO createSubscription(SubscriptionCreateDTO subscription) {
@@ -209,6 +210,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         model.put("expirationDate", subscriptionDTO.getEndDate());
         model.put("paymentFrequency", subscriptionDTO.getPaymentFrequency());
         model.put("actualPrice", subscriptionDTO.getTotalAmount());
+        model.put("renewalUrl", domain + "/Ofertantes/subscription");
 
         Mail mail = emailService.createMail(
                 userEmail,
