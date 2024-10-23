@@ -1,10 +1,12 @@
 package thelaborseekers.jobhubapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import thelaborseekers.jobhubapi.dto.JobOfferCreateDTO;
 import thelaborseekers.jobhubapi.dto.JobOfferDetailsDTO;
+import thelaborseekers.jobhubapi.dto.JobOfferFilterRequestDTO;
 import thelaborseekers.jobhubapi.exception.BadRequestException;
 import thelaborseekers.jobhubapi.exception.ResourceNotFoundException;
 import thelaborseekers.jobhubapi.mapper.JobOfferMapper;
@@ -15,6 +17,7 @@ import thelaborseekers.jobhubapi.model.entity.Ofertante;
 import thelaborseekers.jobhubapi.model.enums.JobStatus;
 import thelaborseekers.jobhubapi.model.enums.Reputation;
 import thelaborseekers.jobhubapi.repository.JobModalityRepository;
+import thelaborseekers.jobhubapi.repository.JobOfferFilterRequestRepository;
 import thelaborseekers.jobhubapi.repository.JobOfferRepository;
 import thelaborseekers.jobhubapi.repository.OfertanteRepository;
 import thelaborseekers.jobhubapi.service.AdminJobOfferService;
@@ -22,6 +25,7 @@ import thelaborseekers.jobhubapi.service.AdminOfertanteService;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -32,6 +36,9 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
     private final OfertanteRepository ofertanteRepository;
     private final JobModalityRepository jobModalityRepository;
     private final JobOfferMapper jobOfferMapper;
+
+    @Autowired
+    private JobOfferFilterRequestRepository jobOfferFilterRequestRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -167,4 +174,14 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
             return jobOfferMapper.toJobOfferDetailsDTO(jobOffer);
         }
 
+    @Override
+    public List<JobOfferFilterRequestDTO> filterJobOffer(JobOfferFilterRequestDTO filterRequest) {
+
+        List<JobOffer> jobOffers = jobOfferFilterRequestRepository.findByLocationAndTitle(filterRequest.getLocation(), filterRequest.getTitle());
+
+        return jobOffers.stream()
+                .map(jobOfferMapper::toDTO)
+                .collect(Collectors.toList());
     }
+
+}
