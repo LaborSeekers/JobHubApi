@@ -65,6 +65,7 @@ public class AdminJobOfferController {
         adminJobOfferService.deleteJobOffer(id);
     }
 
+    /*
     @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE','OFERTANTE')")
     @PostMapping("/ofertas/filter")
     public ResponseEntity<List<JobOfferFilterRequestDTO>> filterJobOffers(@RequestBody JobOfferFilterRequestDTO jobOfferFilterRequestDTO) {
@@ -74,6 +75,18 @@ public class AdminJobOfferController {
         {
             throw new BadRequestException("No se encontraron ofertas con los filtros aplicados. ");
         }
+        return new ResponseEntity<>(jobOffers, HttpStatus.OK);
+    }
+     */
+
+    @PostMapping("/ofertas/filter")
+    public ResponseEntity<List<JobOfferFilterRequestDTO>> filterJobOffer(@RequestParam(required = false, defaultValue = "") String location, @RequestParam(required = false, defaultValue = "") String title){
+        List<JobOfferFilterRequestDTO> jobOffers = adminJobOfferService.filterJobOffer(location, title);
+
+        if(jobOffers.isEmpty()){
+            throw new BadRequestException("No se encontraron ofertas con los filtros aplicados. ");
+        }
+
         return new ResponseEntity<>(jobOffers, HttpStatus.OK);
     }
 }

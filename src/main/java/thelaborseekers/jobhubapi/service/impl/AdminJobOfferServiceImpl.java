@@ -174,6 +174,7 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
             return jobOfferMapper.toJobOfferDetailsDTO(jobOffer);
         }
 
+        /*
     @Override
     public List<JobOfferFilterRequestDTO> filterJobOffer(JobOfferFilterRequestDTO filterRequest) {
 
@@ -183,5 +184,27 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
                 .map(jobOfferMapper::toDTO)
                 .collect(Collectors.toList());
     }
+    */
 
+    @Override
+    public List<JobOfferFilterRequestDTO> filterJobOffer(String location, String title){
+        List<JobOffer> jobOffers;
+
+        if(!location.isEmpty() && !title.isEmpty()){
+            jobOffers = jobOfferFilterRequestRepository.findByLocationAndTitle(location, title);
+        } else if (!location.isEmpty()) {
+            //Solo ubicacion
+            jobOffers = jobOfferFilterRequestRepository.findByLocation(location);
+        } else if (!title.isEmpty()) {
+            //Solo titulo
+            jobOffers = jobOfferFilterRequestRepository.findByTitle(title);
+        } else {
+            //ningun filtro
+            jobOffers = jobOfferFilterRequestRepository.findAll();
+        }
+
+        return jobOffers.stream()
+                .map(jobOfferMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 }

@@ -23,5 +23,7 @@ public interface AdminJobOfferService {
 
     JobOfferDetailsDTO findById(Integer jobOfferId);
 
-    List<JobOfferFilterRequestDTO> filterJobOffer(JobOfferFilterRequestDTO filterRequestDTO);
+    //List<JobOfferFilterRequestDTO> filterJobOffer(JobOfferFilterRequestDTO filterRequestDTO);
+
+    List<JobOfferFilterRequestDTO> filterJobOffer(String location, String title);
 }

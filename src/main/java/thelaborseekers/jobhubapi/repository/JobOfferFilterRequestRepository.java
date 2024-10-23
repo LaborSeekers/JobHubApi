@@ -9,5 +9,9 @@ import java.util.List;
 @Repository
 public interface JobOfferFilterRequestRepository extends JpaRepository<JobOffer, Long> {
 
+    List<JobOffer> findByLocation(String location);
+
+    List<JobOffer> findByTitle(String title);
+
     List<JobOffer> findByLocationAndTitle(String location, String title);
 }
