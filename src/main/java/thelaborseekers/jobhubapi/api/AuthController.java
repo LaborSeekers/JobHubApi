@@ -34,7 +34,7 @@ public class AuthController {
         UserProfileDTO userProfile = userService.registerPostulante(userRegistrationDTO);
         return new ResponseEntity<>(userProfile, HttpStatus.CREATED);
     }
-
+        
     @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping("/register/Ofertantes")
     public ResponseEntity<UserProfileDTO> registerOfertante(@Valid @RequestBody UserRegistrationDTO userRegistrationDTO) {

@@ -123,6 +123,12 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserProfileDTO(user);
     }
 
+    @Override
+    public UserProfileDTO getUserProfileByEmail(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        return userMapper.toUserProfileDTO(user);
+    }
+
     private UserProfileDTO registerUserWithRole(UserRegistrationDTO userRegistrationDTO, Erole roleEnum) {
         //Verificar si el email ya esta en uso o si ya existe un usuario con el mismo nombre y apellido
         boolean existByEmail = userRepository.existsByEmail(userRegistrationDTO.getEmail());

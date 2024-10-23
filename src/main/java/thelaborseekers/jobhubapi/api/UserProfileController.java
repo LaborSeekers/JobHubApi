@@ -23,6 +23,13 @@ public class UserProfileController {
         return new ResponseEntity<>(userProfileDTO, HttpStatus.OK);
     }
 
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserProfileDTO> getUserProfile(@PathVariable String email) {
+        UserProfileDTO userProfileDTO = userService.getUserProfileByEmail(email);
+        return new ResponseEntity<>(userProfileDTO, HttpStatus.OK);
+    }
+
     //Actualizar el perfil de usuario
     @PutMapping("/{id}")
     public ResponseEntity<UserProfileDTO> updateProfile(@PathVariable Integer id, @Valid @RequestBody UserProfileDTO userProfileDTO) {
