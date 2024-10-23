@@ -45,28 +45,41 @@ public class UserRecoveryService {
     public String verifyAccount(String email, String otp) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found with this email: " + email));
-        if (user.getPostulante().getOtp().equals(otp) && Duration.between(user.getPostulante().getOtpGeneratedTime(),
-                LocalDateTime.now()).getSeconds() < (1 * 60)) {
-            user.getPostulante().setActive(true);
-            userRepository.save(user);
-            return "OTP verified you can login";
+
+        if (user.getPostulante().getOtp() == null) {
+            throw new RuntimeException("No OTP found for this user. Please generate a new OTP.: " + otp);
         }
-        return "Please regenerate otp and try again";
+        if(user.getPostulante().getOtp().equals(otp)) {
+            if(Duration.between(user.getPostulante().getOtpGeneratedTime(),LocalDateTime.now()).getSeconds() < (1 * 60)){
+                user.getPostulante().setActive(true);
+                user.getPostulante().setOtp(null);
+                user.getPostulante().setOtpGeneratedTime(null);
+                userRepository.save(user);
+                return "OTP verified, you can login now. ";
+            } else {
+                throw new RuntimeException("OTP verification failed. Please regenerate and try again.");
+            }
+        } else {
+            throw new RuntimeException("Invalid OTP. Please try again.");
+        }
+
     }
 
     public String regenerateOtp(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found with this email: " + email));
+
         String otp = otpUtil.generateOtp();
+        /*
         try {
             emailUtil.sendSetPasswordEmail(email);
         } catch (MessagingException e) {
             throw new RuntimeException("Unable to send otp please try again");
-        }
+        }*/
         user.getPostulante().setOtp(otp);
         user.getPostulante().setOtpGeneratedTime(LocalDateTime.now());
         userRepository.save(user);
-        return "Email sent... please verify account within 1 minute";
+        return otp;
     }
 
     public String login(LoginDTO loginDto) {
@@ -85,8 +98,13 @@ public class UserRecoveryService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(
                         () -> new RuntimeException("User not found with this email: " + email));
+
+        String otp = otpUtil.generateOtp();
+        user.getPostulante().setOtp(otp);
+        user.getPostulante().setOtpGeneratedTime(LocalDateTime.now());
+        userRepository.save(user);
         try {
-            emailUtil.sendSetPasswordEmail(email);
+            emailUtil.sendOTPEmail(email, otp);
         } catch (MessagingException e) {
             throw new RuntimeException("Unable to send set a password email please try again");
         }

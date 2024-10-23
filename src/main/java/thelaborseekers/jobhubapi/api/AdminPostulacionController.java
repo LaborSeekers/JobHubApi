@@ -30,11 +30,13 @@ public class AdminPostulacionController {
     private AdminPostulacionServiceImpl adminPostulacionServiceImpl;
 
     @PutMapping("/{id}/estado")
-    public ResponseEntity<String> actualizarEstado(@PathVariable Long id, @Valid @RequestBody PostulacionEstadoDTO nuevoEstadoDTO) {
+    public ResponseEntity<PostulacionDTO> actualizarEstado(@PathVariable("id") Long id, @RequestBody PostulacionEstadoDTO nuevoEstadoDTO) {
         String nuevoEstado = nuevoEstadoDTO.getNuevoEstado();
-        System.out.println("Estado recibido: " + nuevoEstado); // LOG para verificar que el estado se recibe correctamente
+        System.out.println("Estado recibido: " + nuevoEstado);
+
         PostulacionDTO postulacionDTO = adminPostulacionService.actualizarEstado(id, nuevoEstado);
-        return ResponseEntity.ok("Estado actualizado y notificación enviada: " + postulacionDTO.getEstado());
+
+        return new ResponseEntity<>(postulacionDTO, HttpStatus.OK);
     }
 
     @PutMapping("/notificacion/{id}")

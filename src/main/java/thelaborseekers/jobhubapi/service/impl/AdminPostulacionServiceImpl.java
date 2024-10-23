@@ -3,12 +3,14 @@ package thelaborseekers.jobhubapi.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import thelaborseekers.jobhubapi.dto.PostulacionDTO;
+import thelaborseekers.jobhubapi.exception.BadRequestException;
 import thelaborseekers.jobhubapi.exception.ResourceNotFoundException;
 import thelaborseekers.jobhubapi.mapper.PostulacionMapper;
 import thelaborseekers.jobhubapi.model.entity.Postulacion;
 import thelaborseekers.jobhubapi.repository.PostulacionRepository;
 import thelaborseekers.jobhubapi.service.AdminPostulacionService;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +46,13 @@ public class AdminPostulacionServiceImpl implements AdminPostulacionService {
 
     @Override
     public PostulacionDTO actualizarEstado(Long id, String nuevoEstado) {
+
+        List<String> estadosPermitidos = Arrays.asList("Aprobado", "Finalizado", "Cancelado");
+
+        if(!estadosPermitidos.contains(nuevoEstado)) {
+            throw new BadRequestException("Estado inválido. Los valores permitidos son: Aprobado, Finalizado, Cancelado.");
+        }
+
         Postulacion postulacion = postulacionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Postulación no encontrada para el ID: " + id));
 

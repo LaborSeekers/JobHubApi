@@ -13,10 +13,12 @@ public class UserRecoveryController {
     @Autowired
     private UserRecoveryService userService;
 
+    /*
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
         return new ResponseEntity<>(userService.register(registerDto), HttpStatus.OK);
     }
+    */
 
     @PutMapping("/verify-account")
     public ResponseEntity<String> verifyAccount(@RequestParam String email,
