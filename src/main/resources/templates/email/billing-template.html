@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Estilos para dispositivos móviles */
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1, h2 {
+                font-size: 1.5em;
+            }
+
+            table, th, td {
+                font-size: 0.9em;
+            }
+
+            .total {
+                font-size: 1.1em;
+            }
+        }
+
+        .total {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Factura N° <span th:text="${id}">Número de factura</span></h1>
+
+    <p>Fecha de pago: <span th:text="${paymentDate}">Fecha de pago</span></p>
+
+    <h2>Vendedor</h2>
+    <p>Nombre: <span>JobHub</span></p>
+
+    <h2>Cliente</h2>
+    <p>Nombre: <span th:text="${user}">Nombre del cliente</span></p>
+
+    <h2>Detalles de la Factura</h2>
+    <div style="overflow-x:auto;">
+        <table>
+            <thead>
+            <tr>
+                <th>Cantidad</th>
+                <th>Tipo</th>
+                <th>Descripción</th>
+                <th>Precio Unitario</th>
+                <th>Subtotal</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${description}">Descripción</td>
+                <td th:text="${type}">Tipo</td>
+                <td th:text="${quantity}">Cantidad</td>
+                <td th:text="${amount}">Precio Unitario</td>
+                <td th:text="${total}">Subtotal</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 class="total">Total: <span th:text="${total}">Total</span></h2>
+
+    <div class="footer">
+        <p>Gracias por tu compra.</p>
+        <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
+        <p>Lima, Perú</p>
+        <p>
+            <a href="http://htmlemail.io">© 2024 JobHub</a>.
+        </p>
+    </div>
+</div>
+</body>
+</html>

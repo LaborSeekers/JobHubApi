@@ -24,7 +24,7 @@ public class Postulante {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String name;
+    private String firstName;
     private String lastName;
     //private String email;
     //private String password;

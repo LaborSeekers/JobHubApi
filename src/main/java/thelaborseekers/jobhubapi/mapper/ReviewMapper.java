@@ -20,7 +20,7 @@ public class ReviewMapper {
     // Convierte la entidad Review a ReviewDetailsDTO
     public ReviewDetailsDTO toReviewDetailsDTO(Review review) {
         ReviewDetailsDTO dto = modelMapper.map(review, ReviewDetailsDTO.class);
-        dto.setPostulanteName(review.getPostulante().getName()+" " +review.getPostulante().getLastName());
+        dto.setPostulanteName(review.getPostulante().getFirstName()+" " +review.getPostulante().getLastName());
         dto.setJobOfferTitle(review.getJobOffer().getTitle());
         return dto;
     }

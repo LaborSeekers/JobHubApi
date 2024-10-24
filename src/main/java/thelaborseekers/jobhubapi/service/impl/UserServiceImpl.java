@@ -18,6 +18,7 @@ import thelaborseekers.jobhubapi.model.entity.Postulante;
 import thelaborseekers.jobhubapi.model.entity.Role;
 import thelaborseekers.jobhubapi.model.entity.User;
 import thelaborseekers.jobhubapi.model.enums.Erole;
+import thelaborseekers.jobhubapi.model.enums.Reputation;
 import thelaborseekers.jobhubapi.repository.OfertanteRepository;
 import thelaborseekers.jobhubapi.repository.PostulanteRepository;
 import thelaborseekers.jobhubapi.repository.RoleRepository;
@@ -82,8 +83,8 @@ public class UserServiceImpl implements UserService {
         // Verificar si ya existe un postulante u ofertante con el mismo nombre y apellido (excepto el usuario actual)
         // La verificación se realiza excluyendo el usuario actual para permitir que actualice su propio perfil
         // sin que se genere un conflicto de duplicidad en los nombres y apellidos.
-        boolean existsAsCustomer = postulanteRepository.existsByNameAndLastNameAndUserIdNot(userProfileDTO.getName(), userProfileDTO.getLastName(), id);
-        boolean existsAsAuthor = ofertanteRepository.existsByNameAndLastNameAndUserIdNot(userProfileDTO.getName(), userProfileDTO.getLastName(), id);
+        boolean existsAsCustomer = postulanteRepository.existsByFirstNameAndLastNameAndUserIdNot(userProfileDTO.getFirstName(), userProfileDTO.getLastName(), id);
+        boolean existsAsAuthor = ofertanteRepository.existsByFirstNameAndLastNameAndUserIdNot(userProfileDTO.getFirstName(), userProfileDTO.getLastName(), id);
 
         if (existsAsCustomer || existsAsAuthor) {
             throw new BadRequestException("Ya existe un usuario con el mismo nombre y apellido");
@@ -92,7 +93,7 @@ public class UserServiceImpl implements UserService {
 
         // Actualizar los campos específicos del perfil
         if (user.getPostulante() != null) {
-            user.getPostulante().setName(userProfileDTO.getName());
+            user.getPostulante().setFirstName(userProfileDTO.getFirstName());
             user.getPostulante().setLastName(userProfileDTO.getLastName());
             user.getPostulante().setPhone(userProfileDTO.getPhone());
             user.getPostulante().setBirthday(userProfileDTO.getBirthday());
@@ -100,11 +101,12 @@ public class UserServiceImpl implements UserService {
         }
 
         if (user.getOfertante() != null) {
-            user.getOfertante().setName(userProfileDTO.getName());
+            user.getOfertante().setFirstName(userProfileDTO.getFirstName());
             user.getOfertante().setLastName(userProfileDTO.getLastName());
             user.getOfertante().setPhone(userProfileDTO.getPhone());
             user.getOfertante().setBirthday(userProfileDTO.getBirthday());
             user.getOfertante().setUpdatedAt(LocalDateTime.now());
+            //evaluar si es que es necesario hacer el update de la empresa por este medio
         }
         // Guardar los cambios en la base de datos
         User updatedUser = userRepository.save(user);
@@ -121,11 +123,17 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserProfileDTO(user);
     }
 
+    @Override
+    public UserProfileDTO getUserProfileByEmail(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        return userMapper.toUserProfileDTO(user);
+    }
+
     private UserProfileDTO registerUserWithRole(UserRegistrationDTO userRegistrationDTO, Erole roleEnum) {
         //Verificar si el email ya esta en uso o si ya existe un usuario con el mismo nombre y apellido
         boolean existByEmail = userRepository.existsByEmail(userRegistrationDTO.getEmail());
-        boolean existsAsPostulante = postulanteRepository.existsByNameAndLastName(userRegistrationDTO.getName(),userRegistrationDTO.getLastName());
-        boolean existAsOfertante = ofertanteRepository.existsByNameAndLastName(userRegistrationDTO.getName(),userRegistrationDTO.getLastName());
+        boolean existsAsPostulante = postulanteRepository.existsByFirstNameAndLastName(userRegistrationDTO.getFirstName(),userRegistrationDTO.getLastName());
+        boolean existAsOfertante = ofertanteRepository.existsByFirstNameAndLastName(userRegistrationDTO.getFirstName(),userRegistrationDTO.getLastName());
         if(existByEmail) {
             throw new BadRequestException("Email already exists");
         }
@@ -137,9 +145,10 @@ public class UserServiceImpl implements UserService {
         userRegistrationDTO.setPassword(passwordEncoder.encode(userRegistrationDTO.getPassword()));
         User user = userMapper.toEntity(userRegistrationDTO);
         user.setRole(role);
+        Postulante postulante = new Postulante();
+        Ofertante ofertante = new Ofertante();
         if(roleEnum == Erole.POSTULANTE){
-            Postulante postulante = new Postulante();
-            postulante.setName(userRegistrationDTO.getName());
+            postulante.setFirstName(userRegistrationDTO.getFirstName());
             postulante.setLastName(userRegistrationDTO.getLastName());
             postulante.setPhone(userRegistrationDTO.getPhone());
             postulante.setBirthday(userRegistrationDTO.getBirthday());
@@ -148,18 +157,24 @@ public class UserServiceImpl implements UserService {
             postulante.setUser(user);
             user.setPostulante(postulante);
         } else if (roleEnum == Erole.OFERTANTE) {
-            Ofertante ofertante = new Ofertante();
-            ofertante.setName(userRegistrationDTO.getName());
+            ofertante.setFirstName(userRegistrationDTO.getFirstName());
             ofertante.setLastName(userRegistrationDTO.getLastName());
             ofertante.setPhone(userRegistrationDTO.getPhone());
-            ofertante.setPhone(userRegistrationDTO.getPhone());
+            ofertante.setBirthday(userRegistrationDTO.getBirthday());
             ofertante.setCreatedAt(LocalDateTime.now());
             ofertante.setEmpresa(userRegistrationDTO.getEmpresa());
             ofertante.setReputationValue(100);
+            ofertante.setReputation(Reputation.valueOf("ALTA"));
             ofertante.setUser(user);
             user.setOfertante(ofertante);
         }
         User savedUser = userRepository.save(user);
+        if(roleEnum == Erole.POSTULANTE){
+            postulanteRepository.save(postulante);
+        } else if (roleEnum == Erole.OFERTANTE) {
+            ofertanteRepository.save(ofertante);
+        }
         return userMapper.toUserProfileDTO(savedUser);
     }
+
 }

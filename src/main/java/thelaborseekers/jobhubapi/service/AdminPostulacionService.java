@@ -18,5 +18,5 @@ public interface AdminPostulacionService {
 
     String obtenerNotificacion(Long id);
     // Nuevo método para obtener historial
-    List<Postulacion> obtenerHistorialPorPostulanteId(Long postulanteId);
+    List<Postulacion> obtenerHistorialPorPostulanteId(Integer postulanteId);
 }

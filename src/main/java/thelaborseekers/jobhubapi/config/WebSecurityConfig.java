@@ -16,10 +16,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import thelaborseekers.jobhubapi.security.JWTConfigurer;
 import thelaborseekers.jobhubapi.security.JWTFilter;
 import thelaborseekers.jobhubapi.security.JwtAuthenticationEntryPoint;
 import thelaborseekers.jobhubapi.security.TokenProvider;
+
+import java.util.Arrays;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
@@ -33,6 +38,20 @@ public class WebSecurityConfig {
     private final JWTFilter jwtRequestFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final UserDetailsService userDetailsService;
+
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:4200")); // Permitir solo Angular local
+        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        corsConfiguration.setAllowCredentials(true); // Si estás manejando cookies o credenciales
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration); // Permitir para todos los endpoints
+
+        return new CorsFilter(source);
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -49,6 +68,7 @@ public class WebSecurityConfig {
                         // TODO: Permitir acceso público a las rutas de login, registro y endpoints públicos como Swagger UI
                         .requestMatchers(antMatcher("/auth/login")).permitAll()
                         .requestMatchers(antMatcher("/auth/register/Postulantes")).permitAll()
+                        .requestMatchers(antMatcher("/mail/")).permitAll()
                         /*.requestMatchers(antMatcher("/auth/register/Ofertantes")).permitAll()*/ //cualquiera no puede registrarse como ofertante
                         .requestMatchers("/api/v1/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/webjars/**").permitAll()
                         // TODO: Cualquier otra solicitud requiere autenticación (JWT u otra autenticación configurada)

@@ -26,4 +26,7 @@ public interface AdminJobOfferService {
     //List<JobOfferFilterRequestDTO> filterJobOffer(JobOfferFilterRequestDTO filterRequestDTO);
 
     List<JobOfferFilterRequestDTO> filterJobOffer(String location, String title);
+
+    List<JobOfferDetailsDTO> getRecommendations(Integer postulanteId);
+
 }

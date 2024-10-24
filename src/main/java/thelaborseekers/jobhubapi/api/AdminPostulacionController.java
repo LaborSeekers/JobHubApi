@@ -44,4 +44,5 @@ public class AdminPostulacionController {
         String mensajeNotificacion = adminPostulacionServiceImpl.obtenerNotificacion(id);
         return ResponseEntity.ok(mensajeNotificacion);
     }
+
 }

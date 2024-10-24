@@ -21,7 +21,7 @@ public class FeedbackMapper {
 
         FeedbackDetailDTO feedbackDetailDTO = modelMapper.map(feedback, FeedbackDetailDTO.class);
 
-        feedbackDetailDTO.setName(feedback.getApplication().getPostulante().getName() + " " + feedback.getApplication().getPostulante().getLastName());
+        feedbackDetailDTO.setName(feedback.getApplication().getPostulante().getFirstName() + " " + feedback.getApplication().getPostulante().getLastName());
         feedbackDetailDTO.setTitle(feedback.getJobOffer().getTitle());
 
         return feedbackDetailDTO;

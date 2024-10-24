@@ -31,7 +31,7 @@ public class AdminJobOfferController {
         return new ResponseEntity<>(createdJobOffer, HttpStatus.CREATED);
 
     }
-
+    @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE','OFERTANTE')")
     @GetMapping
     public ResponseEntity<List<JobOfferDetailsDTO>> getAllJobOffers() {
         List<JobOfferDetailsDTO> jobOffers = adminJobOfferService.getAllJobOffers();

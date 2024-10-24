@@ -6,9 +6,11 @@ public enum Reputation {
     ALTA,
     MUY_ALTA;
     public static Reputation fromValue(Integer reputationValue) {
-        if (reputationValue >= 61) {
+        if (reputationValue >= 75) {
+            return MUY_ALTA;
+        } else if (reputationValue >= 60) {
             return ALTA;
-        } else if (reputationValue >= 31) {
+        } else if (reputationValue >= 40) {
             return MEDIA;
         } else {
             return BAJA;

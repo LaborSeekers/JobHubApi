@@ -16,7 +16,7 @@ public interface UserService {
 
     UserProfileDTO updateUserProfile(Integer id, UserProfileDTO userProfileDTO);
     UserProfileDTO getUserProfile(Integer id);
-
+    UserProfileDTO getUserProfileByEmail(String email);
 
     List<UserProfileDTO> getAllUserProfiles();
 
