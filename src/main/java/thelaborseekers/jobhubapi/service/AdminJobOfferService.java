@@ -12,6 +12,10 @@ public interface AdminJobOfferService {
 
     List<JobOfferDetailsDTO> getAllJobOffers();
 
+    //Obtener lista de ofertas por empresa
+
+    List<JobOfferDetailsDTO> getJobOffersByCompanyId(Integer companyId);
+
     JobOfferDetailsDTO getJobOfferById(Integer jobOfferId);
 
     JobOfferDetailsDTO  updateJobOffer(Integer jobOfferId,JobOfferCreateDTO  jobOfferCreateDTO);

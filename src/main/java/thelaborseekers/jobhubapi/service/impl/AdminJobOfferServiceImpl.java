@@ -12,6 +12,7 @@ import thelaborseekers.jobhubapi.mapper.OfertanteMapper;
 import thelaborseekers.jobhubapi.model.entity.JobModality;
 import thelaborseekers.jobhubapi.model.entity.JobOffer;
 import thelaborseekers.jobhubapi.model.entity.Ofertante;
+import thelaborseekers.jobhubapi.model.entity.Review;
 import thelaborseekers.jobhubapi.model.enums.JobStatus;
 import thelaborseekers.jobhubapi.model.enums.Reputation;
 import thelaborseekers.jobhubapi.repository.JobModalityRepository;
@@ -84,6 +85,16 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
     public List<JobOfferDetailsDTO> getAllJobOffers() {
         List<JobOffer> joboffers =jobOfferRepository.findAll();
         return joboffers.stream().map(jobOfferMapper::toJobOfferDetailsDTO).toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<JobOfferDetailsDTO> getJobOffersByCompanyId(Integer companyId) {
+        // Buscar todas las reviews por el ID de la empresa
+        List<JobOffer> jobOffers = jobOfferRepository.findByOfertanteEmpresaId(companyId);
+        return jobOffers.stream()
+                .map(jobOfferMapper::toJobOfferDetailsDTO)
+                .toList();
     }
 
 

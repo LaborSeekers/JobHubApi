@@ -63,4 +63,12 @@ public class AdminJobOfferController {
         adminJobOfferService.deleteJobOffer(id);
     }
 
+
+
+    // Endpoint para obtener ofertas de trabajo por ID de empresa
+    @GetMapping("/company/{companyId}")
+    public ResponseEntity<List<JobOfferDetailsDTO>> getJobOffersByCompanyId(@PathVariable Integer companyId) {
+        List<JobOfferDetailsDTO> jobOffers = adminJobOfferService.getJobOffersByCompanyId(companyId);
+        return ResponseEntity.ok(jobOffers); // Devuelve una respuesta con las ofertas encontradas
+    }
 }
