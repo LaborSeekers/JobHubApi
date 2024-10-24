@@ -8,9 +8,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import thelaborseekers.jobhubapi.dto.JobOfferCreateDTO;
 import thelaborseekers.jobhubapi.dto.JobOfferDetailsDTO;
+import thelaborseekers.jobhubapi.dto.PostulanteProfileDTO;
 import thelaborseekers.jobhubapi.dto.JobOfferFilterRequestDTO;
 import thelaborseekers.jobhubapi.exception.BadRequestException;
 import thelaborseekers.jobhubapi.model.entity.JobOffer;
+import thelaborseekers.jobhubapi.model.enums.JobStatus;
 import thelaborseekers.jobhubapi.model.enums.Reputation;
 import thelaborseekers.jobhubapi.service.AdminJobOfferService;
 
@@ -87,4 +89,20 @@ public class AdminJobOfferController {
         return new ResponseEntity<>(jobOffers, HttpStatus.OK);
 
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'OFERTANTE')")
+@GetMapping("/{jobOfferId}/postulantes")
+public ResponseEntity<List<PostulanteProfileDTO>> getPostulantesByJobOfferId(@PathVariable Integer jobOfferId) {
+    List<PostulanteProfileDTO> postulantes = adminJobOfferService.getPostulantesByJobOfferId(jobOfferId);
+    return new ResponseEntity<>(postulantes, HttpStatus.OK);
+}
+
+@PreAuthorize("hasAnyRole('ADMIN', 'OFERTANTE')")
+@PatchMapping("/{jobOfferId}/status")
+public ResponseEntity<JobOfferDetailsDTO> updateJobOfferStatus(@PathVariable Integer jobOfferId, @RequestBody JobStatus status) {
+    JobOfferDetailsDTO updatedJobOffer = adminJobOfferService.updateJobOfferStatus(jobOfferId, status);
+    return new ResponseEntity<>(updatedJobOffer, HttpStatus.OK);
+}
+
+
 }
