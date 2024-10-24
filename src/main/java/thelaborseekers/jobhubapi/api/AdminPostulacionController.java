@@ -1,10 +1,14 @@
 package thelaborseekers.jobhubapi.api;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import thelaborseekers.jobhubapi.dto.PostulacionDTO;
+import thelaborseekers.jobhubapi.dto.PostulacionEstadoDTO;
+import thelaborseekers.jobhubapi.mapper.PostulacionMapper;
 import thelaborseekers.jobhubapi.model.entity.Postulacion;
 import thelaborseekers.jobhubapi.service.AdminPostulacionService;
 import thelaborseekers.jobhubapi.service.impl.AdminPostulacionServiceImpl;
@@ -13,49 +17,32 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/postulaciones")
+@RequestMapping("/admin/postulaciones")
 @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE')")
 public class AdminPostulacionController {
 
     @Autowired
     private AdminPostulacionService adminPostulacionService;
+
+    @Autowired
+    private PostulacionMapper postulacionMapper;
     @Autowired
     private AdminPostulacionServiceImpl adminPostulacionServiceImpl;
 
     @PutMapping("/{id}/estado")
-    public ResponseEntity<String> actualizarEstado(@PathVariable Long id, @RequestBody String nuevoEstado){
-        Optional<Postulacion> postulacionOpt = adminPostulacionService.obtenerPostulacionPorId(id);
-        if (postulacionOpt.isPresent()) {
-            Postulacion postulacion = postulacionOpt.get();
-            adminPostulacionService.notificarCambioDeEstado(postulacion, nuevoEstado);
-            return ResponseEntity.ok("Estado actualizado y notificacion enviada");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Postulación no encontrada");
-        }
+    public ResponseEntity<PostulacionDTO> actualizarEstado(@PathVariable("id") Long id, @RequestBody PostulacionEstadoDTO nuevoEstadoDTO) {
+        String nuevoEstado = nuevoEstadoDTO.getNuevoEstado();
+        System.out.println("Estado recibido: " + nuevoEstado);
+
+        PostulacionDTO postulacionDTO = adminPostulacionService.actualizarEstado(id, nuevoEstado);
+
+        return new ResponseEntity<>(postulacionDTO, HttpStatus.OK);
     }
 
     @PutMapping("/notificacion/{id}")
     public ResponseEntity<String> obtenerNotificacion(@PathVariable Long id) {
-        Optional<Postulacion> postulacionOpt = adminPostulacionService.obtenerPostulacionPorId(id);
-
-        if (postulacionOpt.isPresent()) {
-            Postulacion postulacion = postulacionOpt.get();
-            String estadoActual = postulacion.getEstado(); // Asumiendo que el estado se guarda en la entidad
-            String mensajeNotificacion = adminPostulacionService.notificarCambioDeEstado(postulacion, estadoActual);
-            return ResponseEntity.ok(mensajeNotificacion);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Postulación no encontrada");
-        }
+        String mensajeNotificacion = adminPostulacionServiceImpl.obtenerNotificacion(id);
+        return ResponseEntity.ok(mensajeNotificacion);
     }
-    @GetMapping("/historial/{postulanteId}")
-    public ResponseEntity<List<Postulacion>> obtenerHistorialDePostulaciones(@PathVariable Integer postulanteId) {
-        List<Postulacion> historial = adminPostulacionService.obtenerHistorialPorPostulanteId(postulanteId);
-        
-        if (historial.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        return ResponseEntity.ok(historial);
-    }
-
 
 }

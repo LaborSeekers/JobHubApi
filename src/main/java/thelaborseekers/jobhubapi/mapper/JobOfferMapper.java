@@ -5,6 +5,7 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Component;
 import thelaborseekers.jobhubapi.dto.JobOfferCreateDTO;
 import thelaborseekers.jobhubapi.dto.JobOfferDetailsDTO;
+import thelaborseekers.jobhubapi.dto.JobOfferFilterRequestDTO;
 import thelaborseekers.jobhubapi.model.entity.JobOffer;
 
 @Component
@@ -16,6 +17,11 @@ public class JobOfferMapper {
         this.modelMapper = modelMapper;
         this.modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
     }
+
+    public JobOfferFilterRequestDTO toDTO(JobOffer jobOffer) {
+        return modelMapper.map(jobOffer, JobOfferFilterRequestDTO.class);
+    }
+
     //Response
     public JobOfferDetailsDTO toJobOfferDetailsDTO(JobOffer jobOffer) {
         JobOfferDetailsDTO dto = modelMapper.map(jobOffer, JobOfferDetailsDTO.class);

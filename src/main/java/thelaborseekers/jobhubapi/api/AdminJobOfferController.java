@@ -8,6 +8,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import thelaborseekers.jobhubapi.dto.JobOfferCreateDTO;
 import thelaborseekers.jobhubapi.dto.JobOfferDetailsDTO;
+import thelaborseekers.jobhubapi.dto.JobOfferFilterRequestDTO;
+import thelaborseekers.jobhubapi.exception.BadRequestException;
 import thelaborseekers.jobhubapi.model.entity.JobOffer;
 import thelaborseekers.jobhubapi.model.enums.Reputation;
 import thelaborseekers.jobhubapi.service.AdminJobOfferService;
@@ -65,10 +67,24 @@ public class AdminJobOfferController {
 
 
 
+
     // Endpoint para obtener ofertas de trabajo por ID de empresa
     @GetMapping("/company/{companyId}")
     public ResponseEntity<List<JobOfferDetailsDTO>> getJobOffersByCompanyId(@PathVariable Integer companyId) {
         List<JobOfferDetailsDTO> jobOffers = adminJobOfferService.getJobOffersByCompanyId(companyId);
         return ResponseEntity.ok(jobOffers); // Devuelve una respuesta con las ofertas encontradas
+    }
+
+  
+    @PostMapping("/ofertas/filter")
+    public ResponseEntity<List<JobOfferFilterRequestDTO>> filterJobOffer(@RequestParam(required = false, defaultValue = "") String location, @RequestParam(required = false, defaultValue = "") String title){
+        List<JobOfferFilterRequestDTO> jobOffers = adminJobOfferService.filterJobOffer(location, title);
+
+        if(jobOffers.isEmpty()){
+            throw new BadRequestException("No se encontraron ofertas con los filtros aplicados. ");
+        }
+
+        return new ResponseEntity<>(jobOffers, HttpStatus.OK);
+
     }
 }
