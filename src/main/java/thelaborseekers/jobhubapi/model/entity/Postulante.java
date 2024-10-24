@@ -15,8 +15,6 @@ import java.util.List;
 
 @Data
 @Entity // crea la tabla
-@Getter
-@Setter
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name="Postulante")
 public class Postulante {
