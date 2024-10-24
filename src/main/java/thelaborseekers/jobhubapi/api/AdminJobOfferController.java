@@ -65,20 +65,17 @@ public class AdminJobOfferController {
         adminJobOfferService.deleteJobOffer(id);
     }
 
-    /*
-    @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE','OFERTANTE')")
-    @PostMapping("/ofertas/filter")
-    public ResponseEntity<List<JobOfferFilterRequestDTO>> filterJobOffers(@RequestBody JobOfferFilterRequestDTO jobOfferFilterRequestDTO) {
-        List<JobOfferFilterRequestDTO> jobOffers = adminJobOfferService.filterJobOffer(jobOfferFilterRequestDTO);
 
-        if(jobOffers.isEmpty())
-        {
-            throw new BadRequestException("No se encontraron ofertas con los filtros aplicados. ");
-        }
-        return new ResponseEntity<>(jobOffers, HttpStatus.OK);
+
+
+    // Endpoint para obtener ofertas de trabajo por ID de empresa
+    @GetMapping("/company/{companyId}")
+    public ResponseEntity<List<JobOfferDetailsDTO>> getJobOffersByCompanyId(@PathVariable Integer companyId) {
+        List<JobOfferDetailsDTO> jobOffers = adminJobOfferService.getJobOffersByCompanyId(companyId);
+        return ResponseEntity.ok(jobOffers); // Devuelve una respuesta con las ofertas encontradas
     }
-     */
 
+  
     @PostMapping("/ofertas/filter")
     public ResponseEntity<List<JobOfferFilterRequestDTO>> filterJobOffer(@RequestParam(required = false, defaultValue = "") String location, @RequestParam(required = false, defaultValue = "") String title){
         List<JobOfferFilterRequestDTO> jobOffers = adminJobOfferService.filterJobOffer(location, title);
@@ -88,5 +85,6 @@ public class AdminJobOfferController {
         }
 
         return new ResponseEntity<>(jobOffers, HttpStatus.OK);
+
     }
 }

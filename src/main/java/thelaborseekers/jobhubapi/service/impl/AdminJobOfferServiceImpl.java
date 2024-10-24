@@ -16,6 +16,7 @@ import thelaborseekers.jobhubapi.model.entity.FavoriteJobOffers;
 import thelaborseekers.jobhubapi.model.entity.JobModality;
 import thelaborseekers.jobhubapi.model.entity.JobOffer;
 import thelaborseekers.jobhubapi.model.entity.Ofertante;
+import thelaborseekers.jobhubapi.model.entity.Review;
 import thelaborseekers.jobhubapi.model.enums.JobStatus;
 import thelaborseekers.jobhubapi.model.enums.Reputation;
 import thelaborseekers.jobhubapi.repository.FavoriteJobOffersRepository;
@@ -79,17 +80,12 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
         jobOffer.setJobModality(jobModality);
         jobOffer.setCreatedAt(LocalDateTime.now());
 
-        // Verificar si se ha programado una fecha de publicación
+        // Verificar y establecer la fecha de publicación y el estado
         if (jobOfferCreateDTO.getScheduledPublishAt() != null) {
             jobOffer.setScheduledPublishAt(jobOfferCreateDTO.getScheduledPublishAt());
             jobOffer.setStatus(JobStatus.INACTIVE);  // Si hay una fecha de programación, el estado es INACTIVE
         } else {
-            // Si no se proporciona una fecha de publicación, verificar y establecer el estado de trabajo
-            if (jobOfferCreateDTO.getStatus() == null) {
-                jobOffer.setStatus(JobStatus.ACTIVE);  // Establece como ACTIVE si no se proporciona un estado
-            } else {
-                jobOffer.setStatus(jobOfferCreateDTO.getStatus());  // Asigna el estado proporcionado
-            }
+            jobOffer.setStatus(jobOfferCreateDTO.getStatus() != null ? jobOfferCreateDTO.getStatus() : JobStatus.ACTIVE);
         }
 
         return jobOfferMapper.toJobOfferDetailsDTO(jobOfferRepository.save(jobOffer));
@@ -102,6 +98,16 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
         return joboffers.stream().map(jobOfferMapper::toJobOfferDetailsDTO).toList();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<JobOfferDetailsDTO> getJobOffersByCompanyId(Integer companyId) {
+        // Buscar todas las reviews por el ID de la empresa
+        List<JobOffer> jobOffers = jobOfferRepository.findByOfertanteEmpresaId(companyId);
+        return jobOffers.stream()
+                .map(jobOfferMapper::toJobOfferDetailsDTO)
+                .toList();
+    }
+
 
     @Override
     @Transactional
@@ -109,9 +115,11 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
         JobOffer existingJobOffer = jobOfferRepository.findById(jobOfferId)
                 .orElseThrow(() -> new ResourceNotFoundException("Job offer not found with id: " + jobOfferId));
 
-        jobOfferRepository.findByTitle(jobOfferCreateDTO.getTitle()).ifPresent(jobOffer ->
-        {
-            throw new BadRequestException("Ya existe un trabajo con el mismo titulo.");
+        // Verificar si hay otra oferta con el mismo título, excluyendo la oferta que se está actualizando
+        jobOfferRepository.findByTitle(jobOfferCreateDTO.getTitle()).ifPresent(jobOffer -> {
+            if (!jobOffer.getId().equals(jobOfferId)) { // Asegurarse de que no sea la misma oferta
+                throw new BadRequestException("Ya existe un trabajo con el mismo título.");
+            }
         });
 
         //Asignar FK antes de actualizar
@@ -131,22 +139,17 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
         existingJobOffer.setSalary(jobOfferCreateDTO.getSalary());
         existingJobOffer.setLocation(jobOfferCreateDTO.getLocation());
         existingJobOffer.setStatus(jobOfferCreateDTO.getStatus());
-        existingJobOffer.setJobModality(jobModality);
-        existingJobOffer.setOfertante(ofertante);
-
-        // Verificar si se actualiza la fecha de publicación programada
+        // Actualizar el estado y la fecha de publicación programada
         if (jobOfferCreateDTO.getScheduledPublishAt() != null) {
-            // Si hay una nueva fecha de publicación programada, establecer el estado en INACTIVE
             existingJobOffer.setStatus(JobStatus.INACTIVE);
             existingJobOffer.setScheduledPublishAt(jobOfferCreateDTO.getScheduledPublishAt());
         } else {
-            // Si no se actualiza la fecha de publicación, mantener el estado actual o el proporcionado
-            if (jobOfferCreateDTO.getStatus() != null) {
-                existingJobOffer.setStatus(jobOfferCreateDTO.getStatus()); // Usar el estado proporcionado
-            } else {
-                existingJobOffer.setStatus(existingJobOffer.getStatus()); // Mantener el estado actual
-            }
+            existingJobOffer.setStatus(jobOfferCreateDTO.getStatus() != null ? jobOfferCreateDTO.getStatus() : existingJobOffer.getStatus());
         }
+
+        existingJobOffer.setJobModality(jobModality);
+        existingJobOffer.setOfertante(ofertante);
+
 
         return jobOfferMapper.toJobOfferDetailsDTO(jobOfferRepository.save(existingJobOffer));
     }
