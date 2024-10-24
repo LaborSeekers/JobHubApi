@@ -20,6 +20,8 @@ public class SwaggerAPIConfig {
     @Value("${JobHubApi.openapi.dev-url}")
     private String devUrl;
 
+    @Value("${JobHubApi.openapi.prod-url}")
+    private String prodUrl;
     @Bean
     public OpenAPI myOpenAPI(){
 
@@ -27,6 +29,11 @@ public class SwaggerAPIConfig {
         Server devServer = new Server();
         devServer.setUrl(devUrl);
         devServer.setDescription("JobHub API development server");
+
+        //prod server definition
+        Server prodServer = new Server();
+        prodServer.setUrl(prodUrl);
+        prodServer.setDescription("JobHub API Production server");
 
         //contact info  1/5
         Contact contact = new Contact();
@@ -57,7 +64,7 @@ public class SwaggerAPIConfig {
         // Requerimiento de seguridad para utilizar en las operaciones
         SecurityRequirement securityRequirement = new SecurityRequirement().addList("bearerAuth");
 
-        return new OpenAPI().info(info).servers(List.of(devServer)).addSecurityItem(securityRequirement).components(components);
+        return new OpenAPI().info(info).servers(List.of(devServer,prodServer)).addSecurityItem(securityRequirement).components(components);
     }
 
 }
