@@ -111,7 +111,7 @@ public class AuthController {
         return adminPostulanteService.filterByAge(age);
     }
 
-    @GetMapping("/postulantes/{postulanteId}/historial")
+    @GetMapping("/Postulantes/{postulanteId}/historial")
     public ResponseEntity<?> getHistorialPostulaciones(@PathVariable Integer postulanteId) {
         // Obtener historial de postulaciones del postulante
         PostulanteHistorialDTO historial = adminPostulanteService.getHistorialPostulaciones(postulanteId);
