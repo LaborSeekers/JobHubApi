@@ -197,10 +197,10 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
     */
 
     @Override
-    public List<JobOfferFilterRequestDTO> filterJobOffer(String location, String title){
+    public List<JobOfferFilterRequestDTO> filterJobOffer(String location, String title) {
         List<JobOffer> jobOffers;
 
-        if(!location.isEmpty() && !title.isEmpty()){
+        if (!location.isEmpty() && !title.isEmpty()) {
             jobOffers = jobOfferFilterRequestRepository.findByLocationAndTitle(location, title);
         } else if (!location.isEmpty()) {
             //Solo ubicacion
@@ -216,7 +216,7 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
         return jobOffers.stream()
                 .map(jobOfferMapper::toDTO)
                 .collect(Collectors.toList());
-
+    }
     @Override
     public List<JobOfferDetailsDTO> getRecommendations(Integer postulanteId) {
         List<FavoriteJobOffers> favorites = favoriteJobOffersRepository.findByPostulanteId(postulanteId);

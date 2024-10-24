@@ -6,4 +6,4 @@ COPY ${JAR_FILE} JobHubApi.jar
 
 EXPOSE 8080
 
-ENTRYPOINT["java","-jar","JobHubApi.jar"]
+ENTRYPOINT["java","-jar","jobhubapi.jar"]

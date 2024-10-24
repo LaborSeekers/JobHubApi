@@ -15,7 +15,7 @@ public class PostulacionMapper {
 
     public PostulacionDTO toDTO(Postulacion postulacion) {
         PostulacionDTO postulacionDTO = modelMapper.map(postulacion, PostulacionDTO.class);
-        postulacionDTO.setPostulanteNombre(postulacion.getPostulante().getName() + " " + postulacion.getPostulante().getLastName());
+        postulacionDTO.setPostulanteNombre(postulacion.getPostulante().getFirstName() + " " + postulacion.getPostulante().getLastName());
         postulacionDTO.setOfertaLaboralTitulo(postulacion.getOfertaLaboral().getTitle());
         return postulacionDTO;
     }
