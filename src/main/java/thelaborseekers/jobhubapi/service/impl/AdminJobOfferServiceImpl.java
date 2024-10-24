@@ -12,14 +12,19 @@ import thelaborseekers.jobhubapi.exception.BadRequestException;
 import thelaborseekers.jobhubapi.exception.ResourceNotFoundException;
 import thelaborseekers.jobhubapi.mapper.JobOfferMapper;
 import thelaborseekers.jobhubapi.mapper.OfertanteMapper;
+import thelaborseekers.jobhubapi.mapper.PostulanteMapper;
+import thelaborseekers.jobhubapi.mapper.PostulacionMapper;
 import thelaborseekers.jobhubapi.model.entity.FavoriteJobOffers;
 import thelaborseekers.jobhubapi.model.entity.JobModality;
 import thelaborseekers.jobhubapi.model.entity.JobOffer;
 import thelaborseekers.jobhubapi.model.entity.Ofertante;
+import thelaborseekers.jobhubapi.model.entity.Postulacion;
 import thelaborseekers.jobhubapi.model.entity.Review;
 import thelaborseekers.jobhubapi.model.enums.JobStatus;
 import thelaborseekers.jobhubapi.model.enums.Reputation;
 import thelaborseekers.jobhubapi.repository.FavoriteJobOffersRepository;
+import thelaborseekers.jobhubapi.repository.PostulacionRepository;
+import thelaborseekers.jobhubapi.dto.PostulanteProfileDTO;
 import thelaborseekers.jobhubapi.repository.JobModalityRepository;
 import thelaborseekers.jobhubapi.repository.JobOfferFilterRequestRepository;
 import thelaborseekers.jobhubapi.repository.JobOfferRepository;
@@ -43,8 +48,10 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
     private final JobOfferRepository jobOfferRepository;
     private final AdminOfertanteService adminOfertanteService;
     private final OfertanteRepository ofertanteRepository;
+    private final PostulacionRepository postulacionRepository;
     private final JobModalityRepository jobModalityRepository;
     private final JobOfferMapper jobOfferMapper;
+    private final PostulanteMapper postulanteMapper;
     private final FavoriteJobOffersRepository favoriteJobOffersRepository;
 
     @Autowired
@@ -264,4 +271,27 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
         return score;
 
     }
+
+    @Override
+public List<PostulanteProfileDTO> getPostulantesByJobOfferId(Integer jobOfferId) {
+    JobOffer jobOffer = jobOfferRepository.findById(jobOfferId)
+        .orElseThrow(() -> new ResourceNotFoundException("Job offer not found with id: " + jobOfferId));
+    
+    List<Postulacion> postulaciones = postulacionRepository.findByOfertaLaboral(jobOffer);
+
+    return postulaciones.stream()
+        .map((Postulacion postulacion) -> postulanteMapper.toProfileDTO(postulacion.getPostulante())) // Cambiado a toProfileDTO
+        .collect(Collectors.toList());
+}
+
+@Override
+public JobOfferDetailsDTO updateJobOfferStatus(Integer jobOfferId, JobStatus status) {
+    JobOffer jobOffer = jobOfferRepository.findById(jobOfferId)
+        .orElseThrow(() -> new ResourceNotFoundException("Job offer not found with id: " + jobOfferId));
+
+    jobOffer.setStatus(status);
+    jobOfferRepository.save(jobOffer);
+
+    return jobOfferMapper.toJobOfferDetailsDTO(jobOffer);
+}
 }

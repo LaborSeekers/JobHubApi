@@ -41,4 +41,15 @@ public class PostulanteMapper {
         return ProfileDTO;
     }
 
+    public PostulanteProfileDTO toProfileDTO(Postulante postulante) {
+        // Buscar el CV si existe
+        Optional<Curriculum> cvOpt = curriculumRepository.findByPostulanteId(postulante.getId());
+        PostulanteProfileDTO profileDTO = modelMapper.map(postulante, PostulanteProfileDTO.class);
+    
+        // Si el CV existe, lo mapeamos
+        cvOpt.ifPresent(cv -> profileDTO.setCurriculum(modelMapper.map(cv, CurriculumDTO.class)));
+    
+        return profileDTO;
+    }
+
 }

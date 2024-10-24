@@ -2,7 +2,9 @@ package thelaborseekers.jobhubapi.service;
 
 import thelaborseekers.jobhubapi.dto.JobOfferCreateDTO;
 import thelaborseekers.jobhubapi.dto.JobOfferDetailsDTO;
+import thelaborseekers.jobhubapi.dto.PostulanteProfileDTO;
 import thelaborseekers.jobhubapi.dto.JobOfferFilterRequestDTO;
+import thelaborseekers.jobhubapi.model.enums.JobStatus;
 import thelaborseekers.jobhubapi.model.enums.Reputation;
 
 import java.util.List;
@@ -32,5 +34,11 @@ public interface AdminJobOfferService {
     List<JobOfferFilterRequestDTO> filterJobOffer(String location, String title);
 
     List<JobOfferDetailsDTO> getRecommendations(Integer postulanteId);
+
+    List<PostulanteProfileDTO> getPostulantesByJobOfferId(Integer jobOfferId);
+
+    
+    JobOfferDetailsDTO updateJobOfferStatus(Integer jobOfferId, JobStatus status);
+
 
 }
