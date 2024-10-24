@@ -27,10 +27,11 @@ INSERT INTO Postulante (name, last_name, phone, user_id, birthday, created_at, a
 ('Jane', 'Doe',  '555-0104', 5,'1993-08-22',now(), TRUE) On conflict do nothing;
 
 
+
 -- Insertar datos de prueba en la tabla JobModality (suponiendo que existe)
 INSERT INTO Job_modality (id, name, description) VALUES
-                                       (1, 'In person','En esta modalidad trabajas desde una sede asignada'),
-                                       (2, 'hybrid','En esta modalidad se trabajar unos dias desde la sede que se le indique al trabajador y desde casa') On conflict do nothing ;
+                                                     (1, 'In person','En esta modalidad trabajas desde una sede asignada'),
+                                                     (2, 'hybrid','En esta modalidad se trabajar unos dias desde la sede que se le indique al trabajador y desde casa') On conflict do nothing ;
 
 -- Insertar datos de prueba en la tabla JobOffer
 INSERT INTO Job_offers (id, title, description, requirements, logo, location, created_at, salary, benefits, status, job_modality_id, ofertante_id) VALUES
@@ -61,6 +62,15 @@ INSERT INTO Postulacion (id, estado, fecha_aplicacion, postulante_id, oferta_lab
                                                                                              (1, 'Pendiente', '2024-09-10', 5, 1),
                                                                                              (2, 'Aprobado', '2024-09-11', 1, 2),
                                                                                              (3, 'Cancelado', '2024-09-12', 5, 2)ON CONFLICT DO NOTHING;
+
 /*
 INSERT INTO Users (id, email,password) values (1,'u201816862@upc.edu.pe','12345678987')ON CONFLICT DO NOTHING;
+*/
+
+/*
+INSERT INTO roles (id, name)
+VALUES
+    (1, 'ADMIN'),
+    (2, 'POSTUlANTE'),
+    (3, 'OFERTANTE');
 */

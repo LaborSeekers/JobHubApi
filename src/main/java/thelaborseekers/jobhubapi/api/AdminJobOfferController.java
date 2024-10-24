@@ -8,6 +8,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import thelaborseekers.jobhubapi.dto.JobOfferCreateDTO;
 import thelaborseekers.jobhubapi.dto.JobOfferDetailsDTO;
+import thelaborseekers.jobhubapi.dto.JobOfferFilterRequestDTO;
+import thelaborseekers.jobhubapi.exception.BadRequestException;
 import thelaborseekers.jobhubapi.model.entity.JobOffer;
 import thelaborseekers.jobhubapi.model.enums.Reputation;
 import thelaborseekers.jobhubapi.service.AdminJobOfferService;
@@ -63,4 +65,28 @@ public class AdminJobOfferController {
         adminJobOfferService.deleteJobOffer(id);
     }
 
+    /*
+    @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE','OFERTANTE')")
+    @PostMapping("/ofertas/filter")
+    public ResponseEntity<List<JobOfferFilterRequestDTO>> filterJobOffers(@RequestBody JobOfferFilterRequestDTO jobOfferFilterRequestDTO) {
+        List<JobOfferFilterRequestDTO> jobOffers = adminJobOfferService.filterJobOffer(jobOfferFilterRequestDTO);
+
+        if(jobOffers.isEmpty())
+        {
+            throw new BadRequestException("No se encontraron ofertas con los filtros aplicados. ");
+        }
+        return new ResponseEntity<>(jobOffers, HttpStatus.OK);
+    }
+     */
+
+    @PostMapping("/ofertas/filter")
+    public ResponseEntity<List<JobOfferFilterRequestDTO>> filterJobOffer(@RequestParam(required = false, defaultValue = "") String location, @RequestParam(required = false, defaultValue = "") String title){
+        List<JobOfferFilterRequestDTO> jobOffers = adminJobOfferService.filterJobOffer(location, title);
+
+        if(jobOffers.isEmpty()){
+            throw new BadRequestException("No se encontraron ofertas con los filtros aplicados. ");
+        }
+
+        return new ResponseEntity<>(jobOffers, HttpStatus.OK);
+    }
 }

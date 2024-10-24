@@ -1,11 +1,13 @@
 package thelaborseekers.jobhubapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import thelaborseekers.jobhubapi.dto.FavoriteJobOfferDetailDTO;
 import thelaborseekers.jobhubapi.dto.JobOfferCreateDTO;
 import thelaborseekers.jobhubapi.dto.JobOfferDetailsDTO;
+import thelaborseekers.jobhubapi.dto.JobOfferFilterRequestDTO;
 import thelaborseekers.jobhubapi.exception.BadRequestException;
 import thelaborseekers.jobhubapi.exception.ResourceNotFoundException;
 import thelaborseekers.jobhubapi.mapper.JobOfferMapper;
@@ -18,6 +20,7 @@ import thelaborseekers.jobhubapi.model.enums.JobStatus;
 import thelaborseekers.jobhubapi.model.enums.Reputation;
 import thelaborseekers.jobhubapi.repository.FavoriteJobOffersRepository;
 import thelaborseekers.jobhubapi.repository.JobModalityRepository;
+import thelaborseekers.jobhubapi.repository.JobOfferFilterRequestRepository;
 import thelaborseekers.jobhubapi.repository.JobOfferRepository;
 import thelaborseekers.jobhubapi.repository.OfertanteRepository;
 import thelaborseekers.jobhubapi.service.AdminFavoriteJobOffersService;
@@ -27,7 +30,9 @@ import thelaborseekers.jobhubapi.service.AdminOfertanteService;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+
 import java.util.Map;
+
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -40,6 +45,9 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
     private final JobModalityRepository jobModalityRepository;
     private final JobOfferMapper jobOfferMapper;
     private final FavoriteJobOffersRepository favoriteJobOffersRepository;
+
+    @Autowired
+    private JobOfferFilterRequestRepository jobOfferFilterRequestRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -175,6 +183,40 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
             return jobOfferMapper.toJobOfferDetailsDTO(jobOffer);
         }
 
+
+        /*
+    @Override
+    public List<JobOfferFilterRequestDTO> filterJobOffer(JobOfferFilterRequestDTO filterRequest) {
+
+        List<JobOffer> jobOffers = jobOfferFilterRequestRepository.findByLocationAndTitle(filterRequest.getLocation(), filterRequest.getTitle());
+
+        return jobOffers.stream()
+                .map(jobOfferMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+    */
+
+    @Override
+    public List<JobOfferFilterRequestDTO> filterJobOffer(String location, String title){
+        List<JobOffer> jobOffers;
+
+        if(!location.isEmpty() && !title.isEmpty()){
+            jobOffers = jobOfferFilterRequestRepository.findByLocationAndTitle(location, title);
+        } else if (!location.isEmpty()) {
+            //Solo ubicacion
+            jobOffers = jobOfferFilterRequestRepository.findByLocation(location);
+        } else if (!title.isEmpty()) {
+            //Solo titulo
+            jobOffers = jobOfferFilterRequestRepository.findByTitle(title);
+        } else {
+            //ningun filtro
+            jobOffers = jobOfferFilterRequestRepository.findAll();
+        }
+
+        return jobOffers.stream()
+                .map(jobOfferMapper::toDTO)
+                .collect(Collectors.toList());
+
     @Override
     public List<JobOfferDetailsDTO> getRecommendations(Integer postulanteId) {
         List<FavoriteJobOffers> favorites = favoriteJobOffersRepository.findByPostulanteId(postulanteId);
@@ -217,5 +259,6 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
         }
 
         return score;
+
     }
 }
