@@ -153,6 +153,7 @@ public class UserServiceImpl implements UserService {
             postulante.setPhone(userRegistrationDTO.getPhone());
             postulante.setBirthday(userRegistrationDTO.getBirthday());
             postulante.setCreatedAt(LocalDateTime.now());
+            postulante.setActive(false);
 
             postulante.setUser(user);
             user.setPostulante(postulante);
