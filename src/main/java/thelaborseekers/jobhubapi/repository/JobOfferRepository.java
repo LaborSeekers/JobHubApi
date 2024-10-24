@@ -10,8 +10,11 @@ import java.util.Optional;
 
 public interface JobOfferRepository extends JpaRepository<JobOffer, Integer> {
 
+    List<JobOffer> findByOfertanteEmpresaId(Integer companyId);
     Optional<JobOffer> findByTitle(String title);
 
     @Query("SELECT j FROM JobOffer j WHERE (:location IS NULL OR j.location = :location) AND (:modality IS NULL OR j.jobModality = :modality)")
     List<JobOffer> findByLocationAndModality(@Param("location") String location, @Param("modality") Integer modality);
+
+    List<JobOffer> findByLocation(String location);
 }

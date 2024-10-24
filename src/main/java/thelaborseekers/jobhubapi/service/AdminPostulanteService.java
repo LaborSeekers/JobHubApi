@@ -3,6 +3,7 @@ package thelaborseekers.jobhubapi.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import thelaborseekers.jobhubapi.dto.PostulanteRegisterDTO;
+import thelaborseekers.jobhubapi.dto.PostulanteHistorialDTO;
 import thelaborseekers.jobhubapi.dto.PostulanteProfileDTO;
 
 import java.util.List;
@@ -18,4 +19,5 @@ public interface AdminPostulanteService {
      // Nuevos métodos
      List<PostulanteProfileDTO> filterByNameAndLastName(String name, String lastName);
      List<PostulanteProfileDTO> filterByAge(int age);
+     PostulanteHistorialDTO getHistorialPostulaciones(Integer postulanteId);
 }

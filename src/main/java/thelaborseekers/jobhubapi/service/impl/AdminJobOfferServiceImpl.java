@@ -1,27 +1,45 @@
 package thelaborseekers.jobhubapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import thelaborseekers.jobhubapi.dto.FavoriteJobOfferDetailDTO;
 import thelaborseekers.jobhubapi.dto.JobOfferCreateDTO;
 import thelaborseekers.jobhubapi.dto.JobOfferDetailsDTO;
+import thelaborseekers.jobhubapi.dto.JobOfferFilterRequestDTO;
 import thelaborseekers.jobhubapi.exception.BadRequestException;
 import thelaborseekers.jobhubapi.exception.ResourceNotFoundException;
 import thelaborseekers.jobhubapi.mapper.JobOfferMapper;
 import thelaborseekers.jobhubapi.mapper.OfertanteMapper;
+import thelaborseekers.jobhubapi.mapper.PostulanteMapper;
+import thelaborseekers.jobhubapi.mapper.PostulacionMapper;
+import thelaborseekers.jobhubapi.model.entity.FavoriteJobOffers;
 import thelaborseekers.jobhubapi.model.entity.JobModality;
 import thelaborseekers.jobhubapi.model.entity.JobOffer;
 import thelaborseekers.jobhubapi.model.entity.Ofertante;
+import thelaborseekers.jobhubapi.model.entity.Postulacion;
+import thelaborseekers.jobhubapi.model.entity.Review;
 import thelaborseekers.jobhubapi.model.enums.JobStatus;
 import thelaborseekers.jobhubapi.model.enums.Reputation;
+import thelaborseekers.jobhubapi.repository.FavoriteJobOffersRepository;
+import thelaborseekers.jobhubapi.repository.PostulacionRepository;
+import thelaborseekers.jobhubapi.dto.PostulanteProfileDTO;
 import thelaborseekers.jobhubapi.repository.JobModalityRepository;
+import thelaborseekers.jobhubapi.repository.JobOfferFilterRequestRepository;
 import thelaborseekers.jobhubapi.repository.JobOfferRepository;
 import thelaborseekers.jobhubapi.repository.OfertanteRepository;
+import thelaborseekers.jobhubapi.service.AdminFavoriteJobOffersService;
 import thelaborseekers.jobhubapi.service.AdminJobOfferService;
 import thelaborseekers.jobhubapi.service.AdminOfertanteService;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+
+import java.util.Map;
+
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -30,8 +48,14 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
     private final JobOfferRepository jobOfferRepository;
     private final AdminOfertanteService adminOfertanteService;
     private final OfertanteRepository ofertanteRepository;
+    private final PostulacionRepository postulacionRepository;
     private final JobModalityRepository jobModalityRepository;
     private final JobOfferMapper jobOfferMapper;
+    private final PostulanteMapper postulanteMapper;
+    private final FavoriteJobOffersRepository favoriteJobOffersRepository;
+
+    @Autowired
+    private JobOfferFilterRequestRepository jobOfferFilterRequestRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -63,17 +87,12 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
         jobOffer.setJobModality(jobModality);
         jobOffer.setCreatedAt(LocalDateTime.now());
 
-        // Verificar si se ha programado una fecha de publicación
+        // Verificar y establecer la fecha de publicación y el estado
         if (jobOfferCreateDTO.getScheduledPublishAt() != null) {
             jobOffer.setScheduledPublishAt(jobOfferCreateDTO.getScheduledPublishAt());
             jobOffer.setStatus(JobStatus.INACTIVE);  // Si hay una fecha de programación, el estado es INACTIVE
         } else {
-            // Si no se proporciona una fecha de publicación, verificar y establecer el estado de trabajo
-            if (jobOfferCreateDTO.getStatus() == null) {
-                jobOffer.setStatus(JobStatus.ACTIVE);  // Establece como ACTIVE si no se proporciona un estado
-            } else {
-                jobOffer.setStatus(jobOfferCreateDTO.getStatus());  // Asigna el estado proporcionado
-            }
+            jobOffer.setStatus(jobOfferCreateDTO.getStatus() != null ? jobOfferCreateDTO.getStatus() : JobStatus.ACTIVE);
         }
 
         return jobOfferMapper.toJobOfferDetailsDTO(jobOfferRepository.save(jobOffer));
@@ -86,6 +105,16 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
         return joboffers.stream().map(jobOfferMapper::toJobOfferDetailsDTO).toList();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<JobOfferDetailsDTO> getJobOffersByCompanyId(Integer companyId) {
+        // Buscar todas las reviews por el ID de la empresa
+        List<JobOffer> jobOffers = jobOfferRepository.findByOfertanteEmpresaId(companyId);
+        return jobOffers.stream()
+                .map(jobOfferMapper::toJobOfferDetailsDTO)
+                .toList();
+    }
+
 
     @Override
     @Transactional
@@ -93,9 +122,11 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
         JobOffer existingJobOffer = jobOfferRepository.findById(jobOfferId)
                 .orElseThrow(() -> new ResourceNotFoundException("Job offer not found with id: " + jobOfferId));
 
-        jobOfferRepository.findByTitle(jobOfferCreateDTO.getTitle()).ifPresent(jobOffer ->
-        {
-            throw new BadRequestException("Ya existe un trabajo con el mismo titulo.");
+        // Verificar si hay otra oferta con el mismo título, excluyendo la oferta que se está actualizando
+        jobOfferRepository.findByTitle(jobOfferCreateDTO.getTitle()).ifPresent(jobOffer -> {
+            if (!jobOffer.getId().equals(jobOfferId)) { // Asegurarse de que no sea la misma oferta
+                throw new BadRequestException("Ya existe un trabajo con el mismo título.");
+            }
         });
 
         //Asignar FK antes de actualizar
@@ -115,22 +146,17 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
         existingJobOffer.setSalary(jobOfferCreateDTO.getSalary());
         existingJobOffer.setLocation(jobOfferCreateDTO.getLocation());
         existingJobOffer.setStatus(jobOfferCreateDTO.getStatus());
-        existingJobOffer.setJobModality(jobModality);
-        existingJobOffer.setOfertante(ofertante);
-
-        // Verificar si se actualiza la fecha de publicación programada
+        // Actualizar el estado y la fecha de publicación programada
         if (jobOfferCreateDTO.getScheduledPublishAt() != null) {
-            // Si hay una nueva fecha de publicación programada, establecer el estado en INACTIVE
             existingJobOffer.setStatus(JobStatus.INACTIVE);
             existingJobOffer.setScheduledPublishAt(jobOfferCreateDTO.getScheduledPublishAt());
         } else {
-            // Si no se actualiza la fecha de publicación, mantener el estado actual o el proporcionado
-            if (jobOfferCreateDTO.getStatus() != null) {
-                existingJobOffer.setStatus(jobOfferCreateDTO.getStatus()); // Usar el estado proporcionado
-            } else {
-                existingJobOffer.setStatus(existingJobOffer.getStatus()); // Mantener el estado actual
-            }
+            existingJobOffer.setStatus(jobOfferCreateDTO.getStatus() != null ? jobOfferCreateDTO.getStatus() : existingJobOffer.getStatus());
         }
+
+        existingJobOffer.setJobModality(jobModality);
+        existingJobOffer.setOfertante(ofertante);
+
 
         return jobOfferMapper.toJobOfferDetailsDTO(jobOfferRepository.save(existingJobOffer));
     }
@@ -167,4 +193,105 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
             return jobOfferMapper.toJobOfferDetailsDTO(jobOffer);
         }
 
+
+        /*
+    @Override
+    public List<JobOfferFilterRequestDTO> filterJobOffer(JobOfferFilterRequestDTO filterRequest) {
+
+        List<JobOffer> jobOffers = jobOfferFilterRequestRepository.findByLocationAndTitle(filterRequest.getLocation(), filterRequest.getTitle());
+
+        return jobOffers.stream()
+                .map(jobOfferMapper::toDTO)
+                .collect(Collectors.toList());
     }
+    */
+
+    @Override
+    public List<JobOfferFilterRequestDTO> filterJobOffer(String location, String title) {
+        List<JobOffer> jobOffers;
+
+        if (!location.isEmpty() && !title.isEmpty()) {
+            jobOffers = jobOfferFilterRequestRepository.findByLocationAndTitle(location, title);
+        } else if (!location.isEmpty()) {
+            //Solo ubicacion
+            jobOffers = jobOfferFilterRequestRepository.findByLocation(location);
+        } else if (!title.isEmpty()) {
+            //Solo titulo
+            jobOffers = jobOfferFilterRequestRepository.findByTitle(title);
+        } else {
+            //ningun filtro
+            jobOffers = jobOfferFilterRequestRepository.findAll();
+        }
+
+        return jobOffers.stream()
+                .map(jobOfferMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+    @Override
+    public List<JobOfferDetailsDTO> getRecommendations(Integer postulanteId) {
+        List<FavoriteJobOffers> favorites = favoriteJobOffersRepository.findByPostulanteId(postulanteId);
+        Map<JobOffer, Double> scores = new HashMap<>();
+
+        for (FavoriteJobOffers favoriteJobOffers : favorites) {
+            JobOffer favoritejobOffer = favoriteJobOffers.getJobOffer();
+
+            List<JobOffer> similarJobs = jobOfferRepository.findByLocation(favoritejobOffer.getLocation());
+
+            for (JobOffer similarJob : similarJobs) {
+                double score = calculateScore(favoritejobOffer, similarJob);
+                scores.put(similarJob, scores.getOrDefault(similarJob, 0.0) + score);
+            }
+        }
+        return scores.entrySet().stream()
+                .sorted(Map.Entry.<JobOffer, Double>comparingByValue().reversed())
+                .map(Map.Entry::getKey)
+                .limit(5)
+                .map(jobOfferMapper::toJobOfferDetailsDTO)
+                .toList();
+    }
+
+    private double calculateScore(JobOffer favoriteJob, JobOffer similarJob) {
+        double score = 0.0;
+
+        if (favoriteJob.getJobModality().equals(similarJob.getJobModality())) {
+            score += 1.0;
+        }
+
+        if (favoriteJob.getLocation().equalsIgnoreCase(similarJob.getLocation())) {
+            score += 2.0;
+        }
+
+        double salaryDifference = Math.abs(favoriteJob.getSalary() - similarJob.getSalary());
+        if (salaryDifference <= (favoriteJob.getSalary() * 0.1)) {
+            score += 1.0;
+        } else if (salaryDifference <= (favoriteJob.getSalary() * 0.2)) {
+            score += 0.5;
+        }
+
+        return score;
+
+    }
+
+    @Override
+public List<PostulanteProfileDTO> getPostulantesByJobOfferId(Integer jobOfferId) {
+    JobOffer jobOffer = jobOfferRepository.findById(jobOfferId)
+        .orElseThrow(() -> new ResourceNotFoundException("Job offer not found with id: " + jobOfferId));
+    
+    List<Postulacion> postulaciones = postulacionRepository.findByOfertaLaboral(jobOffer);
+
+    return postulaciones.stream()
+        .map((Postulacion postulacion) -> postulanteMapper.toProfileDTO(postulacion.getPostulante())) // Cambiado a toProfileDTO
+        .collect(Collectors.toList());
+}
+
+@Override
+public JobOfferDetailsDTO updateJobOfferStatus(Integer jobOfferId, JobStatus status) {
+    JobOffer jobOffer = jobOfferRepository.findById(jobOfferId)
+        .orElseThrow(() -> new ResourceNotFoundException("Job offer not found with id: " + jobOfferId));
+
+    jobOffer.setStatus(status);
+    jobOfferRepository.save(jobOffer);
+
+    return jobOfferMapper.toJobOfferDetailsDTO(jobOffer);
+}
+}

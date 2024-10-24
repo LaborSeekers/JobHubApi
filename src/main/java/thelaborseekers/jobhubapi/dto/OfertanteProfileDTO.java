@@ -15,14 +15,12 @@ public class OfertanteProfileDTO {
 
     @NotBlank(message = "El nombre es obligatorio")
     @Size(min = 2, max = 50,message = "El nombre debe tener entre 2 a 50 caracteres")
-    private String name;
+    private String firstName;
 
     @NotBlank(message = "El apellido es obligatorio")
     @Size(min = 2, max = 50,message = "El apellido debe tener entre 2 a 50 caracteres")
     private String lastName;
 
-    @NotBlank(message = "El correo electronico es obligatorio")
-    private String email;
 
     @Size(min = 8, message = "El número telefonico no es valido")
     @NotBlank(message = "El telefono celular es obligatorio")

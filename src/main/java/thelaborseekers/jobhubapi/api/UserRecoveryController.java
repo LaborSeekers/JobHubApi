@@ -1,7 +1,8 @@
 package thelaborseekers.jobhubapi.api;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import thelaborseekers.jobhubapi.dto.LoginDto;
+import thelaborseekers.jobhubapi.dto.LoginDTO;
 import thelaborseekers.jobhubapi.dto.RegisterDto;
 import thelaborseekers.jobhubapi.service.UserRecoveryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,14 +10,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @RestController
+@PreAuthorize("hasAnyRole('ADMIN','OFERTANTE')")
 public class UserRecoveryController {
     @Autowired
     private UserRecoveryService userService;
 
+    /*
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
         return new ResponseEntity<>(userService.register(registerDto), HttpStatus.OK);
     }
+    */
 
     @PutMapping("/verify-account")
     public ResponseEntity<String> verifyAccount(@RequestParam String email,
@@ -28,7 +32,7 @@ public class UserRecoveryController {
         return new ResponseEntity<>(userService.regenerateOtp(email), HttpStatus.OK);
     }
     @PutMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<String> login(@RequestBody LoginDTO loginDto) {
         return new ResponseEntity<>(userService.login(loginDto), HttpStatus.OK);
     }
     @PutMapping("/forgot-password")

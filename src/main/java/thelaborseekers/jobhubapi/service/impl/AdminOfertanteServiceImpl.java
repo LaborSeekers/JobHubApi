@@ -12,8 +12,10 @@ import thelaborseekers.jobhubapi.exception.ResourceNotFoundException;
 import thelaborseekers.jobhubapi.mapper.OfertanteMapper;
 import thelaborseekers.jobhubapi.model.entity.Ofertante;
 import thelaborseekers.jobhubapi.repository.OfertanteRepository;
+import thelaborseekers.jobhubapi.repository.UserRepository;
 import thelaborseekers.jobhubapi.service.AdminOfertanteService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -21,6 +23,7 @@ import java.util.List;
 public class AdminOfertanteServiceImpl implements AdminOfertanteService {
     private final OfertanteRepository ofertanteRepository;
     private final OfertanteMapper ofertanteMapper;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
     @Override
@@ -39,11 +42,12 @@ public class AdminOfertanteServiceImpl implements AdminOfertanteService {
     @Transactional
     @Override
     public OfertanteRegisterDTO create(OfertanteRegisterDTO ofertanteRegisterDTO) {
-        if(ofertanteRepository.existsByEmail(ofertanteRegisterDTO.getEmail())) {
+        if(userRepository.existsByEmail(ofertanteRegisterDTO.getEmail())) {
             throw new BadRequestException("Email is already in use");
         }
         Ofertante ofertante = ofertanteMapper.toEntity(ofertanteRegisterDTO);
         ofertante.setReputationValue(100);
+        ofertante.setCreatedAt(LocalDateTime.now());
         ofertante = ofertanteRepository.save(ofertante);
         return ofertanteMapper.toDTO(ofertante);
     }
@@ -60,18 +64,19 @@ public class AdminOfertanteServiceImpl implements AdminOfertanteService {
     public OfertanteRegisterDTO update(Integer id, OfertanteRegisterDTO updatedOfertanteRegisterDTO) {
         Ofertante ofertanteFromDB = ofertanteRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Ofertante not found with id: " + id));
 
-        if(ofertanteRepository.existsByEmail(updatedOfertanteRegisterDTO.getEmail())
-                && !ofertanteFromDB.getEmail().equals(updatedOfertanteRegisterDTO.getEmail())) {
+        if(userRepository.existsByEmail(updatedOfertanteRegisterDTO.getEmail())
+                && !ofertanteFromDB.getUser().getEmail().equals(updatedOfertanteRegisterDTO.getEmail())) {
             throw new BadRequestException("Email is already in use");
         }
-        ofertanteFromDB.setName(updatedOfertanteRegisterDTO.getName());
+        ofertanteFromDB.setFirstName(updatedOfertanteRegisterDTO.getFirstName());
         ofertanteFromDB.setLastName(updatedOfertanteRegisterDTO.getLastName());
-        ofertanteFromDB.setEmail(updatedOfertanteRegisterDTO.getEmail());
+        //ofertanteFromDB.setEmail(updatedOfertanteRegisterDTO.getEmail());
         ofertanteFromDB.setPhone(updatedOfertanteRegisterDTO.getPhone());
         ofertanteFromDB.setBirthday(updatedOfertanteRegisterDTO.getBirthday());
-        ofertanteFromDB.setPassword(updatedOfertanteRegisterDTO.getPassword());
+        //ofertanteFromDB.setPassword(updatedOfertanteRegisterDTO.getPassword());
         ofertanteFromDB.setEmpresa(updatedOfertanteRegisterDTO.getEmpresa());
 
+        ofertanteFromDB.setUpdatedAt(LocalDateTime.now());
         ofertanteFromDB = ofertanteRepository.save(ofertanteFromDB);
         return ofertanteMapper.toDTO(ofertanteFromDB);
     }

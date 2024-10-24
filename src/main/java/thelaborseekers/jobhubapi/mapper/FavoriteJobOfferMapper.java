@@ -21,7 +21,7 @@ public class FavoriteJobOfferMapper {
 
         FavoriteJobOfferDetailDTO favoriteJobOfferDetailDTO = modelMapper.map(favoriteJobOffers, FavoriteJobOfferDetailDTO.class);
 
-        favoriteJobOfferDetailDTO.setPostulante(favoriteJobOffers.getPostulante().getName() + " " + favoriteJobOffers.getPostulante().getLastName());
+        favoriteJobOfferDetailDTO.setPostulante(favoriteJobOffers.getPostulante().getFirstName() + " " + favoriteJobOffers.getPostulante().getLastName());
         favoriteJobOfferDetailDTO.setJobTitle(favoriteJobOffers.getJobOffer().getTitle());
 
         return favoriteJobOfferDetailDTO;
