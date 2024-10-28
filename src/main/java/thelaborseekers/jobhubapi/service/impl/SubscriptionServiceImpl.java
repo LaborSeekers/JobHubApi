@@ -210,7 +210,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         model.put("expirationDate", subscriptionDTO.getEndDate());
         model.put("paymentFrequency", subscriptionDTO.getPaymentFrequency());
         model.put("actualPrice", subscriptionDTO.getTotalAmount());
-        model.put("renewalUrl", domain + "/Ofertantes/subscription");
 
         Mail mail = emailService.createMail(
                 userEmail,

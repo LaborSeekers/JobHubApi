@@ -16,6 +16,7 @@ public class UserProfileDTO {
     @NotBlank(message = "El correo electronico es obligatorio")
     private String email;
     private String role;
+    private Integer userRoleId;
     @NotBlank(message = "El nombre es obligatorio")
     private String firstName;
     @NotBlank(message = "El apellido es obligatorio")
