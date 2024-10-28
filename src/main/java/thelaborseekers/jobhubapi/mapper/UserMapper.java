@@ -29,12 +29,14 @@ public class UserMapper {
           userProfileDTO.setEmpresa(user.getOfertante().getEmpresa());
           userProfileDTO.setBirthday(user.getOfertante().getBirthday());
           userProfileDTO.setPhone(user.getOfertante().getPhone());
+          userProfileDTO.setUserRoleId(user.getOfertante().getId());
       }
       if (user.getPostulante() != null) {
           userProfileDTO.setFirstName(user.getPostulante().getFirstName());
           userProfileDTO.setLastName(user.getPostulante().getLastName());
           userProfileDTO.setBirthday(user.getPostulante().getBirthday());
           userProfileDTO.setPhone(user.getPostulante().getPhone());
+          userProfileDTO.setUserRoleId(user.getPostulante().getId());
       }
         return userProfileDTO;
     }

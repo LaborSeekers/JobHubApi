@@ -34,7 +34,7 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
 
     @Transactional
     @Override
-    public void createAndSendPasswordResetToken(String email) throws Exception {
+    public void createAndSendPasswordResetToken(String email, String url) throws Exception {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
 
@@ -45,9 +45,8 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
         passwordResetTokenRepository.save(passwordResetToken);
 
         Map<String, Object> model = new HashMap<>();
-        String resetUrl = domain + "/forgot-password" + passwordResetToken.getToken();
         model.put("user", user.getEmail());
-        model.put("resetUrl", resetUrl);
+        model.put("resetUrl", url + '/' +passwordResetToken.getToken());
 
         Mail mail = emailService.createMail(
                 user.getEmail(),
