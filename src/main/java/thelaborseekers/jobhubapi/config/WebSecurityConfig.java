@@ -42,13 +42,16 @@ public class WebSecurityConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:4200")); // Permitir solo Angular local
+        corsConfiguration.setAllowedOrigins(Arrays.asList(
+                "http://localhost:4200", // Permitir local
+                "https://master--meek-youtiao-3b238b.netlify.app" // Permitir Netlify
+        ));
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-        corsConfiguration.setAllowCredentials(true); // Si estás manejando cookies o credenciales
+        corsConfiguration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfiguration); // Permitir para todos los endpoints
+        source.registerCorsConfiguration("/**", corsConfiguration);
 
         return new CorsFilter(source);
     }
