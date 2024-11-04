@@ -1,3 +1,10 @@
+
+INSERT INTO Job_offers (id, title, description, requirements, logo, location, created_at, salary, benefits, status, job_modality_id, ofertante_id) VALUES
+                                                                                                                                                       (1, 'Software Engineer', 'Develop and maintain software applications.', 'Java, Spring Boot', 'logo1.png', 'New York', '2024-09-01T09:00:00', 80000, 'Health insurance, 401k', 'ACTIVE', 1, 3),
+                                                                                                                                                       (2, 'Data Scientist', 'Analyze data to provide insights.', 'Python, SQL', 'logo2.png', 'San Francisco', '2024-09-05T09:00:00', 90000, 'Health insurance, stock options', 'INACTIVE', 2, 3),
+                                                                                                                                                       (3, 'AI Specialist', 'Develop and maintain AI models.', 'Python', 'logo3.png', 'Los Angeles', '2024-09-05T09:00:00', 95000, 'Health insurance, stock options', 'ACTIVE', 2, 4) On conflict do nothing;
+
+/*
 INSERT INTO Empresa (name, description) VALUES
                                                 ( 'Tech Innovators', 'A leading company in tech innovation.'),
                                                 ( 'Health Solutions', 'Provider of health and wellness solutions.') On conflict do nothing;
