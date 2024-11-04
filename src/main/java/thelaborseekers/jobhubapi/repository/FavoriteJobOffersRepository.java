@@ -1,6 +1,8 @@
 package thelaborseekers.jobhubapi.repository;
 
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,6 +23,8 @@ public interface FavoriteJobOffersRepository extends JpaRepository<FavoriteJobOf
     List<FavoriteJobOffers> findByPostulanteId( @Param("Postulante_id")Integer postulanteId);
     @Query("SELECT fjo from FavoriteJobOffers fjo WHERE fjo.jobOffer.id = :job_offer_id")
     List<FavoriteJobOffers> findByJobOfferId( @Param("job_offer_id") Integer jobOfferId);
+
+    Page<FavoriteJobOffers> findByPostulanteId(Integer postulanteId, Pageable pageable);
 
     @Modifying
     @Transactional

@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 import thelaborseekers.jobhubapi.dto.JobOfferDetailsDTO;
 import thelaborseekers.jobhubapi.service.AdminJobOfferService;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/recomendations")
@@ -21,7 +24,7 @@ public class JobOfferRecomendationController {
 
     @GetMapping
     public ResponseEntity<List<JobOfferDetailsDTO>> recommendations(Integer postulanteId) {
-        List<JobOfferDetailsDTO> recommended = adminJobOfferService.getRecommendations(postulanteId);
+        List<JobOfferDetailsDTO> recommended = new ArrayList<>(adminJobOfferService.getRecommendations(postulanteId));
         return new ResponseEntity<>(recommended, HttpStatus.OK);
     }
 }

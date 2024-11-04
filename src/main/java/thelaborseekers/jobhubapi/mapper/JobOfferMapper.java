@@ -27,7 +27,7 @@ public class JobOfferMapper {
         JobOfferDetailsDTO dto = modelMapper.map(jobOffer, JobOfferDetailsDTO.class);
         dto.setOfertanteName(jobOffer.getOfertante().getFirstName()+" "+jobOffer.getOfertante().getLastName());
         dto.setJobModalityName(jobOffer.getJobModality().getName());
-
+        dto.setReputation(jobOffer.getOfertante().getReputation());
 
         return dto;
     }

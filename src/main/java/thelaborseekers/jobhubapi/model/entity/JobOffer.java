@@ -26,6 +26,7 @@ public class JobOffer {
     @Column(nullable = false)
     private String requirements;
 
+    @Column(name = "logo", columnDefinition = "TEXT")
     private String logo;
 
     private String location;

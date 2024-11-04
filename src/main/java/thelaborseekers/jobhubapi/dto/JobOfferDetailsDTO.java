@@ -1,8 +1,10 @@
 package thelaborseekers.jobhubapi.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import thelaborseekers.jobhubapi.model.enums.JobStatus;
+import thelaborseekers.jobhubapi.model.enums.Reputation;
 
 import java.time.LocalDateTime;
 
@@ -25,7 +27,14 @@ public class JobOfferDetailsDTO {
 
     private String logo;
 
+    private Reputation reputation;
+
     // En JobOfferDetailsDTO
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime createdAt;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime scheduledPublishAt;
 
     private String ofertanteName;

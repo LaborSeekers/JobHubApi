@@ -3,7 +3,8 @@ package thelaborseekers.jobhubapi.dto;
 import lombok.Data;
 
 @Data
-public class FavoriteJobOfferDetailDTO {
+public class ApplicationCreateDTO {
+    private Integer id;
 
     private Integer postulante_id;
 
