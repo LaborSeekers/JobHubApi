@@ -29,6 +29,12 @@ public class AdminPostulacionController {
     @Autowired
     private AdminPostulacionServiceImpl adminPostulacionServiceImpl;
 
+    @PostMapping
+    public ResponseEntity<PostulacionDTO> crearPostulacion(@Valid @RequestBody PostulacionDTO postulacionDTO) {
+        PostulacionDTO respuestaDTO = adminPostulacionService.crearPostulacion(postulacionDTO);
+        return new ResponseEntity<>(respuestaDTO, HttpStatus.CREATED);
+    }
+
     @PutMapping("/{id}/estado")
     public ResponseEntity<PostulacionDTO> actualizarEstado(@PathVariable("id") Long id, @RequestBody PostulacionEstadoDTO nuevoEstadoDTO) {
         String nuevoEstado = nuevoEstadoDTO.getNuevoEstado();

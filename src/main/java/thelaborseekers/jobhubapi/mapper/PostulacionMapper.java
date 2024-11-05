@@ -20,4 +20,9 @@ public class PostulacionMapper {
         return postulacionDTO;
     }
 
+    public Postulacion toEntity(PostulacionDTO postulacionDTO) {
+        Postulacion postulacion = modelMapper.map(postulacionDTO, Postulacion.class);
+        return postulacion;
+    }
+
 }
