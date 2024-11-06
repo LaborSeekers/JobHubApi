@@ -13,4 +13,5 @@ public interface PostulacionRepository extends JpaRepository<Postulacion, Long> 
     List<Postulacion> findByPostulanteId(Integer postulanteId);
     // Método que encuentra postulaciones según una oferta laboral
     List<Postulacion> findByOfertaLaboral(JobOffer jobOffer);
+    List<Postulacion> findByOfertaLaboralId(Long ofertaLaboralId);
 }

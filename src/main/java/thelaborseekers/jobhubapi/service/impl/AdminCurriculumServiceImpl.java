@@ -56,4 +56,13 @@ public class AdminCurriculumServiceImpl implements AdminCurriculumService {
         Curriculum curriculum = findById(id);
         curriculumRepository.delete(curriculum);
     }
+
+    @Transactional(readOnly = true)
+@Override
+public Curriculum findByPostulanteId(Integer postulanteId) {
+    return curriculumRepository.findByPostulanteId(postulanteId)
+        .orElseThrow(() -> new RuntimeException("Curriculum not found with postulanteId: " + postulanteId));
+}
+
+
 }
