@@ -294,4 +294,6 @@ public JobOfferDetailsDTO updateJobOfferStatus(Integer jobOfferId, JobStatus sta
 
     return jobOfferMapper.toJobOfferDetailsDTO(jobOffer);
 }
+
+
 }

@@ -105,4 +105,6 @@ public ResponseEntity<JobOfferDetailsDTO> updateJobOfferStatus(@PathVariable Int
 }
 
 
+
+
 }
