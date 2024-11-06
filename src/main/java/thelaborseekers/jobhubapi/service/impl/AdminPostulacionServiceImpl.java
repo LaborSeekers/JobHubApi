@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AdminPostulacionServiceImpl implements AdminPostulacionService {
@@ -87,4 +88,12 @@ public class AdminPostulacionServiceImpl implements AdminPostulacionService {
         postulacion = postulacionRepository.save(postulacion);
         return postulacionMapper.toDTO(postulacion);
     }
+
+    @Override
+public List<PostulacionDTO> obtenerPostulacionesPorJobOfferId(Long jobOfferId) {
+    List<Postulacion> postulaciones = postulacionRepository.findByOfertaLaboralId(jobOfferId);
+    return postulaciones.stream()
+            .map(postulacionMapper::toDTO)
+            .collect(Collectors.toList());
+}
 }

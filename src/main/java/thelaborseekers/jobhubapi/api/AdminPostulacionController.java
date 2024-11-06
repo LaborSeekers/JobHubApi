@@ -51,4 +51,11 @@ public class AdminPostulacionController {
         return ResponseEntity.ok(mensajeNotificacion);
     }
 
+    @GetMapping("/oferta/{jobOfferId}")
+@PreAuthorize("hasRole('ADMIN') or hasRole('OFERTANTE')")
+public ResponseEntity<List<PostulacionDTO>> obtenerPostulacionesPorJobOfferId(@PathVariable Long jobOfferId) {
+    List<PostulacionDTO> postulaciones = adminPostulacionService.obtenerPostulacionesPorJobOfferId(jobOfferId);
+    return ResponseEntity.ok(postulaciones);
+}
+
 }

@@ -21,4 +21,5 @@ public interface AdminPostulacionService {
     List<Postulacion> obtenerHistorialPorPostulanteId(Integer postulanteId);
 
     PostulacionDTO crearPostulacion(PostulacionDTO postulacionDTO);
+    List<PostulacionDTO> obtenerPostulacionesPorJobOfferId(Long jobOfferId);
 }
