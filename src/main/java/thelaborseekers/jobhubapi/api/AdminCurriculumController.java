@@ -51,4 +51,8 @@ public class AdminCurriculumController {
     public void delete(@PathVariable Integer id) {
         adminCurriculumService.delete(id);
     }
+    @GetMapping("/user/{postulanteId}")
+    public Curriculum getByUserId(@PathVariable Integer postulanteId) {
+    return adminCurriculumService.findByPostulanteId(postulanteId);
+}
 }

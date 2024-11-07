@@ -11,4 +11,7 @@ public class PostulacionDTO {
     private String ofertaLaboralTitulo;
     private String estado;
     private LocalDate fechaAplicacion;
+    // Nuevos campos de ID para postulante y oferta laboral
+    private Long postulanteId;
+    private Long ofertaLaboralId;
 }

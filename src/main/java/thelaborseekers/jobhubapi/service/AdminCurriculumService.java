@@ -12,5 +12,8 @@ public interface AdminCurriculumService {
     Curriculum create(Curriculum curriculum);
     Curriculum findById(Integer id);
     Curriculum update(Integer id, Curriculum updatedCurriculum);
+    Curriculum findByPostulanteId(Integer postulanteId);
     void delete(Integer id);
+
+    
 }
