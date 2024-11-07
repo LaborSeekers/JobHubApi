@@ -49,6 +49,21 @@ public class AdminJobOfferController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE','OFERTANTE')")
+    @GetMapping("/pageoffer")
+    public ResponseEntity<Page<JobOfferDetailsDTO>> getJobOffers(
+            @RequestParam Integer ofertanteid,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) Integer modality,
+            @RequestParam(required = false) JobStatus status,
+            @RequestParam(required = false) String title,
+            @PageableDefault(size = 5) Pageable pageable) {
+
+        Page<JobOfferDetailsDTO> page = adminJobOfferService.getJobOffersByOffertanteId(ofertanteid, location, modality, status, title, pageable);
+        return ResponseEntity.ok(page);
+    }
+
+
+    @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE','OFERTANTE')")
     @GetMapping("/{jobOfferId}")
     public ResponseEntity<JobOfferDetailsDTO> getJobOfferById(@PathVariable Integer jobOfferId) {
         JobOfferDetailsDTO jobOffer = adminJobOfferService.getJobOfferById(jobOfferId);
