@@ -1,13 +1,24 @@
 package thelaborseekers.jobhubapi.dto;
 
 import lombok.Data;
+import thelaborseekers.jobhubapi.model.entity.JobModality;
+
+import java.time.LocalDateTime;
 
 @Data
 public class FeedbackDetailDTO {
 
-    private String title;
+    private Integer jobOfferID;
 
-    private String name;
+    private String jobTitle;
+    private String jobLocation;
+    private long jobSalary;
+    private String jobLogo;
+    private String jobModality;
+
+    private Integer applicationID;
+
+    private LocalDateTime dateCreated;
 
     private String content;
 }

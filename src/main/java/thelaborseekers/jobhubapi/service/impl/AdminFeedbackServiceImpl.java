@@ -1,6 +1,7 @@
 package thelaborseekers.jobhubapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import thelaborseekers.jobhubapi.dto.FeedbackCreateDTO;
@@ -8,13 +9,16 @@ import thelaborseekers.jobhubapi.dto.FeedbackDetailDTO;
 import thelaborseekers.jobhubapi.exception.BadRequestException;
 import thelaborseekers.jobhubapi.exception.ResourceNotFoundException;
 import thelaborseekers.jobhubapi.mapper.FeedbackMapper;
+import thelaborseekers.jobhubapi.model.entity.Application;
 import thelaborseekers.jobhubapi.model.entity.FavoriteJobOffers;
 import thelaborseekers.jobhubapi.model.entity.Feedback;
+import thelaborseekers.jobhubapi.model.entity.JobOffer;
 import thelaborseekers.jobhubapi.repository.ApplicationRepository;
 import thelaborseekers.jobhubapi.repository.FeedbackRepository;
 import thelaborseekers.jobhubapi.repository.JobOfferRepository;
 import thelaborseekers.jobhubapi.service.AdminFeedbackService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -24,6 +28,7 @@ public class AdminFeedbackServiceImpl implements AdminFeedbackService {
     private final FeedbackMapper feedbackMapper;
     private final JobOfferRepository jobOfferRepository;
     private final ApplicationRepository applicationRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Transactional(readOnly = true)
     @Override
@@ -44,32 +49,52 @@ public class AdminFeedbackServiceImpl implements AdminFeedbackService {
                 .toList();
     }
 
-    @Transactional
     @Override
-    public FeedbackCreateDTO create(Integer jobOfferID, Integer applicationId, String content) {
-        Feedback feedback = feedbackRepository.getFeedbacksByJobOfferAndApplication(jobOfferID, applicationId);
-        if (feedback != null) {
-            throw new BadRequestException("Ya existe feedback con esos id");
-        }
-
-        jobOfferRepository.findById(jobOfferID).orElseThrow(
-                () -> new ResourceNotFoundException("Job offer not found with id: " + jobOfferID));
-        applicationRepository.findById(applicationId).orElseThrow(
-                () -> new ResourceNotFoundException("Application not found with id: " + applicationId));
-
-        feedbackRepository.addFeedback(jobOfferID, applicationId, content);
-
-        FeedbackCreateDTO feedbackCreateDTO = new FeedbackCreateDTO();
-        feedbackCreateDTO.setApplicationID(applicationId);
-        feedbackCreateDTO.setJobOfferID(jobOfferID);
-        feedbackCreateDTO.setContent(content);
-
-        return feedbackCreateDTO;
+    public List<FeedbackDetailDTO> getFeedbacksFromPostulante(Integer postulanteId) {
+        List<Feedback> list = feedbackRepository.getFeedbackFromPostulante(postulanteId);
+        return list.stream()
+                .map(feedbackMapper::toDetailDTO)
+                .toList();
     }
 
     @Transactional
     @Override
-    public FeedbackCreateDTO update(Integer jobOfferID, Integer applicationId, String content) {
+    public FeedbackDetailDTO create(Integer applicationId, String content) {
+        Application app = applicationRepository.findById(applicationId).orElseThrow(
+                () -> new ResourceNotFoundException("Application not found with id: " + applicationId));
+
+        Feedback feedback = feedbackRepository.getFeedbacksByJobOfferAndApplication(app.getJobOffer().getId(), applicationId);
+        if (feedback != null) {
+            throw new BadRequestException("Ya existe feedback con esos id");
+        }
+
+
+
+        JobOffer j = app.getJobOffer();
+        feedback = new Feedback();
+        feedback.setApplication(app);
+        feedback.setDateCreated(LocalDateTime.now());
+        feedback.setJobOffer(j);
+        feedback.setContent(content);
+        feedback = feedbackRepository.save(feedback);
+
+        FeedbackDetailDTO feedbackDetailDTO = feedbackMapper.toDetailDTO(feedback);
+
+        String userId = "POSTULANTE" + app.getPostulante().getId();
+        String userDestination = "/user/" + userId + "/notifications";
+        messagingTemplate.convertAndSend(userDestination, feedbackDetailDTO);
+
+        return feedbackDetailDTO;
+    }
+
+    @Transactional
+    @Override
+    public FeedbackCreateDTO update(Integer applicationId, String content) {
+        Application app = applicationRepository.findById(applicationId).orElseThrow(
+                () -> new ResourceNotFoundException("Application not found with id: " + applicationId));
+
+        Integer jobOfferID = app.getJobOffer().getId();
+
         Feedback feedback =  feedbackRepository.getFeedbacksByJobOfferAndApplication(jobOfferID, applicationId);
         if (feedback == null) {
             throw new ResourceNotFoundException("No existe un feedback con esos id");
