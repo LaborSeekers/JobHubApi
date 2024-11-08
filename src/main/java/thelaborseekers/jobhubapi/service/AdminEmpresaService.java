@@ -12,5 +12,7 @@ public interface AdminEmpresaService {
     EmpresaDTO create(EmpresaDTO postulante);
     EmpresaDTO findById(Integer id);
     EmpresaDTO update(Integer id, EmpresaDTO updatedPostulante);
+
+    EmpresaDTO getEmpresaByJobOfferId(Integer id);
     void delete(Integer id);
 }
