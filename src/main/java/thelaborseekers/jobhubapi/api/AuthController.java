@@ -82,6 +82,11 @@ public class AuthController {
     public PostulanteProfileDTO getPostulanteById(@PathVariable Integer id) {
         return adminPostulanteService.findById(id);
     }
+    @PostMapping("/Postulantes/get")
+    public ResponseEntity<List<PostulanteProfileDTO>> getPostulanteByIds(@RequestBody List<Integer> ids) {
+        List<PostulanteProfileDTO> postulantes = adminPostulanteService.findByIds(ids);
+        return new ResponseEntity<>(postulantes, HttpStatus.OK);
+    }
 
     @PutMapping("/Postulantes/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE')")

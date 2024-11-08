@@ -15,8 +15,8 @@ public interface AdminPostulanteService {
     PostulanteProfileDTO findById(Integer id);
     PostulanteRegisterDTO update(Integer id, PostulanteRegisterDTO updatedPostulanteRegisterDTO);
     void delete(Integer id);
-
-     // Nuevos métodos
+    List<PostulanteProfileDTO> findByIds(List<Integer> id);
+    // Nuevos métodos
      List<PostulanteProfileDTO> filterByNameAndLastName(String name, String lastName);
      List<PostulanteProfileDTO> filterByAge(int age);
      PostulanteHistorialDTO getHistorialPostulaciones(Integer postulanteId);
