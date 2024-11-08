@@ -20,6 +20,7 @@ public interface AdminCurriculumService {
     CurriculumDTO findByUserId(Integer id);
     //Curriculum update(Integer id, Curriculum updatedCurriculum);
     void delete(Integer id);
+    Curriculum findByPostulanteId(Integer postulanteId);
 
     
 }
