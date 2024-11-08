@@ -41,12 +41,12 @@ public class Postulante {
 
     @OneToOne
     @JoinColumn(name = "user_id",referencedColumnName = "id")
+    @JsonIgnore
     private User user;
 
     // Relación uno a muchos con postulaciones
     @OneToMany(mappedBy = "postulante", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore // Para evitar ciclos en la serialización JSON
     private List<Postulacion> postulaciones;
-
 
 }

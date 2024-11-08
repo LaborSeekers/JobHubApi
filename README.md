@@ -10,7 +10,7 @@ El propósito de **JobHub** es ofrecer una solución completa que optimice la ma
 |------|---|
 | Anthony Hans Tarrillo Ayllón | Desarrollador |
 | Fernando Samuel Paredes Espinoza | Desarrollador |
-| Guido Yair Abel Jeri Saldaña | Desarrollador |
+| Guido Yair Abel Jeri Saldaña | Desarrollador |        
 | José Giovanni Laura Silvera | Desarrollador |
 | Karim Wagner Samanamud Mosquera | Líder del Proyecto |
 

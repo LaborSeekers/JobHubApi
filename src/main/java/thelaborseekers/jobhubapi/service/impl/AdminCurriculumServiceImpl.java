@@ -107,6 +107,7 @@ public class AdminCurriculumServiceImpl implements AdminCurriculumService {
     }
 
 
+
     private void updateLanguages(Curriculum curriculum, List<Language> updatedLanguages) {
         if(updatedLanguages !=null){
 
@@ -157,6 +158,14 @@ public class AdminCurriculumServiceImpl implements AdminCurriculumService {
         }
 
     }
+
+
+    @Transactional(readOnly = true)
+@Override
+public Curriculum findByPostulanteId(Integer postulanteId) {
+    return curriculumRepository.findByPostulanteId(postulanteId)
+        .orElseThrow(() -> new RuntimeException("Curriculum not found with postulanteId: " + postulanteId));
+}
 
 
 

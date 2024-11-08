@@ -29,6 +29,12 @@ public class AdminPostulacionController {
     @Autowired
     private AdminPostulacionServiceImpl adminPostulacionServiceImpl;
 
+    @PostMapping
+    public ResponseEntity<PostulacionDTO> crearPostulacion(@Valid @RequestBody PostulacionDTO postulacionDTO) {
+        PostulacionDTO respuestaDTO = adminPostulacionService.crearPostulacion(postulacionDTO);
+        return new ResponseEntity<>(respuestaDTO, HttpStatus.CREATED);
+    }
+
     @PutMapping("/{id}/estado")
     public ResponseEntity<PostulacionDTO> actualizarEstado(@PathVariable("id") Long id, @RequestBody PostulacionEstadoDTO nuevoEstadoDTO) {
         String nuevoEstado = nuevoEstadoDTO.getNuevoEstado();
@@ -44,5 +50,12 @@ public class AdminPostulacionController {
         String mensajeNotificacion = adminPostulacionServiceImpl.obtenerNotificacion(id);
         return ResponseEntity.ok(mensajeNotificacion);
     }
+
+    @GetMapping("/oferta/{jobOfferId}")
+@PreAuthorize("hasRole('ADMIN') or hasRole('OFERTANTE')")
+public ResponseEntity<List<PostulacionDTO>> obtenerPostulacionesPorJobOfferId(@PathVariable Long jobOfferId) {
+    List<PostulacionDTO> postulaciones = adminPostulacionService.obtenerPostulacionesPorJobOfferId(jobOfferId);
+    return ResponseEntity.ok(postulaciones);
+}
 
 }

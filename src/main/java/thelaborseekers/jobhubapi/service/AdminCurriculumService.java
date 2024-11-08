@@ -13,10 +13,13 @@ import java.util.List;
 public interface AdminCurriculumService {
     List<Curriculum> findAll();
     Page<Curriculum> paginate(Pageable pageable);
+
     //Curriculum create(Curriculum curriculum);
     CurriculumDTO createCompleteCurriculum(Curriculum curriculum, List<Language> languages, List<Education> educations,List<WorkExperience> workExperiences);
     CurriculumDTO updateCurriculum(Integer id, Curriculum updatedCurriculum,List<Language> updatedLanguages, List<Education> updatedEducations,List<WorkExperience> updatedWorkExperiences);
     CurriculumDTO findByUserId(Integer id);
     //Curriculum update(Integer id, Curriculum updatedCurriculum);
     void delete(Integer id);
+
+    
 }

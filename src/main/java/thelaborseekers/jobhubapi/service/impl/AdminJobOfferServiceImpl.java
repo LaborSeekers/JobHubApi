@@ -119,6 +119,22 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
         Page<JobOffer> joboffers = jobOfferRepository.findByLocationAndModalityAndStatusAndTitle(locationFixed, modality, status, titleFixed ,pageable);
         return joboffers.map(jobOfferMapper::toJobOfferDetailsDTO);
     }
+    @Override
+    public Page<JobOfferDetailsDTO> getJobOffersByOffertanteId(Integer offertanteId, String location, Integer modality, JobStatus status, String title, Pageable pageable) {
+        // Agregar caracteres comodín a location y title para hacer coincidencias parciales
+        String locationFixed = location != null ? '%' + location + '%' : null;
+        String titleFixed = title != null ? '%' + title + '%' : null;
+
+        // Llama al repositorio para obtener las ofertas de trabajo según los filtros aplicados
+        Page<JobOffer> jobOffers = jobOfferRepository.findByLocationAndModalityAndStatusAndTitleAndOfertanteId(
+                locationFixed, modality, status, titleFixed, offertanteId, pageable
+        );
+
+        // Mapea las ofertas de trabajo a DTOs
+        return jobOffers.map(jobOfferMapper::toJobOfferDetailsDTO);
+    }
+
+
 
     @Override
     public List<JobOfferDetailsDTO> findAllActive() {
@@ -333,4 +349,6 @@ public JobOfferDetailsDTO updateJobOfferStatus(Integer jobOfferId, JobStatus sta
 
     return jobOfferMapper.toJobOfferDetailsDTO(jobOffer);
 }
+
+
 }
