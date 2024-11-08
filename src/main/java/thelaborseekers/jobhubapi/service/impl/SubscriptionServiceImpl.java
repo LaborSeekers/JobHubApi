@@ -96,9 +96,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         Subscription subscriptionDB = subscriptionRepository.findById(subscriptionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Subscription not found with id: " + subscriptionId));
 
-        subscriptionDB.setStatus(SubscriptionStatus.CANCELLED);
+        if(subscriptionDB.getStatus() == SubscriptionStatus.INACTIVE){
+            subscriptionRepository.delete(subscriptionDB);
+        } else {
 
-        subscriptionRepository.save(subscriptionDB);
+            subscriptionDB.setStatus(SubscriptionStatus.CANCELLED);
+
+            subscriptionRepository.save(subscriptionDB);
+        }
     }
 
     @Override
@@ -210,7 +215,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         model.put("expirationDate", subscriptionDTO.getEndDate());
         model.put("paymentFrequency", subscriptionDTO.getPaymentFrequency());
         model.put("actualPrice", subscriptionDTO.getTotalAmount());
-        model.put("renewalUrl", domain + "/Ofertantes/subscription");
 
         Mail mail = emailService.createMail(
                 userEmail,

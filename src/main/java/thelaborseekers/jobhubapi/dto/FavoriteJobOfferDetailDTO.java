@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class FavoriteJobOfferDetailDTO {
 
-    private String postulante;
+    private Integer postulante_id;
 
-    private String jobTitle;
+    private Integer jobOffer_id;
 }

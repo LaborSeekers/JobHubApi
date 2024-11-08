@@ -3,6 +3,7 @@ package thelaborseekers.jobhubapi.api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import thelaborseekers.jobhubapi.dto.FeedbackCreateDTO;
@@ -29,18 +30,23 @@ public class AdminFeedbackController {
         return ResponseEntity.ok(adminFeedbackService.getFeedbacksByJobOffer(jobOfferId));
     }
 
+    @GetMapping("/from-postulante")
+    public ResponseEntity<List<FeedbackDetailDTO>> getFeedbacksFromPostulante(@RequestParam Integer postulanteId) {
+        return ResponseEntity.ok(adminFeedbackService.getFeedbacksFromPostulante(postulanteId));
+    }
+
     @PreAuthorize("hasAnyRole('ADMIN','OFERTANTE')")
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/job/{job_offer_id}/add-feedback")
-    public ResponseEntity<FeedbackCreateDTO> create(@PathVariable Integer job_offer_id, @RequestParam Integer applicationId, @RequestParam String content) {
-        FeedbackCreateDTO feedbackCreateDTO = adminFeedbackService.create(job_offer_id, applicationId, content);
-        return new ResponseEntity<>(feedbackCreateDTO, HttpStatus.CREATED);
+    @PostMapping("/add")
+    public ResponseEntity<FeedbackDetailDTO> create(@RequestParam Integer applicationId, @RequestParam String content) {
+        FeedbackDetailDTO feedbackDetailDTO = adminFeedbackService.create(applicationId, content);
+        return new ResponseEntity<>(feedbackDetailDTO, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','OFERTANTE')")
     @PatchMapping("/update")
-    public ResponseEntity<FeedbackCreateDTO> update(@RequestParam Integer jobOfferID, @RequestParam Integer applicationId, @RequestParam String content) {
-        FeedbackCreateDTO feedbackCreateDTO = adminFeedbackService.update(jobOfferID, applicationId, content);
+    public ResponseEntity<FeedbackCreateDTO> update(@RequestParam Integer applicationId, @RequestParam String content) {
+        FeedbackCreateDTO feedbackCreateDTO = adminFeedbackService.update(applicationId, content);
         return new ResponseEntity<>(feedbackCreateDTO, HttpStatus.OK);
     }
 

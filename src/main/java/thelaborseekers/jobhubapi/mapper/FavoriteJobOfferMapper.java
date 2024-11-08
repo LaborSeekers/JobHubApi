@@ -19,10 +19,9 @@ public class FavoriteJobOfferMapper {
 
     public FavoriteJobOfferDetailDTO toDetailDTO(FavoriteJobOffers favoriteJobOffers) {
 
-        FavoriteJobOfferDetailDTO favoriteJobOfferDetailDTO = modelMapper.map(favoriteJobOffers, FavoriteJobOfferDetailDTO.class);
-
-        favoriteJobOfferDetailDTO.setPostulante(favoriteJobOffers.getPostulante().getFirstName() + " " + favoriteJobOffers.getPostulante().getLastName());
-        favoriteJobOfferDetailDTO.setJobTitle(favoriteJobOffers.getJobOffer().getTitle());
+        FavoriteJobOfferDetailDTO favoriteJobOfferDetailDTO = new FavoriteJobOfferDetailDTO();
+        favoriteJobOfferDetailDTO.setPostulante_id(favoriteJobOffers.getPostulante().getId());
+        favoriteJobOfferDetailDTO.setJobOffer_id(favoriteJobOffers.getJobOffer().getId());
 
         return favoriteJobOfferDetailDTO;
     }

@@ -2,6 +2,8 @@ package thelaborseekers.jobhubapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import thelaborseekers.jobhubapi.dto.FavoriteJobOfferDetailDTO;
@@ -34,10 +36,7 @@ import thelaborseekers.jobhubapi.service.AdminJobOfferService;
 import thelaborseekers.jobhubapi.service.AdminOfertanteService;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-
-import java.util.Map;
+import java.util.*;
 
 import java.util.stream.Collectors;
 
@@ -64,6 +63,14 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
                 .orElseThrow(() -> new ResourceNotFoundException("JobOffer not found with id: " + jobOfferId));
 
         return jobOfferMapper.toJobOfferDetailsDTO(jobOffer);
+    }
+
+    @Override
+    public Page<JobOfferDetailsDTO> getJobOffersByIds(List<Integer> jobOfferIds, String location, Integer modality, JobStatus status, String title, Pageable pageable) {
+        String locationFixed = '%' + location + '%';
+        String titleFixed = '%' + title + '%';
+        Page<JobOffer> page = jobOfferRepository.findByIds(jobOfferIds, locationFixed, modality, status, titleFixed, pageable);
+        return page.map(jobOfferMapper::toJobOfferDetailsDTO);
     }
 
     @Override
@@ -104,6 +111,37 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
         List<JobOffer> joboffers =jobOfferRepository.findAll();
         return joboffers.stream().map(jobOfferMapper::toJobOfferDetailsDTO).toList();
     }
+
+    @Override
+    public Page<JobOfferDetailsDTO> getJobOffersPage(String location, Integer modality, JobStatus status, String title, Pageable pageable) {
+        String locationFixed = '%' + location + '%';
+        String titleFixed = '%' + title + '%';
+        Page<JobOffer> joboffers = jobOfferRepository.findByLocationAndModalityAndStatusAndTitle(locationFixed, modality, status, titleFixed ,pageable);
+        return joboffers.map(jobOfferMapper::toJobOfferDetailsDTO);
+    }
+    @Override
+    public Page<JobOfferDetailsDTO> getJobOffersByOffertanteId(Integer offertanteId, String location, Integer modality, JobStatus status, String title, Pageable pageable) {
+        // Agregar caracteres comodín a location y title para hacer coincidencias parciales
+        String locationFixed = location != null ? '%' + location + '%' : null;
+        String titleFixed = title != null ? '%' + title + '%' : null;
+
+        // Llama al repositorio para obtener las ofertas de trabajo según los filtros aplicados
+        Page<JobOffer> jobOffers = jobOfferRepository.findByLocationAndModalityAndStatusAndTitleAndOfertanteId(
+                locationFixed, modality, status, titleFixed, offertanteId, pageable
+        );
+
+        // Mapea las ofertas de trabajo a DTOs
+        return jobOffers.map(jobOfferMapper::toJobOfferDetailsDTO);
+    }
+
+
+
+    @Override
+    public List<JobOfferDetailsDTO> findAllActive() {
+        List<JobOffer> joboffers =jobOfferRepository.findAllActive(JobStatus.ACTIVE);
+        return joboffers.stream().map(jobOfferMapper::toJobOfferDetailsDTO).toList();
+    }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -230,46 +268,63 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
     @Override
     public List<JobOfferDetailsDTO> getRecommendations(Integer postulanteId) {
         List<FavoriteJobOffers> favorites = favoriteJobOffersRepository.findByPostulanteId(postulanteId);
-        Map<JobOffer, Double> scores = new HashMap<>();
-
+        Set<Integer> favoriteJobIds = favorites.stream()
+                .map(favorite -> favorite.getJobOffer().getId())
+                .collect(Collectors.toSet());
+        Map<Integer, Double> scores = new HashMap<>();
+        List<JobOffer> allJobs = jobOfferRepository.findAllActive(JobStatus.ACTIVE);
+        List<JobOffer> simJobs = allJobs.stream()
+                .filter(job -> !favoriteJobIds.contains(job.getId()))
+                .toList();
         for (FavoriteJobOffers favoriteJobOffers : favorites) {
-            JobOffer favoritejobOffer = favoriteJobOffers.getJobOffer();
-
-            List<JobOffer> similarJobs = jobOfferRepository.findByLocation(favoritejobOffer.getLocation());
-
-            for (JobOffer similarJob : similarJobs) {
-                double score = calculateScore(favoritejobOffer, similarJob);
-                scores.put(similarJob, scores.getOrDefault(similarJob, 0.0) + score);
+            JobOffer favoriteJob = favoriteJobOffers.getJobOffer();
+            for (JobOffer similarJob : simJobs) {
+                double score = calculateScore(favoriteJob, similarJob);
+                scores.put(similarJob.getId(), scores.getOrDefault(similarJob.getId(), 0.0) + score);
             }
         }
+
+        // Obtener los trabajos recomendados
         return scores.entrySet().stream()
-                .sorted(Map.Entry.<JobOffer, Double>comparingByValue().reversed())
-                .map(Map.Entry::getKey)
+                .sorted(Map.Entry.<Integer, Double>comparingByValue().reversed())
                 .limit(5)
+                .map(Map.Entry::getKey)
+                .map(jobOfferRepository::findById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .map(jobOfferMapper::toJobOfferDetailsDTO)
                 .toList();
     }
 
     private double calculateScore(JobOffer favoriteJob, JobOffer similarJob) {
+        // Almacenar propiedades en variables locales
+        JobModality favoriteModality = favoriteJob.getJobModality();
+        JobModality similarModality = similarJob.getJobModality();
+        String favoriteLocation = favoriteJob.getLocation();
+        String similarLocation = similarJob.getLocation();
+        double favoriteSalary = favoriteJob.getSalary();
+        double salaryDifference = Math.abs(favoriteSalary - similarJob.getSalary());
+
         double score = 0.0;
 
-        if (favoriteJob.getJobModality().equals(similarJob.getJobModality())) {
+        if (favoriteModality == similarModality) {
             score += 1.0;
         }
 
-        if (favoriteJob.getLocation().equalsIgnoreCase(similarJob.getLocation())) {
+        if (favoriteLocation.equalsIgnoreCase(similarLocation)) {
             score += 2.0;
         }
 
-        double salaryDifference = Math.abs(favoriteJob.getSalary() - similarJob.getSalary());
-        if (salaryDifference <= (favoriteJob.getSalary() * 0.1)) {
+        double salaryThreshold1 = favoriteSalary * 0.1;
+        double salaryThreshold2 = favoriteSalary * 0.2;
+
+        if (salaryDifference <= salaryThreshold1) {
             score += 1.0;
-        } else if (salaryDifference <= (favoriteJob.getSalary() * 0.2)) {
+        } else if (salaryDifference <= salaryThreshold2) {
             score += 0.5;
         }
 
         return score;
-
     }
 
     @Override
@@ -294,4 +349,6 @@ public JobOfferDetailsDTO updateJobOfferStatus(Integer jobOfferId, JobStatus sta
 
     return jobOfferMapper.toJobOfferDetailsDTO(jobOffer);
 }
+
+
 }

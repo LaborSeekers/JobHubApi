@@ -2,14 +2,15 @@ package thelaborseekers.jobhubapi.api;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import thelaborseekers.jobhubapi.dto.JobOfferCreateDTO;
-import thelaborseekers.jobhubapi.dto.JobOfferDetailsDTO;
-import thelaborseekers.jobhubapi.dto.PostulanteProfileDTO;
-import thelaborseekers.jobhubapi.dto.JobOfferFilterRequestDTO;
+import thelaborseekers.jobhubapi.dto.*;
 import thelaborseekers.jobhubapi.exception.BadRequestException;
 import thelaborseekers.jobhubapi.model.entity.JobOffer;
 import thelaborseekers.jobhubapi.model.enums.JobStatus;
@@ -41,12 +42,41 @@ public class AdminJobOfferController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE','OFERTANTE')")
+    @GetMapping("/page")
+    public ResponseEntity<Page<JobOfferDetailsDTO>> findPage(@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable, String location, Integer modality, JobStatus status, String title) {
+        Page<JobOfferDetailsDTO> page = adminJobOfferService.getJobOffersPage(location, modality, status, title, pageable);
+        return new ResponseEntity<>(page, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE','OFERTANTE')")
+    @GetMapping("/pageoffer")
+    public ResponseEntity<Page<JobOfferDetailsDTO>> getJobOffers(
+            @RequestParam Integer ofertanteid,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) Integer modality,
+            @RequestParam(required = false) JobStatus status,
+            @RequestParam(required = false) String title,
+            @PageableDefault(size = 5) Pageable pageable) {
+
+        Page<JobOfferDetailsDTO> page = adminJobOfferService.getJobOffersByOffertanteId(ofertanteid, location, modality, status, title, pageable);
+        return ResponseEntity.ok(page);
+    }
+
+
+    @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE','OFERTANTE')")
     @GetMapping("/{jobOfferId}")
     public ResponseEntity<JobOfferDetailsDTO> getJobOfferById(@PathVariable Integer jobOfferId) {
         JobOfferDetailsDTO jobOffer = adminJobOfferService.getJobOfferById(jobOfferId);
         return ResponseEntity.ok(jobOffer);
-
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE','OFERTANTE')")
+    @PostMapping("/details")
+    public ResponseEntity<Page<JobOfferDetailsDTO>> getJobOfferByIds(@RequestBody List<Integer> Ids,@RequestParam String location, Integer modality, JobStatus status,@RequestParam String title,@PageableDefault(size = 5) Pageable pageable) {
+        Page<JobOfferDetailsDTO> page = adminJobOfferService.getJobOffersByIds(Ids,location,modality,status,title,pageable);
+        return ResponseEntity.ok(page);
+    }
+
     @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE','OFERTANTE')")
     @GetMapping("/reputation/{jobOfferId}")
     public ResponseEntity<Reputation> getReputationJobOfferById(@PathVariable Integer jobOfferId) {
@@ -103,6 +133,8 @@ public ResponseEntity<JobOfferDetailsDTO> updateJobOfferStatus(@PathVariable Int
     JobOfferDetailsDTO updatedJobOffer = adminJobOfferService.updateJobOfferStatus(jobOfferId, status);
     return new ResponseEntity<>(updatedJobOffer, HttpStatus.OK);
 }
+
+
 
 
 }

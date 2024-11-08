@@ -13,8 +13,8 @@ public class MailController {
     private final PasswordResetTokenService passwordResetTokenService;
 
     @PostMapping("/sendMail")
-    public ResponseEntity<Void> sendPasswordResetMail(@RequestBody String email) throws Exception {
-        passwordResetTokenService.createAndSendPasswordResetToken(email);
+    public ResponseEntity<Void> sendPasswordResetMail(@RequestBody String email, @RequestParam String url) throws Exception {
+        passwordResetTokenService.createAndSendPasswordResetToken(email, url);
         return ResponseEntity.ok().build();
     }
 

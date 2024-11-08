@@ -3,8 +3,9 @@ package thelaborseekers.jobhubapi.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import thelaborseekers.jobhubapi.model.enums.ApplicationStatus;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -22,5 +23,8 @@ public class Application {
     @JoinColumn(name = "joboffer_id")
     private JobOffer jobOffer;
 
-    private Date dateApplied;
+    private ApplicationStatus status;
+
+    private LocalDateTime dateApplied;
+    private LocalDateTime dateUpdated;
 }

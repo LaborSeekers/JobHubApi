@@ -9,10 +9,12 @@ import thelaborseekers.jobhubapi.mapper.PostulacionMapper;
 import thelaborseekers.jobhubapi.model.entity.Postulacion;
 import thelaborseekers.jobhubapi.repository.PostulacionRepository;
 import thelaborseekers.jobhubapi.service.AdminPostulacionService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AdminPostulacionServiceImpl implements AdminPostulacionService {
@@ -79,4 +81,19 @@ public class AdminPostulacionServiceImpl implements AdminPostulacionService {
     public List<Postulacion> obtenerHistorialPorPostulanteId(Integer postulanteId) {
         return postulacionRepository.findByPostulanteId(postulanteId);
     }
+    @Transactional
+    @Override
+    public PostulacionDTO crearPostulacion(PostulacionDTO postulacionDTO) {
+        Postulacion postulacion = postulacionMapper.toEntity(postulacionDTO);
+        postulacion = postulacionRepository.save(postulacion);
+        return postulacionMapper.toDTO(postulacion);
+    }
+
+    @Override
+public List<PostulacionDTO> obtenerPostulacionesPorJobOfferId(Long jobOfferId) {
+    List<Postulacion> postulaciones = postulacionRepository.findByOfertaLaboralId(jobOfferId);
+    return postulaciones.stream()
+            .map(postulacionMapper::toDTO)
+            .collect(Collectors.toList());
+}
 }

@@ -3,10 +3,13 @@ package thelaborseekers.jobhubapi.api;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import thelaborseekers.jobhubapi.dto.EmpresaDTO;
 import thelaborseekers.jobhubapi.model.entity.Empresa;
+import thelaborseekers.jobhubapi.repository.EmpresaRepository;
+import thelaborseekers.jobhubapi.repository.JobOfferRepository;
 import thelaborseekers.jobhubapi.service.AdminEmpresaService;
 
 import java.util.List;
@@ -17,6 +20,7 @@ import java.util.List;
 @PreAuthorize("hasAnyRole('ADMIN')")
 public class AdminEmpresaController {
     private final AdminEmpresaService adminEmpresaService;
+    private final JobOfferRepository jobOfferRepository;
     @GetMapping()
     public List<EmpresaDTO> list() {return adminEmpresaService.findAll();
     }
@@ -47,6 +51,13 @@ public class AdminEmpresaController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Integer id) {
         adminEmpresaService.delete(id);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE','OFERTANTE')")
+    @GetMapping("/{jobOfferId}/empresa")
+    public ResponseEntity<EmpresaDTO> getEmpresaByJobOfferId(@PathVariable Integer jobOfferId) {
+        EmpresaDTO empresaDTO = adminEmpresaService.getEmpresaByJobOfferId(jobOfferId);
+        return ResponseEntity.ok(empresaDTO);
     }
 
 }

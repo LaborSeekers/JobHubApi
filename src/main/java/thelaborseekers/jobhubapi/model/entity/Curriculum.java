@@ -3,6 +3,8 @@ package thelaborseekers.jobhubapi.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "Curriculum")
@@ -18,5 +20,12 @@ public class Curriculum {
 
     private String content; // Se podría almacenar el contenido en formato JSON o texto plano
 
+    @OneToMany(mappedBy = "curriculum", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Language> languages; // Lista de idiomas que habla el postulante.
 
+    @OneToMany(mappedBy = "curriculum", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WorkExperience> work_experience; // Lista de experiencias laborales del postulante.
+
+    @OneToMany(mappedBy = "curriculum", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Education> education;
 }

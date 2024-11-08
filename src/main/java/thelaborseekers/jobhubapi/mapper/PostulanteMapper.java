@@ -35,8 +35,13 @@ public class PostulanteMapper {
 
         Curriculum cv = curriculumRepository.findByPostulanteId(postulante.getId()).orElse(null);
         PostulanteProfileDTO ProfileDTO = modelMapper.map(postulante, PostulanteProfileDTO.class);
+        ProfileDTO.setEmail(postulante.getUser().getEmail());
         if (cv != null) {
-            ProfileDTO.setCurriculum(modelMapper.map(cv,CurriculumDTO.class));
+            CurriculumDTO CurriculumCompleto =modelMapper.map(cv,CurriculumDTO.class);
+            CurriculumCompleto.setEducation(cv.getEducation());
+            CurriculumCompleto.setLanguages(cv.getLanguages());
+            CurriculumCompleto.setWorkExperience(cv.getWork_experience());
+            ProfileDTO.setCurriculum(CurriculumCompleto);
         }
         return ProfileDTO;
     }

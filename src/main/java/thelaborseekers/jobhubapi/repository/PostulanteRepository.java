@@ -18,6 +18,10 @@ public interface PostulanteRepository extends JpaRepository<Postulante, Integer>
 
     //Optional<Postulante> findByEmail(String email);
 
+    @Query("SELECT p FROM Postulante p WHERE p.id IN :ids")
+    List<Postulante> findByIds(@Param("ids") List<Integer> ids);
+
+
     // Nuevo: Filtrar por nombre y apellido
     @Query("SELECT p FROM Postulante p WHERE LOWER(p.firstName) = LOWER(:firstName) AND LOWER(p.lastName) LIKE LOWER(CONCAT(:lastName, '%'))")
     List<Postulante> findByFirstNameAndLastName(@Param("firstName") String firstName, @Param("lastName") String lastName);

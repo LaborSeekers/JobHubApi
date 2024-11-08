@@ -3,6 +3,9 @@ package thelaborseekers.jobhubapi.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Table(name = "Feedback")
@@ -21,4 +24,7 @@ public class Feedback {
 
     @Column(name = "Contenido")
     private String content;
+
+    @Column(name = "date_created")
+    private LocalDateTime dateCreated;
 }

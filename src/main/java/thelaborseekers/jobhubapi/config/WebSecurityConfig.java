@@ -45,6 +45,9 @@ public class WebSecurityConfig {
         corsConfiguration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:4200", // Permitir local
                 "https://master--meek-youtiao-3b238b.netlify.app" // Permitir Netlify
+                //
+                // Importante: colocar tambien dentro de WebSocketMessageBrokerConfig
+                //
         ));
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
@@ -72,6 +75,8 @@ public class WebSecurityConfig {
                         .requestMatchers(antMatcher("/auth/login")).permitAll()
                         .requestMatchers(antMatcher("/auth/register/Postulantes")).permitAll()
                         .requestMatchers(antMatcher("/mail/")).permitAll()
+                        .requestMatchers("/sse/**").permitAll()
+                        .requestMatchers("/ws/**").permitAll()
                         /*.requestMatchers(antMatcher("/auth/register/Ofertantes")).permitAll()*/ //cualquiera no puede registrarse como ofertante
                         .requestMatchers("/api/v1/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/webjars/**").permitAll()
                         // TODO: Cualquier otra solicitud requiere autenticación (JWT u otra autenticación configurada)

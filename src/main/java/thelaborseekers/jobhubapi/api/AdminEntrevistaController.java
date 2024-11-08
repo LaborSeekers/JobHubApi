@@ -59,4 +59,7 @@ public class AdminEntrevistaController {
         String interviewLink = adminEntrevistaService.enterInterview(entrevistaId);
         return ResponseEntity.ok(interviewLink);
     }
+
+
+
 }

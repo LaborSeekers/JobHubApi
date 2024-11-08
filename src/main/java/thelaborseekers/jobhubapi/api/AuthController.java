@@ -24,7 +24,6 @@ import java.util.List;
 public class AuthController {
 
     private final UserService userService;
-
     private final ExternalAuthService externalAuthService;
     private final AdminPostulanteService adminPostulanteService;
     private final AdminOfertanteService adminOfertanteService;
@@ -47,8 +46,6 @@ public class AuthController {
         AuthResponseDTO authResponseDTO = userService.login(loginDTO);
         return new ResponseEntity<>(authResponseDTO, HttpStatus.OK);
     }
-
-
 
     @PostMapping("/register")
     public ResponseEntity<?> registerExternalAccount(@RequestBody ExternalAccountDto externalAccountDto) {
@@ -84,6 +81,11 @@ public class AuthController {
     @GetMapping("/Postulantes/{id}")
     public PostulanteProfileDTO getPostulanteById(@PathVariable Integer id) {
         return adminPostulanteService.findById(id);
+    }
+    @PostMapping("/Postulantes/get")
+    public ResponseEntity<List<PostulanteProfileDTO>> getPostulanteByIds(@RequestBody List<Integer> ids) {
+        List<PostulanteProfileDTO> postulantes = adminPostulanteService.findByIds(ids);
+        return new ResponseEntity<>(postulantes, HttpStatus.OK);
     }
 
     @PutMapping("/Postulantes/{id}")

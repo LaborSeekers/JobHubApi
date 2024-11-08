@@ -1,6 +1,8 @@
 package thelaborseekers.jobhubapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import thelaborseekers.jobhubapi.dto.FavoriteJobOfferCreateDTO;
@@ -42,6 +44,13 @@ public class AdminFavoriteJobOffersImpl implements AdminFavoriteJobOffersService
         return fjo.stream()
                 .map(favoriteJobOfferMapper::toDetailDTO)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Page<FavoriteJobOfferDetailDTO> get_PostulantsForJobOffer(Integer jobOfferId, Pageable pageable) {
+        Page<FavoriteJobOffers> fjo = favoriteJobOffersRepository.findByPostulanteId(jobOfferId, pageable);
+        return fjo.map(favoriteJobOfferMapper::toDetailDTO);
     }
 
     @Transactional

@@ -36,9 +36,6 @@ public class CheckoutServiceImpl implements CheckoutService {
     public PaymentOrderResponse createPayment(Integer subscriptionId, String returnUrl, String cancelUrl) {
         OrderResponse orderResponse = paypalService.createOrder(subscriptionId, returnUrl, cancelUrl);
 
-        for(Link a : orderResponse.getLinks()){
-            System.out.println(a);
-        }
         String paypalUrl = orderResponse
                 .getLinks()
                 .stream()
@@ -47,7 +44,7 @@ public class CheckoutServiceImpl implements CheckoutService {
                 .orElseThrow(RuntimeException::new)
                 .getHref();
 
-        return new PaymentOrderResponse(paypalUrl);
+        return new PaymentOrderResponse(orderResponse.getId(), paypalUrl);
     }
 
     @Override
