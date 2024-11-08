@@ -13,6 +13,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class UserRecoveryService {
@@ -24,6 +26,8 @@ public class UserRecoveryService {
     private PostulanteRepository postulanteRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /*
     public String register(RegisterDto registerDto) {
@@ -124,11 +128,15 @@ public class UserRecoveryService {
                 .orElseThrow(
                         () -> new RuntimeException("User not found with this email: " + email));
 
+        /*
         if(!user.getPostulante().getActive()){
             throw new BadRequestException("Para restablecer tu contraseña primero verifica tu cuenta");
-        }
+        }*/
 
-        user.setPassword(newPassword);
+        // Codificar la nueva contraseña antes de almacenarla
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedPassword);
+        //user.setPassword(newPassword);
         userRepository.save(user);
         return "New password set successfully login with new password";
     }
