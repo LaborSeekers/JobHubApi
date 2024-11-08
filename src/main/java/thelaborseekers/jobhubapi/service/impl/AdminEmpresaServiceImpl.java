@@ -1,6 +1,7 @@
 package thelaborseekers.jobhubapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,10 @@ import thelaborseekers.jobhubapi.exception.BadRequestException;
 import thelaborseekers.jobhubapi.exception.ResourceNotFoundException;
 import thelaborseekers.jobhubapi.mapper.EmpresaMapper;
 import thelaborseekers.jobhubapi.model.entity.Empresa;
+import thelaborseekers.jobhubapi.model.entity.JobOffer;
+import thelaborseekers.jobhubapi.model.entity.Ofertante;
 import thelaborseekers.jobhubapi.repository.EmpresaRepository;
+import thelaborseekers.jobhubapi.repository.JobOfferRepository;
 import thelaborseekers.jobhubapi.service.AdminEmpresaService;
 
 import java.util.List;
@@ -20,6 +24,8 @@ import java.util.List;
 public class AdminEmpresaServiceImpl implements AdminEmpresaService {
     private final EmpresaRepository empresaRepository;
     private final EmpresaMapper empresaMapper;
+    @Autowired
+    private JobOfferRepository jobOfferRepository;
 
     @Transactional(readOnly = true)
     @Override
@@ -71,6 +77,25 @@ public class AdminEmpresaServiceImpl implements AdminEmpresaService {
         empresaFromDB = empresaRepository.save(empresaFromDB);
         return empresaMapper.toDTO(empresaFromDB);
     }
+
+    public EmpresaDTO getEmpresaByJobOfferId(Integer jobOfferId) {
+        // Buscar la oferta de trabajo por su ID
+        JobOffer jobOffer = jobOfferRepository.findById(jobOfferId)
+                .orElseThrow(() -> new RuntimeException("JobOffer not found with id: " + jobOfferId));
+
+        // Obtener el ofertante asociado con la oferta de trabajo
+        Ofertante ofertante = jobOffer.getOfertante();
+
+        // Si el ofertante tiene empresa asociada, devolver los datos de la empresa
+        if (ofertante != null && ofertante.getEmpresa() != null) {
+            Empresa empresa = ofertante.getEmpresa();
+            // Convertir la empresa a DTO usando el  mapper
+            return empresaMapper.toDTO(empresa);        }
+
+        // Si no hay empresa asociada, puedes lanzar una excepción o devolver null
+        throw new RuntimeException("Empresa not found for JobOffer id: " + jobOfferId);
+    }
+
     @Transactional
     @Override
     public void delete(Integer id) {
