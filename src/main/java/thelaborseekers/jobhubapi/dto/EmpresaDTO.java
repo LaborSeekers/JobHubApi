@@ -15,4 +15,5 @@ public class EmpresaDTO {
     @NotBlank(message = "La descripcion de la empresa es obligatoria")
     @Size(min = 2,message = "La descripcion de la empresa debe tener entre 2 a mas caracteres")
     private String description;
+    private String logo;
 }

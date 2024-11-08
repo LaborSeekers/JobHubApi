@@ -67,6 +67,14 @@ public class AdminPostulanteServiceImpl implements AdminPostulanteService {
         return postulanteMapper.toPostulanteProfileDTO(postulante);
     }
 
+    @Override
+    public List<PostulanteProfileDTO> findByIds(List<Integer> id) {
+        List<Postulante> list = postulanteRepository.findByIds(id);
+        return list.stream()
+                .map(postulanteMapper::toPostulanteProfileDTO)
+                .toList();
+    }
+
     @Transactional
     @Override
     public PostulanteRegisterDTO update(Integer id, PostulanteRegisterDTO updatedPostulanteRegisterDTO) {

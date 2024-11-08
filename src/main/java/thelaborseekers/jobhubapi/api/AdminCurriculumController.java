@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import thelaborseekers.jobhubapi.dto.CurriculumDTO;
 import thelaborseekers.jobhubapi.model.entity.Curriculum;
 import thelaborseekers.jobhubapi.service.AdminCurriculumService;
 
@@ -31,19 +32,19 @@ public class AdminCurriculumController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Curriculum create(@RequestBody Curriculum curriculumForm) {
-        return adminCurriculumService.create(curriculumForm);
+    public CurriculumDTO create(@RequestBody Curriculum curriculumForm) {
+        return adminCurriculumService.createCompleteCurriculum(curriculumForm,curriculumForm.getLanguages(),curriculumForm.getEducation(),curriculumForm.getWork_experience());
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','OFERTANTE')")
+
     @GetMapping("/{id}")
-    public Curriculum get(@PathVariable Integer id) {
-        return adminCurriculumService.findById(id);
+    public CurriculumDTO get(@PathVariable Integer id) {
+        return adminCurriculumService.findByUserId(id);
     }
 
     @PutMapping("/{id}")
-    public Curriculum update(@PathVariable Integer id, @RequestBody Curriculum curriculumForm) {
-        return adminCurriculumService.update(id, curriculumForm);
+    public CurriculumDTO update(@PathVariable Integer id, @RequestBody Curriculum curriculumForm) {
+        return adminCurriculumService.updateCurriculum(id, curriculumForm,curriculumForm.getLanguages(),curriculumForm.getEducation(),curriculumForm.getWork_experience());
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -51,4 +52,8 @@ public class AdminCurriculumController {
     public void delete(@PathVariable Integer id) {
         adminCurriculumService.delete(id);
     }
+    @GetMapping("/user/{postulanteId}")
+    public Curriculum getByUserId(@PathVariable Integer postulanteId) {
+    return adminCurriculumService.findByPostulanteId(postulanteId);
+}
 }

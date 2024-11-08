@@ -12,5 +12,10 @@ public class Empresa {
     private Integer id;
 
     private String name;
+
+
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+    @Column(name = "logo", columnDefinition = "TEXT")
+    private String logo;
 }

@@ -17,6 +17,7 @@ public interface AdminJobOfferService {
 
     List<JobOfferDetailsDTO> getAllJobOffers();
 
+
     Page<JobOfferDetailsDTO> getJobOffersPage (String location, Integer modality, JobStatus status, String title, Pageable pageable);
 
     List<JobOfferDetailsDTO> findAllActive();
@@ -27,6 +28,7 @@ public interface AdminJobOfferService {
 
     JobOfferDetailsDTO getJobOfferById(Integer jobOfferId);
     Page<JobOfferDetailsDTO> getJobOffersByIds(List<Integer> jobOfferIds,String location, Integer modality, JobStatus status, String title, Pageable pageable);
+    Page<JobOfferDetailsDTO> getJobOffersByOffertanteId(Integer offertanteId, String location, Integer modality, JobStatus status, String title, Pageable pageable);
 
     JobOfferDetailsDTO  updateJobOffer(Integer jobOfferId,JobOfferCreateDTO  jobOfferCreateDTO);
 
