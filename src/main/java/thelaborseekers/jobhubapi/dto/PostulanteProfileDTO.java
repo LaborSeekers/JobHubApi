@@ -32,5 +32,7 @@ public class PostulanteProfileDTO {
     @Past(message = "La fecha de nacimiento debe ser una fecha pasada")
     private Date birthday;
 
+    private String email;
+
     private CurriculumDTO curriculum;
 }

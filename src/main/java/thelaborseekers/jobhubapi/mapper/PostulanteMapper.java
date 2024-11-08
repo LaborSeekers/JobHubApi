@@ -35,6 +35,7 @@ public class PostulanteMapper {
 
         Curriculum cv = curriculumRepository.findByPostulanteId(postulante.getId()).orElse(null);
         PostulanteProfileDTO ProfileDTO = modelMapper.map(postulante, PostulanteProfileDTO.class);
+        ProfileDTO.setEmail(postulante.getUser().getEmail());
         if (cv != null) {
             CurriculumDTO CurriculumCompleto =modelMapper.map(cv,CurriculumDTO.class);
             CurriculumCompleto.setEducation(cv.getEducation());
