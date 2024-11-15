@@ -2,10 +2,7 @@ package thelaborseekers.jobhubapi.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import thelaborseekers.jobhubapi.dto.JobOfferCreateDTO;
-import thelaborseekers.jobhubapi.dto.JobOfferDetailsDTO;
-import thelaborseekers.jobhubapi.dto.PostulanteProfileDTO;
-import thelaborseekers.jobhubapi.dto.JobOfferFilterRequestDTO;
+import thelaborseekers.jobhubapi.dto.*;
 import thelaborseekers.jobhubapi.model.enums.JobStatus;
 import thelaborseekers.jobhubapi.model.enums.Reputation;
 
@@ -49,5 +46,5 @@ public interface AdminJobOfferService {
     
     JobOfferDetailsDTO updateJobOfferStatus(Integer jobOfferId, JobStatus status);
 
-
+    List<JobOfferAplicantsDTO> getJobOffersWithApplicantsCountByOfertanteId(Integer ofertanteId);
 }
