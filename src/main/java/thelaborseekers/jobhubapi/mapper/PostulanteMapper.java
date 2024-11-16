@@ -41,6 +41,7 @@ public class PostulanteMapper {
             CurriculumCompleto.setEducation(cv.getEducation());
             CurriculumCompleto.setLanguages(cv.getLanguages());
             CurriculumCompleto.setWorkExperience(cv.getWork_experience());
+            CurriculumCompleto.setSkills(cv.getSkills());
             ProfileDTO.setCurriculum(CurriculumCompleto);
         }
         return ProfileDTO;

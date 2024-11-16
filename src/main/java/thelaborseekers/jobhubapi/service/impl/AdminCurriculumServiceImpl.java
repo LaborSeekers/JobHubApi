@@ -9,14 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import thelaborseekers.jobhubapi.dto.CurriculumDTO;
 import thelaborseekers.jobhubapi.exception.ResourceNotFoundException;
 import thelaborseekers.jobhubapi.mapper.CurriculumMapper;
-import thelaborseekers.jobhubapi.model.entity.Curriculum;
-import thelaborseekers.jobhubapi.model.entity.Education;
-import thelaborseekers.jobhubapi.model.entity.Language;
-import thelaborseekers.jobhubapi.model.entity.WorkExperience;
-import thelaborseekers.jobhubapi.repository.CurriculumRepository;
-import thelaborseekers.jobhubapi.repository.EducationRepository;
-import thelaborseekers.jobhubapi.repository.LanguageRepository;
-import thelaborseekers.jobhubapi.repository.WorkExperienceRepository;
+import thelaborseekers.jobhubapi.model.entity.*;
+import thelaborseekers.jobhubapi.repository.*;
 import thelaborseekers.jobhubapi.service.AdminCurriculumService;
 
 import java.util.List;
@@ -28,6 +22,7 @@ public class AdminCurriculumServiceImpl implements AdminCurriculumService {
     private final EducationRepository educationRepository;
     private final LanguageRepository languageRepository;
     private final WorkExperienceRepository workExperienceRepository;
+    private final SkillRepository skillRepository;
     private final CurriculumMapper curriculumMapper;
 
     private final ModelMapper modelMapper;
@@ -45,7 +40,7 @@ public class AdminCurriculumServiceImpl implements AdminCurriculumService {
 
     @Transactional
     @Override
-    public CurriculumDTO createCompleteCurriculum(Curriculum curriculum, List<Language> languages, List<Education> educations, List<WorkExperience> workExperiences) {
+    public CurriculumDTO createCompleteCurriculum(Curriculum curriculum, List<Language> languages, List<Education> educations, List<WorkExperience> workExperiences, List<Skill> skills) {
         Curriculum savedCurriculum = curriculumRepository.save(curriculum);
 
         //Este forEach agrega los idiomas que hable el postulante en su curriculum y ademas asocia cada uno de esos idiomas con el curriculum en la base de datos
@@ -62,16 +57,20 @@ public class AdminCurriculumServiceImpl implements AdminCurriculumService {
             workExperience.setCurriculum(savedCurriculum);
             workExperienceRepository.save(workExperience);
         });
+        skills.forEach(skill -> {
+            skill.setCurriculum(savedCurriculum);
+            skillRepository.save(skill);});
 
         savedCurriculum.getLanguages().addAll(languages);
         savedCurriculum.getEducation().addAll(educations);
         savedCurriculum.getWork_experience().addAll(workExperiences);
+        savedCurriculum.getSkills().addAll(skills);
         return curriculumMapper.toDTO(curriculumRepository.save(savedCurriculum));
     }
 
     @Transactional
     @Override
-    public CurriculumDTO updateCurriculum(Integer id, Curriculum updatedCurriculum, List<Language> updatedLanguages, List<Education> updatedEducation,List<WorkExperience> updatedWorkExperiences) {
+    public CurriculumDTO updateCurriculum(Integer id, Curriculum updatedCurriculum, List<Language> updatedLanguages, List<Education> updatedEducation,List<WorkExperience> updatedWorkExperiences, List<Skill> skills) {
         Curriculum CurriculumFromDB = curriculumRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Curriculum not found with id: " + id));
 
         // Actualizar los atributos principales del currículum
@@ -82,6 +81,8 @@ public class AdminCurriculumServiceImpl implements AdminCurriculumService {
 
         // Actualizar experiencias laborales
         updateEducation(CurriculumFromDB, updatedEducation);
+
+        updateSkills(CurriculumFromDB, skills);
 
         updateWorkExperience(CurriculumFromDB,updatedWorkExperiences);
 
@@ -153,6 +154,23 @@ public class AdminCurriculumServiceImpl implements AdminCurriculumService {
                     workExperience.setCurriculum(curriculum);
                     workExperienceRepository.save(workExperience);
                     existingWorkExperience.add(workExperience);
+                }
+            });
+        }
+
+    }
+
+    private void updateSkills(Curriculum curriculum, List<Skill> updatedSkills) {
+        if (updatedSkills != null)
+        {
+            List<Skill> existingSkills = curriculum.getSkills();
+            existingSkills.removeIf(skill -> !updatedSkills.contains(skill));
+
+            updatedSkills.forEach(skill -> {
+                if (!existingSkills.contains(skill)) {
+                    skill.setCurriculum(curriculum);
+                    skillRepository.save(skill);
+                    existingSkills.add(skill);
                 }
             });
         }
