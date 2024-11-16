@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Data
 @Entity
 @Table
-public class    WorkExperience {
+public class WorkExperience {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -29,5 +29,5 @@ public class    WorkExperience {
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "curriculum_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_curriculum_id"))
-    Curriculum curriculum;
+    private Curriculum curriculum;
 }

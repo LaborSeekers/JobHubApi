@@ -3,6 +3,7 @@ package thelaborseekers.jobhubapi.dto;
 import lombok.Data;
 import thelaborseekers.jobhubapi.model.entity.Education;
 import thelaborseekers.jobhubapi.model.entity.Language;
+import thelaborseekers.jobhubapi.model.entity.Skill;
 import thelaborseekers.jobhubapi.model.entity.WorkExperience;
 
 import java.util.List;
@@ -14,4 +15,5 @@ public class CurriculumDTO {
     private List<Language> languages;
     private List<WorkExperience> workExperience;
     private List<Education> education;
+    private List<Skill> skills;
 }

@@ -28,4 +28,7 @@ public class Curriculum {
 
     @OneToMany(mappedBy = "curriculum", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Education> education;
+
+    @OneToMany(mappedBy = "curriculum",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Skill> skills;
 }

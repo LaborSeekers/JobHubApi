@@ -33,7 +33,7 @@ public class AdminCurriculumController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public CurriculumDTO create(@RequestBody Curriculum curriculumForm) {
-        return adminCurriculumService.createCompleteCurriculum(curriculumForm,curriculumForm.getLanguages(),curriculumForm.getEducation(),curriculumForm.getWork_experience());
+        return adminCurriculumService.createCompleteCurriculum(curriculumForm,curriculumForm.getLanguages(),curriculumForm.getEducation(),curriculumForm.getWork_experience(),curriculumForm.getSkills());
     }
 
 
@@ -44,7 +44,7 @@ public class AdminCurriculumController {
 
     @PutMapping("/{id}")
     public CurriculumDTO update(@PathVariable Integer id, @RequestBody Curriculum curriculumForm) {
-        return adminCurriculumService.updateCurriculum(id, curriculumForm,curriculumForm.getLanguages(),curriculumForm.getEducation(),curriculumForm.getWork_experience());
+        return adminCurriculumService.updateCurriculum(id, curriculumForm,curriculumForm.getLanguages(),curriculumForm.getEducation(),curriculumForm.getWork_experience(),curriculumForm.getSkills());
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
