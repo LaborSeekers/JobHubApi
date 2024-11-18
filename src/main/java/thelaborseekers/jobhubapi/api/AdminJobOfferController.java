@@ -133,7 +133,11 @@ public ResponseEntity<JobOfferDetailsDTO> updateJobOfferStatus(@PathVariable Int
     return new ResponseEntity<>(updatedJobOffer, HttpStatus.OK);
 }
 
-
+    @GetMapping("/applicants-count/{ofertanteId}")
+    public ResponseEntity<List<JobOfferAplicantsDTO>> getJobOffersWithApplicantsCount(@PathVariable Integer ofertanteId) {
+        List<JobOfferAplicantsDTO> jobOffersWithApplicants = adminJobOfferService.getJobOffersWithApplicantsCountByOfertanteId(ofertanteId);
+        return ResponseEntity.ok(jobOffersWithApplicants);
+    }
 
 
 }

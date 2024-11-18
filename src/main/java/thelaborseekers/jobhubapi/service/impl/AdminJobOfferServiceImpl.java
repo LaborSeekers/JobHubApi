@@ -5,9 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import thelaborseekers.jobhubapi.dto.JobOfferCreateDTO;
-import thelaborseekers.jobhubapi.dto.JobOfferDetailsDTO;
-import thelaborseekers.jobhubapi.dto.JobOfferFilterRequestDTO;
+import thelaborseekers.jobhubapi.dto.*;
 import thelaborseekers.jobhubapi.exception.BadRequestException;
 import thelaborseekers.jobhubapi.exception.ResourceNotFoundException;
 import thelaborseekers.jobhubapi.mapper.JobOfferMapper;
@@ -21,7 +19,6 @@ import thelaborseekers.jobhubapi.model.enums.JobStatus;
 import thelaborseekers.jobhubapi.model.enums.Reputation;
 import thelaborseekers.jobhubapi.repository.FavoriteJobOffersRepository;
 import thelaborseekers.jobhubapi.repository.PostulacionRepository;
-import thelaborseekers.jobhubapi.dto.PostulanteProfileDTO;
 import thelaborseekers.jobhubapi.repository.JobModalityRepository;
 import thelaborseekers.jobhubapi.repository.JobOfferFilterRequestRepository;
 import thelaborseekers.jobhubapi.repository.JobOfferRepository;
@@ -336,6 +333,11 @@ public JobOfferDetailsDTO updateJobOfferStatus(Integer jobOfferId, JobStatus sta
 
     return jobOfferMapper.toJobOfferDetailsDTO(jobOffer);
 }
+
+    @Override
+    public List<JobOfferAplicantsDTO> getJobOffersWithApplicantsCountByOfertanteId(Integer ofertanteId) {
+        return jobOfferRepository.findJobOffersWithApplicantsCountByOfertanteId(ofertanteId);
+    }
 
 
 }

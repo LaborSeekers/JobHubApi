@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import thelaborseekers.jobhubapi.dto.JobOfferAplicantsDTO;
 import thelaborseekers.jobhubapi.model.entity.JobOffer;
 import thelaborseekers.jobhubapi.model.enums.JobStatus;
 
@@ -39,6 +40,11 @@ public interface JobOfferRepository extends JpaRepository<JobOffer, Integer> {
             @Param("ofertanteId") Integer ofertanteId,
             Pageable pageable);
 
-
+    //Reporte
+    @Query("SELECT new thelaborseekers.jobhubapi.dto.JobOfferAplicantsDTO(j.title, COUNT(a)) " +
+            "FROM JobOffer j LEFT JOIN Application a ON a.jobOffer.id = j.id " + // Cambié JOIN por LEFT JOIN
+            "WHERE j.ofertante.id = :ofertanteId " +
+            "GROUP BY j.id")
+    List<JobOfferAplicantsDTO> findJobOffersWithApplicantsCountByOfertanteId(@Param("ofertanteId") Integer ofertanteId);
 
 }

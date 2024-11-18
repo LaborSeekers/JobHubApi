@@ -29,5 +29,5 @@ public class Education {
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "curriculum_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_curriculum_id"))
-    Curriculum curriculum;
+    private Curriculum curriculum;
 }
