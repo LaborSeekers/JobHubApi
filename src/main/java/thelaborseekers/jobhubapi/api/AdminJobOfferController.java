@@ -12,7 +12,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import thelaborseekers.jobhubapi.dto.*;
 import thelaborseekers.jobhubapi.exception.BadRequestException;
-import thelaborseekers.jobhubapi.model.entity.JobOffer;
 import thelaborseekers.jobhubapi.model.enums.JobStatus;
 import thelaborseekers.jobhubapi.model.enums.Reputation;
 import thelaborseekers.jobhubapi.service.AdminJobOfferService;
@@ -28,7 +27,7 @@ public class AdminJobOfferController {
 
 
     @PostMapping
-    public ResponseEntity<JobOfferDetailsDTO> createJobOffer(@Valid @RequestBody JobOfferCreateDTO jobOfferCreateDTO) {
+    public ResponseEntity<JobOfferDetailsDTO> createJobOffer(@RequestBody JobOfferCreateDTO jobOfferCreateDTO) {
         JobOfferDetailsDTO createdJobOffer = adminJobOfferService.createJobOffer(jobOfferCreateDTO);
         // Buscar el Ofertante y el JobModality por ID
         return new ResponseEntity<>(createdJobOffer, HttpStatus.CREATED);

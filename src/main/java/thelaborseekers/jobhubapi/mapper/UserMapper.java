@@ -3,7 +3,6 @@ package thelaborseekers.jobhubapi.mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import thelaborseekers.jobhubapi.dto.AuthResponseDTO;
-import thelaborseekers.jobhubapi.dto.LoginDTO;
 import thelaborseekers.jobhubapi.dto.UserProfileDTO;
 import thelaborseekers.jobhubapi.dto.UserRegistrationDTO;
 import thelaborseekers.jobhubapi.model.entity.User;
@@ -41,10 +40,6 @@ public class UserMapper {
         return userProfileDTO;
     }
 
-    // Funciones para LoginDTO
-    public User toUserEntity(LoginDTO loginDTO) {
-        return modelMapper.map(loginDTO, User.class);
-    }
 
     public AuthResponseDTO toAuthResponseDTO(User user, String token) {
         AuthResponseDTO authResponseDTO =  new AuthResponseDTO();

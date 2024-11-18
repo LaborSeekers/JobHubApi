@@ -4,7 +4,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import thelaborseekers.jobhubapi.dto.FavoriteJobOfferCreateDTO;
 import thelaborseekers.jobhubapi.dto.FavoriteJobOfferDetailDTO;
-import thelaborseekers.jobhubapi.model.entity.FavoriteJobOffers;
 
 
 import java.util.List;

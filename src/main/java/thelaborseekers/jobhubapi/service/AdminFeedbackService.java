@@ -2,7 +2,6 @@ package thelaborseekers.jobhubapi.service;
 
 import thelaborseekers.jobhubapi.dto.FeedbackCreateDTO;
 import thelaborseekers.jobhubapi.dto.FeedbackDetailDTO;
-import thelaborseekers.jobhubapi.model.entity.Feedback;
 
 import java.util.List;
 

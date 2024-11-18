@@ -1,13 +1,10 @@
 package thelaborseekers.jobhubapi.service.impl;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import thelaborseekers.jobhubapi.exception.ResourceNotFoundException;
 import thelaborseekers.jobhubapi.model.entity.Education;
-import thelaborseekers.jobhubapi.model.entity.EducationLevel;
-import thelaborseekers.jobhubapi.model.enums.EduLevel;
 import thelaborseekers.jobhubapi.repository.EducationRepository;
 import thelaborseekers.jobhubapi.service.EducationService;
 

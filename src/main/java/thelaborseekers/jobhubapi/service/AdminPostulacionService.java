@@ -10,16 +10,16 @@ import java.util.List;
 
 public interface AdminPostulacionService {
 
-    Optional<Postulacion> obtenerPostulacionPorId(Long id);
+    Optional<Postulacion> obtenerPostulacionPorId(Integer id);
 
     String notificarCambioDeEstado(Postulacion postulacion, String nuevoEstado);
 
-    PostulacionDTO actualizarEstado(Long id, String nuevoEstado);
+    PostulacionDTO actualizarEstado(Integer id, String nuevoEstado);
 
-    String obtenerNotificacion(Long id);
+    String obtenerNotificacion(Integer id);
     // Nuevo método para obtener historial
     List<Postulacion> obtenerHistorialPorPostulanteId(Integer postulanteId);
 
     PostulacionDTO crearPostulacion(PostulacionDTO postulacionDTO);
-    List<PostulacionDTO> obtenerPostulacionesPorJobOfferId(Long jobOfferId);
+    List<PostulacionDTO> obtenerPostulacionesPorJobOfferId(Integer jobOfferId);
 }

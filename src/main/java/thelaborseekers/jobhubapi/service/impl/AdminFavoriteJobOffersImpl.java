@@ -11,8 +11,6 @@ import thelaborseekers.jobhubapi.exception.BadRequestException;
 import thelaborseekers.jobhubapi.exception.ResourceNotFoundException;
 import thelaborseekers.jobhubapi.mapper.FavoriteJobOfferMapper;
 import thelaborseekers.jobhubapi.model.entity.FavoriteJobOffers;
-import thelaborseekers.jobhubapi.model.entity.JobOffer;
-import thelaborseekers.jobhubapi.model.entity.Postulante;
 import thelaborseekers.jobhubapi.repository.FavoriteJobOffersRepository;
 import thelaborseekers.jobhubapi.repository.JobOfferRepository;
 import thelaborseekers.jobhubapi.repository.PostulanteRepository;

@@ -1,6 +1,6 @@
 package thelaborseekers.jobhubapi.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import thelaborseekers.jobhubapi.dto.PostulacionDTO;
 import thelaborseekers.jobhubapi.exception.BadRequestException;
@@ -17,16 +17,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class AdminPostulacionServiceImpl implements AdminPostulacionService {
 
-    @Autowired
-    private PostulacionRepository postulacionRepository;
+    private final PostulacionRepository postulacionRepository;
 
-    @Autowired
-    private PostulacionMapper postulacionMapper;
+    private final PostulacionMapper postulacionMapper;
 
     @Override
-    public Optional<Postulacion> obtenerPostulacionPorId(Long id) {
+    public Optional<Postulacion> obtenerPostulacionPorId(Integer id) {
         return postulacionRepository.findById(id);
     }
 
@@ -47,7 +46,7 @@ public class AdminPostulacionServiceImpl implements AdminPostulacionService {
     }
 
     @Override
-    public PostulacionDTO actualizarEstado(Long id, String nuevoEstado) {
+    public PostulacionDTO actualizarEstado(Integer id, String nuevoEstado) {
 
         List<String> estadosPermitidos = Arrays.asList("Aprobado", "Finalizado", "Cancelado");
 
@@ -69,7 +68,7 @@ public class AdminPostulacionServiceImpl implements AdminPostulacionService {
 
 
     @Override
-    public String obtenerNotificacion(Long id) {
+    public String obtenerNotificacion(Integer id) {
         Postulacion postulacion = postulacionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Postulación no encontrada para el ID: " + id));
 
@@ -90,7 +89,7 @@ public class AdminPostulacionServiceImpl implements AdminPostulacionService {
     }
 
     @Override
-public List<PostulacionDTO> obtenerPostulacionesPorJobOfferId(Long jobOfferId) {
+public List<PostulacionDTO> obtenerPostulacionesPorJobOfferId(Integer jobOfferId) {
     List<Postulacion> postulaciones = postulacionRepository.findByOfertaLaboralId(jobOfferId);
     return postulaciones.stream()
             .map(postulacionMapper::toDTO)

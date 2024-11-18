@@ -1,27 +1,22 @@
 package thelaborseekers.jobhubapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import thelaborseekers.jobhubapi.dto.FavoriteJobOfferDetailDTO;
 import thelaborseekers.jobhubapi.dto.JobOfferCreateDTO;
 import thelaborseekers.jobhubapi.dto.JobOfferDetailsDTO;
 import thelaborseekers.jobhubapi.dto.JobOfferFilterRequestDTO;
 import thelaborseekers.jobhubapi.exception.BadRequestException;
 import thelaborseekers.jobhubapi.exception.ResourceNotFoundException;
 import thelaborseekers.jobhubapi.mapper.JobOfferMapper;
-import thelaborseekers.jobhubapi.mapper.OfertanteMapper;
 import thelaborseekers.jobhubapi.mapper.PostulanteMapper;
-import thelaborseekers.jobhubapi.mapper.PostulacionMapper;
 import thelaborseekers.jobhubapi.model.entity.FavoriteJobOffers;
 import thelaborseekers.jobhubapi.model.entity.JobModality;
 import thelaborseekers.jobhubapi.model.entity.JobOffer;
 import thelaborseekers.jobhubapi.model.entity.Ofertante;
 import thelaborseekers.jobhubapi.model.entity.Postulacion;
-import thelaborseekers.jobhubapi.model.entity.Review;
 import thelaborseekers.jobhubapi.model.enums.JobStatus;
 import thelaborseekers.jobhubapi.model.enums.Reputation;
 import thelaborseekers.jobhubapi.repository.FavoriteJobOffersRepository;
@@ -31,7 +26,6 @@ import thelaborseekers.jobhubapi.repository.JobModalityRepository;
 import thelaborseekers.jobhubapi.repository.JobOfferFilterRequestRepository;
 import thelaborseekers.jobhubapi.repository.JobOfferRepository;
 import thelaborseekers.jobhubapi.repository.OfertanteRepository;
-import thelaborseekers.jobhubapi.service.AdminFavoriteJobOffersService;
 import thelaborseekers.jobhubapi.service.AdminJobOfferService;
 import thelaborseekers.jobhubapi.service.AdminOfertanteService;
 
@@ -52,9 +46,7 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
     private final JobOfferMapper jobOfferMapper;
     private final PostulanteMapper postulanteMapper;
     private final FavoriteJobOffersRepository favoriteJobOffersRepository;
-
-    @Autowired
-    private JobOfferFilterRequestRepository jobOfferFilterRequestRepository;
+    private final JobOfferFilterRequestRepository jobOfferFilterRequestRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -231,19 +223,6 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
             return jobOfferMapper.toJobOfferDetailsDTO(jobOffer);
         }
 
-
-        /*
-    @Override
-    public List<JobOfferFilterRequestDTO> filterJobOffer(JobOfferFilterRequestDTO filterRequest) {
-
-        List<JobOffer> jobOffers = jobOfferFilterRequestRepository.findByLocationAndTitle(filterRequest.getLocation(), filterRequest.getTitle());
-
-        return jobOffers.stream()
-                .map(jobOfferMapper::toDTO)
-                .collect(Collectors.toList());
-    }
-    */
-
     @Override
     public List<JobOfferFilterRequestDTO> filterJobOffer(String location, String title) {
         List<JobOffer> jobOffers;
@@ -268,6 +247,14 @@ public class AdminJobOfferServiceImpl implements AdminJobOfferService{
     @Override
     public List<JobOfferDetailsDTO> getRecommendations(Integer postulanteId) {
         List<FavoriteJobOffers> favorites = favoriteJobOffersRepository.findByPostulanteId(postulanteId);
+
+        if (favorites.isEmpty()) {
+            return jobOfferRepository.findAllActive(JobStatus.ACTIVE).stream()
+                    .limit(5) // Limitar a las primeras 5 ofertas
+                    .map(jobOfferMapper::toJobOfferDetailsDTO)
+                    .toList();
+        }
+
         Set<Integer> favoriteJobIds = favorites.stream()
                 .map(favorite -> favorite.getJobOffer().getId())
                 .collect(Collectors.toSet());

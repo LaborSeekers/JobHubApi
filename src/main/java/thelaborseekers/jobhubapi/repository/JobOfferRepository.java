@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import thelaborseekers.jobhubapi.model.entity.JobOffer;
-import thelaborseekers.jobhubapi.model.entity.Payment;
 import thelaborseekers.jobhubapi.model.enums.JobStatus;
 
 import java.util.List;
@@ -26,8 +25,6 @@ public interface JobOfferRepository extends JpaRepository<JobOffer, Integer> {
 
     @Query("SELECT j FROM  JobOffer j WHERE j.status = :status")
     List<JobOffer> findAllActive(@Param("status") JobStatus status);
-
-    List<JobOffer> findByLocation(String location);
 
     @Query("SELECT j FROM JobOffer j WHERE (:location IS NULL OR j.location ILIKE :location) " +
             "AND (:modality IS NULL OR j.jobModality.id = :modality) " +
