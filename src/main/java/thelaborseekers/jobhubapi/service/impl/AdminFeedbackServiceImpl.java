@@ -10,12 +10,10 @@ import thelaborseekers.jobhubapi.exception.BadRequestException;
 import thelaborseekers.jobhubapi.exception.ResourceNotFoundException;
 import thelaborseekers.jobhubapi.mapper.FeedbackMapper;
 import thelaborseekers.jobhubapi.model.entity.Application;
-import thelaborseekers.jobhubapi.model.entity.FavoriteJobOffers;
 import thelaborseekers.jobhubapi.model.entity.Feedback;
 import thelaborseekers.jobhubapi.model.entity.JobOffer;
 import thelaborseekers.jobhubapi.repository.ApplicationRepository;
 import thelaborseekers.jobhubapi.repository.FeedbackRepository;
-import thelaborseekers.jobhubapi.repository.JobOfferRepository;
 import thelaborseekers.jobhubapi.service.AdminFeedbackService;
 
 import java.time.LocalDateTime;
@@ -26,7 +24,6 @@ import java.util.List;
 public class AdminFeedbackServiceImpl implements AdminFeedbackService {
     private final FeedbackRepository feedbackRepository;
     private final FeedbackMapper feedbackMapper;
-    private final JobOfferRepository jobOfferRepository;
     private final ApplicationRepository applicationRepository;
     private final SimpMessagingTemplate messagingTemplate;
 

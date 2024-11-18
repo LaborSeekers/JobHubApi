@@ -1,7 +1,6 @@
 package thelaborseekers.jobhubapi.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,8 +23,7 @@ import java.util.List;
 public class AdminEmpresaServiceImpl implements AdminEmpresaService {
     private final EmpresaRepository empresaRepository;
     private final EmpresaMapper empresaMapper;
-    @Autowired
-    private JobOfferRepository jobOfferRepository;
+    private final JobOfferRepository jobOfferRepository;
 
     @Transactional(readOnly = true)
     @Override
@@ -64,7 +62,7 @@ public class AdminEmpresaServiceImpl implements AdminEmpresaService {
     @Transactional
     @Override
     public EmpresaDTO update(Integer id, EmpresaDTO updatedEmpresaDTO){
-        Empresa empresaFromDB = empresaRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Empresa not found with id: " + id));;
+        Empresa empresaFromDB = empresaRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Empresa not found with id: " + id));
 
         empresaRepository.findByName(updatedEmpresaDTO.getName())
                 .filter(existingEmpresa -> !existingEmpresa.getId().equals(id))

@@ -1,8 +1,6 @@
 package thelaborseekers.jobhubapi.service;
 
 import thelaborseekers.jobhubapi.model.entity.Education;
-import thelaborseekers.jobhubapi.model.entity.EducationLevel;
-import thelaborseekers.jobhubapi.model.enums.EduLevel;
 
 import java.util.List;
 

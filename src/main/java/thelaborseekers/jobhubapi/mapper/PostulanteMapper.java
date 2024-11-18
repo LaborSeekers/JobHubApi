@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import thelaborseekers.jobhubapi.dto.CurriculumDTO;
 import thelaborseekers.jobhubapi.dto.PostulanteRegisterDTO;
 import thelaborseekers.jobhubapi.dto.PostulanteProfileDTO;
-import thelaborseekers.jobhubapi.exception.ResourceNotFoundException;
 import thelaborseekers.jobhubapi.model.entity.Curriculum;
 import thelaborseekers.jobhubapi.model.entity.Postulante;
 import thelaborseekers.jobhubapi.repository.CurriculumRepository;
@@ -36,6 +35,7 @@ public class PostulanteMapper {
         Curriculum cv = curriculumRepository.findByPostulanteId(postulante.getId()).orElse(null);
         PostulanteProfileDTO ProfileDTO = modelMapper.map(postulante, PostulanteProfileDTO.class);
         ProfileDTO.setEmail(postulante.getUser().getEmail());
+        ProfileDTO.setUserId(postulante.getUser().getId());
         if (cv != null) {
             CurriculumDTO CurriculumCompleto =modelMapper.map(cv,CurriculumDTO.class);
             CurriculumCompleto.setEducation(cv.getEducation());

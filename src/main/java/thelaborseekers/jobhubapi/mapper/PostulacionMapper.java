@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import thelaborseekers.jobhubapi.dto.PostulacionDTO;
 import thelaborseekers.jobhubapi.model.entity.Postulacion;
-import thelaborseekers.jobhubapi.repository.PostulacionRepository;
 import thelaborseekers.jobhubapi.repository.PostulanteRepository;
 import thelaborseekers.jobhubapi.repository.JobOfferRepository;
 

@@ -1,33 +1,26 @@
 package thelaborseekers.jobhubapi.api;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import thelaborseekers.jobhubapi.dto.PostulacionDTO;
 import thelaborseekers.jobhubapi.dto.PostulacionEstadoDTO;
-import thelaborseekers.jobhubapi.mapper.PostulacionMapper;
-import thelaborseekers.jobhubapi.model.entity.Postulacion;
 import thelaborseekers.jobhubapi.service.AdminPostulacionService;
 import thelaborseekers.jobhubapi.service.impl.AdminPostulacionServiceImpl;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/admin/postulaciones")
 @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE')")
+@RequiredArgsConstructor
 public class AdminPostulacionController {
 
-    @Autowired
-    private AdminPostulacionService adminPostulacionService;
-
-    @Autowired
-    private PostulacionMapper postulacionMapper;
-    @Autowired
-    private AdminPostulacionServiceImpl adminPostulacionServiceImpl;
+    private final AdminPostulacionService adminPostulacionService;
+    private final AdminPostulacionServiceImpl adminPostulacionServiceImpl;
 
     @PostMapping
     public ResponseEntity<PostulacionDTO> crearPostulacion(@Valid @RequestBody PostulacionDTO postulacionDTO) {
@@ -36,7 +29,7 @@ public class AdminPostulacionController {
     }
 
     @PutMapping("/{id}/estado")
-    public ResponseEntity<PostulacionDTO> actualizarEstado(@PathVariable("id") Long id, @RequestBody PostulacionEstadoDTO nuevoEstadoDTO) {
+    public ResponseEntity<PostulacionDTO> actualizarEstado(@PathVariable("id") Integer id, @RequestBody PostulacionEstadoDTO nuevoEstadoDTO) {
         String nuevoEstado = nuevoEstadoDTO.getNuevoEstado();
         System.out.println("Estado recibido: " + nuevoEstado);
 
@@ -46,16 +39,16 @@ public class AdminPostulacionController {
     }
 
     @PutMapping("/notificacion/{id}")
-    public ResponseEntity<String> obtenerNotificacion(@PathVariable Long id) {
+    public ResponseEntity<String> obtenerNotificacion(@PathVariable Integer id) {
         String mensajeNotificacion = adminPostulacionServiceImpl.obtenerNotificacion(id);
         return ResponseEntity.ok(mensajeNotificacion);
     }
 
     @GetMapping("/oferta/{jobOfferId}")
-@PreAuthorize("hasRole('ADMIN') or hasRole('OFERTANTE')")
-public ResponseEntity<List<PostulacionDTO>> obtenerPostulacionesPorJobOfferId(@PathVariable Long jobOfferId) {
-    List<PostulacionDTO> postulaciones = adminPostulacionService.obtenerPostulacionesPorJobOfferId(jobOfferId);
-    return ResponseEntity.ok(postulaciones);
-}
+    @PreAuthorize("hasRole('ADMIN') or hasRole('OFERTANTE')")
+    public ResponseEntity<List<PostulacionDTO>> obtenerPostulacionesPorJobOfferId(@PathVariable Integer jobOfferId) {
+        List<PostulacionDTO> postulaciones = adminPostulacionService.obtenerPostulacionesPorJobOfferId(jobOfferId);
+        return ResponseEntity.ok(postulaciones);
+    }
 
 }

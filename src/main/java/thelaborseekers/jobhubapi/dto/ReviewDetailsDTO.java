@@ -1,7 +1,6 @@
 package thelaborseekers.jobhubapi.dto;
 
 import lombok.Data;
-import thelaborseekers.jobhubapi.model.enums.JobStatus;
 
 @Data
 public class ReviewDetailsDTO {

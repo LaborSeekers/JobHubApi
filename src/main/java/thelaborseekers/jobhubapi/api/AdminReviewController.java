@@ -7,8 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import thelaborseekers.jobhubapi.dto.ReviewCreateDTO;
 import thelaborseekers.jobhubapi.dto.ReviewDetailsDTO;
-import thelaborseekers.jobhubapi.model.entity.Review;
-import thelaborseekers.jobhubapi.repository.ReviewRepository;
 import thelaborseekers.jobhubapi.service.AdminReviewService;
 
 import java.util.List;
@@ -18,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminReviewController {
     private final AdminReviewService adminReviewService;
-    private final ReviewRepository reviewRepository;
 
     @PostMapping
     public ResponseEntity<ReviewDetailsDTO> createReview(@Valid @RequestBody ReviewCreateDTO reviewCreateDTO) {

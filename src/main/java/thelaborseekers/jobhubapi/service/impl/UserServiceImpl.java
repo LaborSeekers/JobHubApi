@@ -69,9 +69,7 @@ public class UserServiceImpl implements UserService {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         User user = userPrincipal.getUser();
         String token = tokenProvider.createAccessToken(authentication);
-        AuthResponseDTO ResponseDTO = userMapper.toAuthResponseDTO(user,token);
-
-        return ResponseDTO;
+        return userMapper.toAuthResponseDTO(user,token);
     }
 
     @Override

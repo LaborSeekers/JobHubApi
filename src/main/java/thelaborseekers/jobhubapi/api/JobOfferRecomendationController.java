@@ -11,9 +11,7 @@ import thelaborseekers.jobhubapi.dto.JobOfferDetailsDTO;
 import thelaborseekers.jobhubapi.service.AdminJobOfferService;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/recomendations")
