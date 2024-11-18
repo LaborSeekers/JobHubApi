@@ -3,7 +3,6 @@ package thelaborseekers.jobhubapi.api;
 import org.springframework.http.HttpStatus;
 import thelaborseekers.jobhubapi.dto.UploadMediaDTO;
 import thelaborseekers.jobhubapi.service.StorageService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;

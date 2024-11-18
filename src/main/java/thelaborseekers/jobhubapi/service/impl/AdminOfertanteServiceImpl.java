@@ -86,7 +86,7 @@ public class AdminOfertanteServiceImpl implements AdminOfertanteService {
     @Transactional
     @Override
     public OfertanteRegisterDTO updateReputation(Integer id, Integer ratingValue) {
-        Ofertante ofertanteFromDB = ofertanteRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Ofertante not found with id: " + id));;
+        Ofertante ofertanteFromDB = ofertanteRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Ofertante not found with id: " + id));
         Integer currentReputation = ofertanteFromDB.getReputationValue();
 
         // Actualizar la reputación

@@ -11,7 +11,6 @@ import thelaborseekers.jobhubapi.dto.PaymentDTO;
 import thelaborseekers.jobhubapi.dto.PaymentOrderResponse;
 import thelaborseekers.jobhubapi.integration.notification.email.dto.Mail;
 import thelaborseekers.jobhubapi.integration.notification.email.service.EmailService;
-import thelaborseekers.jobhubapi.integration.payment.paypal.dto.Link;
 import thelaborseekers.jobhubapi.integration.payment.paypal.dto.OrderCaptureResponse;
 import thelaborseekers.jobhubapi.integration.payment.paypal.dto.OrderResponse;
 import thelaborseekers.jobhubapi.integration.payment.paypal.service.PaypalService;

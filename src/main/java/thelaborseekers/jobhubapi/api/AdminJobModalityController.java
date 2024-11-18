@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import thelaborseekers.jobhubapi.dto.JobModalityDTO;
-import thelaborseekers.jobhubapi.model.entity.JobModality;
 import thelaborseekers.jobhubapi.service.AdminJobModalityService;
 
 import java.util.List;

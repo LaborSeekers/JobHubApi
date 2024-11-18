@@ -44,9 +44,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Value("${spring.mail.username}")
     private String mailFrom;
 
-    @Value("${JobHub.domain}")
-    private String domain;
-
     @Override
     public SubscriptionDTO createSubscription(SubscriptionCreateDTO subscription) {
         Ofertante ofertante = ofertanteRepository.findById(subscription.getOfertante())

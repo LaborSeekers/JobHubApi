@@ -35,8 +35,5 @@ public class JobOfferMapper {
         return modelMapper.map(jobOfferCreateDTO, JobOffer.class);
     }
 
-    //Request
-    public JobOfferCreateDTO toJobOfferCreateDTO(JobOffer jobOffer){
-        return modelMapper.map(jobOffer, JobOfferCreateDTO.class);
-    }
+
 }

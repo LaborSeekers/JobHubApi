@@ -3,7 +3,6 @@ package thelaborseekers.jobhubapi.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import thelaborseekers.jobhubapi.model.enums.EduLevel;
 
 import java.time.LocalDate;
 

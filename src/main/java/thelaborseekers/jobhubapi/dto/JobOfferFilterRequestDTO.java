@@ -1,12 +1,10 @@
 package thelaborseekers.jobhubapi.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import thelaborseekers.jobhubapi.model.enums.JobStatus;
 
-import java.time.LocalDateTime;
 
 @Getter
 @Setter

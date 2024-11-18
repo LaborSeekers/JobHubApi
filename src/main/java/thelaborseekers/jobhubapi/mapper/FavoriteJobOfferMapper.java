@@ -30,7 +30,4 @@ public class FavoriteJobOfferMapper {
         return modelMapper.map(favoriteJobOfferCreateDTO, FavoriteJobOffers.class);
     }
 
-    public FavoriteJobOfferCreateDTO toCreateDTO(FavoriteJobOffers favoriteJobOffers) {
-        return modelMapper.map(favoriteJobOffers, FavoriteJobOfferCreateDTO.class);
-    }
 }

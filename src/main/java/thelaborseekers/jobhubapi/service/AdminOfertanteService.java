@@ -4,7 +4,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import thelaborseekers.jobhubapi.dto.OfertanteProfileDTO;
 import thelaborseekers.jobhubapi.dto.OfertanteRegisterDTO;
-import thelaborseekers.jobhubapi.model.entity.Ofertante;
 
 import java.util.List;
 

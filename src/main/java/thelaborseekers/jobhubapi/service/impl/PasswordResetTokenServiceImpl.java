@@ -29,9 +29,6 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
     @Value("${spring.mail.username}")
     private String mailFrom;
 
-    @Value("${JobHub.domain}")
-    private String domain;
-
     @Transactional
     @Override
     public void createAndSendPasswordResetToken(String email, String url) throws Exception {

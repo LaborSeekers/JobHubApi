@@ -30,8 +30,4 @@ public class ReviewMapper {
         return modelMapper.map(reviewCreateDTO, Review.class);
     }
 
-    // Convierte la entidad Review a ReviewCreateDTO (opcional)
-    public ReviewCreateDTO toReviewCreateDTO(Review review) {
-        return modelMapper.map(review, ReviewCreateDTO.class);
-    }
 }

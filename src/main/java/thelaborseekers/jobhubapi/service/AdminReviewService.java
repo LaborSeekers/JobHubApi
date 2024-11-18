@@ -1,6 +1,5 @@
 package thelaborseekers.jobhubapi.service;
 
-import thelaborseekers.jobhubapi.model.entity.Review;
 import thelaborseekers.jobhubapi.dto.ReviewCreateDTO;
 import thelaborseekers.jobhubapi.dto.ReviewDetailsDTO;
 

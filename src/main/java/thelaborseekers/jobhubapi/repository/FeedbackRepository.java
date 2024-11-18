@@ -1,6 +1,5 @@
 package thelaborseekers.jobhubapi.repository;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -8,7 +7,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import thelaborseekers.jobhubapi.model.entity.Feedback;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface FeedbackRepository extends JpaRepository<Feedback, Long> {

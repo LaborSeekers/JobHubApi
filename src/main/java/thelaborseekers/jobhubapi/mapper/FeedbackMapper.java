@@ -36,7 +36,4 @@ public class FeedbackMapper {
         return modelMapper.map(feedbackCreateDTO, Feedback.class);
     }
 
-    public FeedbackCreateDTO toCreateDTO(Feedback feedback) {
-        return modelMapper.map(feedback, FeedbackCreateDTO.class);
-    }
 }
