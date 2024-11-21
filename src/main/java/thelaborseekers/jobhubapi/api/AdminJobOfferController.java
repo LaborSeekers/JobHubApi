@@ -138,6 +138,12 @@ public ResponseEntity<JobOfferDetailsDTO> updateJobOfferStatus(@PathVariable Int
         List<JobOfferAplicantsDTO> jobOffersWithApplicants = adminJobOfferService.getJobOffersWithApplicantsCountByOfertanteId(ofertanteId);
         return ResponseEntity.ok(jobOffersWithApplicants);
     }
-
+    @GetMapping("/category-chart/{category}")
+    @PreAuthorize("hasAnyRole('ADMIN','POSTULANTE','OFERTANTE')")
+    public ResponseEntity<List<CategoryChartDTO>> getJobOffersByCategory(@PathVariable String category) {
+        List<CategoryChartDTO> chartData = adminJobOfferService.getJobOffersByCategory(category);
+        return ResponseEntity.ok(chartData);
+    }
+    
 
 }
