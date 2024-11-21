@@ -47,4 +47,7 @@ public interface AdminJobOfferService {
     JobOfferDetailsDTO updateJobOfferStatus(Integer jobOfferId, JobStatus status);
 
     List<JobOfferAplicantsDTO> getJobOffersWithApplicantsCountByOfertanteId(Integer ofertanteId);
+
+    List<JobOfferAplicantsDTO> getJobOffersPopularity(Integer ofertanteId);
+
 }

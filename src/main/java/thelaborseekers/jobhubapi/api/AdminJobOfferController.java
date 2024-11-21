@@ -138,6 +138,14 @@ public ResponseEntity<JobOfferDetailsDTO> updateJobOfferStatus(@PathVariable Int
         List<JobOfferAplicantsDTO> jobOffersWithApplicants = adminJobOfferService.getJobOffersWithApplicantsCountByOfertanteId(ofertanteId);
         return ResponseEntity.ok(jobOffersWithApplicants);
     }
+    @GetMapping("/popularity/{ofertanteId}")
+public ResponseEntity<List<JobOfferAplicantsDTO>> getJobOffersPopularity(@PathVariable Integer ofertanteId) {
+    List<JobOfferAplicantsDTO> popularJobOffers = adminJobOfferService.getJobOffersPopularity(ofertanteId);
+    return ResponseEntity.ok(popularJobOffers);
+}
+
+
+
 
 
 }

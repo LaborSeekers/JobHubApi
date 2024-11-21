@@ -339,5 +339,12 @@ public JobOfferDetailsDTO updateJobOfferStatus(Integer jobOfferId, JobStatus sta
         return jobOfferRepository.findJobOffersWithApplicantsCountByOfertanteId(ofertanteId);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<JobOfferAplicantsDTO> getJobOffersPopularity(Integer ofertanteId) {
+    return jobOfferRepository.findJobOffersPopularityByOfertanteId(ofertanteId);
+}
+
+
 
 }

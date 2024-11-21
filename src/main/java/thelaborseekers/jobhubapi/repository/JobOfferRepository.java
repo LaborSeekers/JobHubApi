@@ -47,4 +47,11 @@ public interface JobOfferRepository extends JpaRepository<JobOffer, Integer> {
             "GROUP BY j.id")
     List<JobOfferAplicantsDTO> findJobOffersWithApplicantsCountByOfertanteId(@Param("ofertanteId") Integer ofertanteId);
 
+    @Query("SELECT new thelaborseekers.jobhubapi.dto.JobOfferAplicantsDTO(j.title, COUNT(p)) " +
+       "FROM JobOffer j LEFT JOIN Postulacion p ON j.id = p.ofertaLaboral.id " +
+       "WHERE j.ofertante.id = :ofertanteId " +
+       "GROUP BY j.title")
+List<JobOfferAplicantsDTO> findJobOffersPopularityByOfertanteId(@Param("ofertanteId") Integer ofertanteId);
+
+
 }
