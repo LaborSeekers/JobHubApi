@@ -339,5 +339,22 @@ public JobOfferDetailsDTO updateJobOfferStatus(Integer jobOfferId, JobStatus sta
         return jobOfferRepository.findJobOffersWithApplicantsCountByOfertanteId(ofertanteId);
     }
 
+    @Override
+@Transactional(readOnly = true)
+public List<CategoryChartDTO> getJobOffersByCategory(String category) {
+    switch (category.toLowerCase()) {
+        case "status":
+            return jobOfferRepository.countJobOffersByStatus();
+        case "location":
+            return jobOfferRepository.countJobOffersByLocation();
+        case "modality":
+            return jobOfferRepository.countJobOffersByModality();
+        default:
+            throw new IllegalArgumentException("Categoría no válida: " + category);
+    }
+}
+
+
+
 
 }

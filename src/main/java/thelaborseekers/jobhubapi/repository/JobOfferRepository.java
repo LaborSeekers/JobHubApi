@@ -5,6 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import thelaborseekers.jobhubapi.dto.CategoryChartDTO;
 import thelaborseekers.jobhubapi.dto.JobOfferAplicantsDTO;
 import thelaborseekers.jobhubapi.model.entity.JobOffer;
 import thelaborseekers.jobhubapi.model.enums.JobStatus;
@@ -46,5 +48,19 @@ public interface JobOfferRepository extends JpaRepository<JobOffer, Integer> {
             "WHERE j.ofertante.id = :ofertanteId " +
             "GROUP BY j.id")
     List<JobOfferAplicantsDTO> findJobOffersWithApplicantsCountByOfertanteId(@Param("ofertanteId") Integer ofertanteId);
+ //Grafico
+ @Query("SELECT new thelaborseekers.jobhubapi.dto.CategoryChartDTO(j.status, COUNT(j)) " +
+       "FROM JobOffer j GROUP BY j.status")
+List<CategoryChartDTO> countJobOffersByStatus();
+
+@Query("SELECT new thelaborseekers.jobhubapi.dto.CategoryChartDTO(j.location, COUNT(j)) " +
+       "FROM JobOffer j GROUP BY j.location")
+List<CategoryChartDTO> countJobOffersByLocation();
+
+// Gráfico por modalidad
+@Query("SELECT new thelaborseekers.jobhubapi.dto.CategoryChartDTO(jm.name, COUNT(j)) " +
+       "FROM JobOffer j JOIN j.jobModality jm GROUP BY jm.name")
+List<CategoryChartDTO> countJobOffersByModality();
+
 
 }
